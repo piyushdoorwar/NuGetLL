@@ -3,7 +3,7 @@ import { TabId } from "../types";
 import {
   IconDashboard,
   IconGlobe,
-  IconPackage,
+  IconInstalled,
   IconSearch,
   IconSettings,
   IconShield,
@@ -19,13 +19,13 @@ interface Counts {
 }
 
 const TABS: { id: TabId; label: string; icon: ReactNode; countKey?: keyof Counts }[] = [
-  { id: "overview", label: "Overview", icon: <IconDashboard size={15} /> },
-  { id: "browse", label: "Browse", icon: <IconSearch size={15} /> },
-  { id: "installed", label: "Installed", icon: <IconPackage size={15} />, countKey: "installed" },
-  { id: "updates", label: "Updates", icon: <IconUpdate size={15} />, countKey: "outdated" },
-  { id: "vulnerabilities", label: "Vulnerabilities", icon: <IconShield size={15} />, countKey: "vulnerable" },
-  { id: "sources", label: "Sources", icon: <IconGlobe size={15} />, countKey: "sources" },
-  { id: "settings", label: "Settings", icon: <IconSettings size={15} /> }
+  { id: "overview", label: "Overview", icon: <IconDashboard size={17} /> },
+  { id: "browse", label: "Browse", icon: <IconSearch size={17} /> },
+  { id: "installed", label: "Installed", icon: <IconInstalled size={17} />, countKey: "installed" },
+  { id: "updates", label: "Updates", icon: <IconUpdate size={17} />, countKey: "outdated" },
+  { id: "vulnerabilities", label: "Vulnerabilities", icon: <IconShield size={16} />, countKey: "vulnerable" },
+  { id: "sources", label: "Sources", icon: <IconGlobe size={17} />, countKey: "sources" },
+  { id: "settings", label: "Settings", icon: <IconSettings size={17} /> }
 ];
 
 export function Sidebar(props: { tab: TabId; counts: Counts; onSelect: (tab: TabId) => void }) {

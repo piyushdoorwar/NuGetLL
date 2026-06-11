@@ -1,17 +1,35 @@
 import { ReactNode } from "react";
 
-function Icon(props: { size?: number; strokeWidth?: number; children: ReactNode; className?: string }) {
+function StrokeIcon(props: {
+  size?: number;
+  strokeWidth?: number;
+  viewBox?: string;
+  children: ReactNode;
+}) {
   return (
     <svg
-      width={props.size ?? 16}
-      height={props.size ?? 16}
-      viewBox="0 0 24 24"
+      width={props.size ?? 17}
+      height={props.size ?? 17}
+      viewBox={props.viewBox ?? "0 0 24 24"}
       fill="none"
       stroke="currentColor"
-      strokeWidth={props.strokeWidth ?? 1.8}
+      strokeWidth={props.strokeWidth ?? 2}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={props.className}
+      aria-hidden="true"
+    >
+      {props.children}
+    </svg>
+  );
+}
+
+function FillIcon(props: { size?: number; viewBox: string; children: ReactNode }) {
+  return (
+    <svg
+      width={props.size ?? 17}
+      height={props.size ?? 17}
+      viewBox={props.viewBox}
+      fill="currentColor"
       aria-hidden="true"
     >
       {props.children}
@@ -20,88 +38,95 @@ function Icon(props: { size?: number; strokeWidth?: number; children: ReactNode;
 }
 
 export const IconDashboard = (p: { size?: number }) => (
-  <Icon size={p.size}>
+  <StrokeIcon size={p.size} strokeWidth={1.8}>
     <rect width="7" height="9" x="3" y="3" rx="1.5" />
     <rect width="7" height="5" x="14" y="3" rx="1.5" />
     <rect width="7" height="9" x="14" y="12" rx="1.5" />
     <rect width="7" height="5" x="3" y="16" rx="1.5" />
-  </Icon>
+  </StrokeIcon>
 );
 
 export const IconSearch = (p: { size?: number }) => (
-  <Icon size={p.size}>
-    <circle cx="11" cy="11" r="8" />
-    <path d="m21 21-4.3-4.3" />
-  </Icon>
+  <StrokeIcon size={p.size}>
+    <path d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z" />
+  </StrokeIcon>
 );
 
-export const IconPackage = (p: { size?: number }) => (
-  <Icon size={p.size}>
-    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-    <polyline points="3.29 7 12 12 20.71 7" />
-    <line x1="12" y1="22" x2="12" y2="12" />
-  </Icon>
+export const IconInstalled = (p: { size?: number }) => (
+  <FillIcon size={p.size} viewBox="0 0 36 36">
+    <path d="M10.3,18.87l7,6.89a1,1,0,0,0,1.4,0l7-6.89a1,1,0,0,0-1.4-1.43L19,22.65V4a1,1,0,0,0-2,0V22.65l-5.3-5.21a1,1,0,0,0-1.4,1.43Z" />
+    <circle cx="30" cy="6" r="5" />
+  </FillIcon>
 );
 
 export const IconUpdate = (p: { size?: number }) => (
-  <Icon size={p.size}>
-    <circle cx="12" cy="12" r="10" />
-    <polyline points="16 12 12 8 8 12" />
-    <line x1="12" y1="16" x2="12" y2="8" />
-  </Icon>
+  <FillIcon size={p.size} viewBox="-1.5 0 19 19">
+    <path d="M5.857 3.882v3.341a1.03 1.03 0 0 1-2.058 0v-.97a5.401 5.401 0 0 0-1.032 2.27 1.03 1.03 0 1 1-2.02-.395A7.462 7.462 0 0 1 2.235 4.91h-.748a1.03 1.03 0 1 1 0-2.058h3.34a1.03 1.03 0 0 1 1.03 1.03zm-3.25 9.237a1.028 1.028 0 0 1-1.358-.523 7.497 7.497 0 0 1-.37-1.036 1.03 1.03 0 1 1 1.983-.55 5.474 5.474 0 0 0 .269.751 1.029 1.029 0 0 1-.524 1.358zm2.905 2.439a1.028 1.028 0 0 1-1.42.322 7.522 7.522 0 0 1-.885-.652 1.03 1.03 0 0 1 1.34-1.563 5.435 5.435 0 0 0 .643.473 1.03 1.03 0 0 1 .322 1.42zm3.68.438a1.03 1.03 0 0 1-1.014 1.044h-.106a7.488 7.488 0 0 1-.811-.044 1.03 1.03 0 0 1 .224-2.046 5.41 5.41 0 0 0 .664.031h.014a1.03 1.03 0 0 1 1.03 1.015zm.034-12.847a1.03 1.03 0 0 1-1.029 1.01h-.033a1.03 1.03 0 0 1 .017-2.06h.017l.019.001a1.03 1.03 0 0 1 1.009 1.05zm3.236 11.25a1.029 1.029 0 0 1-.3 1.425 7.477 7.477 0 0 1-.797.453 1.03 1.03 0 1 1-.905-1.849 5.479 5.479 0 0 0 .578-.328 1.03 1.03 0 0 1 1.424.3zM10.475 3.504a1.029 1.029 0 0 1 1.41-.359l.018.011a1.03 1.03 0 1 1-1.06 1.764l-.01-.006a1.029 1.029 0 0 1-.358-1.41zm4.26 9.445a7.5 7.5 0 0 1-.315.56 1.03 1.03 0 1 1-1.749-1.086 5.01 5.01 0 0 0 .228-.405 1.03 1.03 0 1 1 1.836.93zm-1.959-6.052a1.03 1.03 0 0 1 1.79-1.016l.008.013a1.03 1.03 0 1 1-1.79 1.017zm2.764 2.487a9.327 9.327 0 0 1 0 .366 1.03 1.03 0 0 1-1.029 1.005h-.025A1.03 1.03 0 0 1 13.482 9.7a4.625 4.625 0 0 0 0-.266 1.03 1.03 0 0 1 1.003-1.055h.026a1.03 1.03 0 0 1 1.029 1.004z" />
+  </FillIcon>
 );
 
 export const IconShield = (p: { size?: number }) => (
-  <Icon size={p.size}>
-    <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1 1 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
-  </Icon>
+  <FillIcon size={p.size} viewBox="0 0 512 512">
+    <path d="M256.001,0L29.89,130.537c0,47.476,4.506,88.936,12.057,125.463C88.61,481.721,256.001,512,256.001,512 s167.389-30.279,214.053-256c7.551-36.527,12.057-77.986,12.057-125.463L256.001,0z M256.118,466.723 c-0.035-0.012-0.082-0.028-0.117-0.039v-47.672V256H140.77H91.122c-6.67-29.738-11.109-63.506-12.394-101.93L255.999,51.728h0.002 v51.73V256h115.27h49.625C385.636,413.404,287.327,456.774,256.118,466.723z" />
+  </FillIcon>
 );
 
 export const IconGlobe = (p: { size?: number }) => (
-  <Icon size={p.size}>
-    <circle cx="12" cy="12" r="10" />
-    <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
-    <path d="M2 12h20" />
-  </Icon>
+  <FillIcon size={p.size} viewBox="0 0 24 24">
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M14.962 13.41c-.927.06-1.915.09-2.962.09-1.047 0-2.035-.03-2.962-.09.267 4.954 1.884 8.74 2.962 8.74 1.078 0 2.694-3.785 2.962-8.74zm-7.936-.188c.152 3.571.961 6.533 2.06 8.442C4.983 20.404 2 16.554 2 12v-.09c1.329.621 3.003 1.056 5.026 1.312zm-4.784-3.44c1.127.662 2.719 1.14 4.769 1.42.103-3.76.933-6.882 2.074-8.866C5.67 3.386 3.03 6.23 2.242 9.782zm6.765 1.622C9.129 6.057 10.864 1.85 12 1.85s2.871 4.207 2.993 9.554c-.925.064-1.923.096-2.993.096a43.67 43.67 0 0 1-2.993-.096zm7.967 1.818c2.023-.256 3.697-.69 5.026-1.311V12c0 4.554-2.984 8.404-7.085 9.664 1.098-1.91 1.907-4.871 2.06-8.442zm4.784-3.44c-1.127.662-2.719 1.14-4.769 1.42-.103-3.76-.933-6.882-2.074-8.866 3.415 1.05 6.055 3.894 6.843 7.446z"
+    />
+  </FillIcon>
 );
 
 export const IconSettings = (p: { size?: number }) => (
-  <Icon size={p.size}>
-    <path d="M20 7h-9" />
-    <path d="M14 17H5" />
-    <circle cx="17" cy="17" r="3" />
-    <circle cx="7" cy="7" r="3" />
-  </Icon>
+  <StrokeIcon size={p.size} strokeWidth={1.5}>
+    <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" />
+    <path d="M2 12.8799V11.1199C2 10.0799 2.85 9.21994 3.9 9.21994C5.71 9.21994 6.45 7.93994 5.54 6.36994C5.02 5.46994 5.33 4.29994 6.24 3.77994L7.97 2.78994C8.76 2.31994 9.78 2.59994 10.25 3.38994L10.36 3.57994C11.26 5.14994 12.74 5.14994 13.65 3.57994L13.76 3.38994C14.23 2.59994 15.25 2.31994 16.04 2.78994L17.77 3.77994C18.68 4.29994 18.99 5.46994 18.47 6.36994C17.56 7.93994 18.3 9.21994 20.11 9.21994C21.15 9.21994 22.01 10.0699 22.01 11.1199V12.8799C22.01 13.9199 21.16 14.7799 20.11 14.7799C18.3 14.7799 17.56 16.0599 18.47 17.6299C18.99 18.5399 18.68 19.6999 17.77 20.2199L16.04 21.2099C15.25 21.6799 14.23 21.3999 13.76 20.6099L13.65 20.4199C12.75 18.8499 11.27 18.8499 10.36 20.4199L10.25 20.6099C9.78 21.3999 8.76 21.6799 7.97 21.2099L6.24 20.2199C5.33 19.6999 5.02 18.5299 5.54 17.6299C6.45 16.0599 5.71 14.7799 3.9 14.7799C2.85 14.7799 2 13.9199 2 12.8799Z" />
+  </StrokeIcon>
 );
 
 export const IconRefresh = (p: { size?: number }) => (
-  <Icon size={p.size}>
-    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-    <path d="M21 3v5h-5" />
-    <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-    <path d="M8 16H3v5" />
-  </Icon>
+  <StrokeIcon size={p.size}>
+    <path d="M21 3V8M21 8H16M21 8L18 5.29168C16.4077 3.86656 14.3051 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.2832 21 19.8675 18.008 20.777 14" />
+  </StrokeIcon>
+);
+
+export const IconVsCode = (p: { size?: number }) => (
+  <FillIcon size={p.size} viewBox="0 0 32 32">
+    <path d="M28,25.6l-5.9,2.4l-9.7-9.6l-6.1,4.8L4,21.9V10.1l2.3-1.2l6.1,4.8L22.1,4L28,6.4V25.6z M15.7,16l6.3,5l0,0V11L15.7,16 L15.7,16z M6.3,19.7L6.3,19.7L10,16l-3.6-3.7l0,0L6.3,19.7L6.3,19.7z" />
+  </FillIcon>
+);
+
+export const IconPackage = (p: { size?: number }) => (
+  <StrokeIcon size={p.size} strokeWidth={1.8}>
+    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+    <polyline points="3.29 7 12 12 20.71 7" />
+    <line x1="12" y1="22" x2="12" y2="12" />
+  </StrokeIcon>
 );
 
 export const IconCheck = (p: { size?: number }) => (
-  <Icon size={p.size} strokeWidth={2.2}>
+  <StrokeIcon size={p.size} strokeWidth={2.2}>
     <polyline points="20 6 9 17 4 12" />
-  </Icon>
+  </StrokeIcon>
 );
 
 export const IconClose = (p: { size?: number }) => (
-  <Icon size={p.size}>
+  <StrokeIcon size={p.size}>
     <path d="M18 6 6 18" />
     <path d="m6 6 12 12" />
-  </Icon>
+  </StrokeIcon>
 );
 
 export const IconDownload = (p: { size?: number }) => (
-  <Icon size={p.size}>
+  <StrokeIcon size={p.size} strokeWidth={1.8}>
     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
     <polyline points="7 10 12 15 17 10" />
     <line x1="12" y1="15" x2="12" y2="3" />
-  </Icon>
+  </StrokeIcon>
 );
 
 /** The GetLL brand mark: package box with a check (media/getll.svg). */

@@ -27,7 +27,7 @@ export function Header(props: {
           <span className="badge error">dotnet SDK not found</span>
         ))}
       <button className="btn btn-ghost btn-sm" onClick={onRefresh}>
-        <IconRefresh size={13} />
+        <IconRefresh size={14} />
         Refresh
       </button>
     </header>

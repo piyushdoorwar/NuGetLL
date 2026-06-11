@@ -1,5 +1,6 @@
 import { post } from "../api/vscodeApi";
 import { GetllSettingsSnapshot } from "../types";
+import { IconVsCode } from "./Icons";
 
 const ROWS: { key: keyof GetllSettingsSnapshot; label: string }[] = [
   { key: "defaultPackageSource", label: "Default package source" },
@@ -36,6 +37,7 @@ export function SettingsView(props: { settings?: GetllSettingsSnapshot }) {
         )}
         <div style={{ marginTop: 14 }}>
           <button className="btn btn-primary" onClick={() => post({ type: "openVsCodeSettings" })}>
+            <IconVsCode size={15} />
             Open VS Code settings
           </button>
         </div>
