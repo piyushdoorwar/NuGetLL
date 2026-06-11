@@ -78,7 +78,7 @@ export async function installPackage(
   packageId: string,
   projectPaths: string[],
   version?: string,
-  options: { isUpdate?: boolean } = {}
+  options: { isUpdate?: boolean; skipConfirm?: boolean } = {}
 ): Promise<OperationOutcome> {
   const config = getConfig();
   const verb = options.isUpdate ? "Update" : "Install";
@@ -92,7 +92,8 @@ export async function installPackage(
     return outcome;
   }
 
-  if (projectPaths.length > 1 && config.confirmBeforeMultiProjectChanges) {
+  // skipConfirm: the dashboard webview shows its own confirmation dialog.
+  if (projectPaths.length > 1 && config.confirmBeforeMultiProjectChanges && !options.skipConfirm) {
     const names = projectPaths
       .map((p) => findProject(services, p)?.name ?? p)
       .map((n) => `  • ${n}`)
@@ -231,7 +232,8 @@ export async function installPackage(
 export async function removePackage(
   services: GetllServices,
   packageId: string,
-  projectPaths: string[]
+  projectPaths: string[],
+  options: { skipConfirm?: boolean } = {}
 ): Promise<OperationOutcome> {
   const outcome: OperationOutcome = { succeeded: [], failed: [], skipped: [] };
   if (!services.dotnet.available) {
@@ -242,14 +244,16 @@ export async function removePackage(
     return outcome;
   }
 
-  const names = projectPaths.map((p) => findProject(services, p)?.name ?? p);
-  const ok = await confirmModal(
-    `Remove ${packageId} from ${names.length} project(s)?`,
-    names.map((n) => `  • ${n}`).join("\n"),
-    "Remove"
-  );
-  if (!ok) {
-    return outcome;
+  if (!options.skipConfirm) {
+    const names = projectPaths.map((p) => findProject(services, p)?.name ?? p);
+    const ok = await confirmModal(
+      `Remove ${packageId} from ${names.length} project(s)?`,
+      names.map((n) => `  • ${n}`).join("\n"),
+      "Remove"
+    );
+    if (!ok) {
+      return outcome;
+    }
   }
 
   await vscode.window.withProgress(

@@ -9,6 +9,16 @@ export function SourcesView(props: { sources?: PackageSource[]; busy: boolean })
   const [url, setUrl] = useState("");
   const [removeTarget, setRemoveTarget] = useState<PackageSource>();
   const [formError, setFormError] = useState<string>();
+  const [editing, setEditing] = useState<string>();
+  const [editUrl, setEditUrl] = useState("");
+
+  const saveEdit = (source: PackageSource) => {
+    const trimmed = editUrl.trim();
+    if (trimmed && trimmed !== source.url) {
+      post({ type: "updateSource", name: source.name, url: trimmed });
+    }
+    setEditing(undefined);
+  };
 
   const add = () => {
     if (!name.trim() || !url.trim()) {
@@ -69,7 +79,26 @@ export function SourcesView(props: { sources?: PackageSource[]; busy: boolean })
                     </span>
                   )}
                 </div>
-                <div className="url">{source.url}</div>
+                {editing === source.name ? (
+                  <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+                    <input
+                      type="text"
+                      value={editUrl}
+                      onChange={(e) => setEditUrl(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && saveEdit(source)}
+                      style={{ flex: 1 }}
+                      autoFocus
+                    />
+                    <button className="btn btn-primary btn-sm" onClick={() => saveEdit(source)}>
+                      Save
+                    </button>
+                    <button className="btn btn-ghost btn-sm" onClick={() => setEditing(undefined)}>
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <div className="url">{source.url}</div>
+                )}
                 {source.configPath && (
                   <div className="url">
                     config:{" "}
@@ -80,6 +109,15 @@ export function SourcesView(props: { sources?: PackageSource[]; busy: boolean })
                 )}
               </div>
               <div className="actions">
+                <button
+                  className="btn btn-ghost btn-sm"
+                  onClick={() => {
+                    setEditing(source.name);
+                    setEditUrl(source.url);
+                  }}
+                >
+                  Edit
+                </button>
                 {source.enabled ? (
                   <button className="btn btn-ghost btn-sm" onClick={() => post({ type: "disableSource", name: source.name })}>
                     Disable

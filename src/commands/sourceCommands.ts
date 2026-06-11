@@ -2,8 +2,6 @@ import * as vscode from "vscode";
 import { GetllServices } from "../services/container";
 import { logger } from "../utils/logger";
 import { DashboardPanel } from "../webview/dashboardPanel";
-import { GetllTreeItem } from "../views/getllTreeProvider";
-import { SourceTreeProvider } from "../views/sourceTreeProvider";
 
 async function withSourceErrorHandling(action: string, work: () => Promise<void>): Promise<boolean> {
   try {
@@ -22,7 +20,9 @@ async function withSourceErrorHandling(action: string, work: () => Promise<void>
   }
 }
 
-export function registerSourceCommands(services: GetllServices, sourceTree: SourceTreeProvider): vscode.Disposable[] {
+export function registerSourceCommands(services: GetllServices): vscode.Disposable[] {
+  const refreshDashboard = () => DashboardPanel.pushSources(services);
+
   const manage = vscode.commands.registerCommand("getll.manageSources", () => {
     DashboardPanel.createOrShow(services, { tab: "sources" });
   });
@@ -54,12 +54,12 @@ export function registerSourceCommands(services: GetllServices, sourceTree: Sour
     }
     if (await withSourceErrorHandling("Add source", () => services.sources.addSource(name.trim(), url.trim()))) {
       vscode.window.showInformationMessage(`GetLL: source "${name}" added. For authenticated feeds, configure a NuGet credential provider.`);
-      sourceTree.invalidate();
+      refreshDashboard();
     }
   });
 
-  const remove = vscode.commands.registerCommand("getll.removeSource", async (node?: GetllTreeItem) => {
-    const name = node?.source?.name ?? (await pickSourceName(services, "Remove Package Source"));
+  const remove = vscode.commands.registerCommand("getll.removeSource", async () => {
+    const name = await pickSourceName(services, "Remove Package Source");
     if (!name) {
       return;
     }
@@ -73,56 +73,55 @@ export function registerSourceCommands(services: GetllServices, sourceTree: Sour
     }
     if (await withSourceErrorHandling("Remove source", () => services.sources.removeSource(name))) {
       vscode.window.showInformationMessage(`GetLL: source "${name}" removed.`);
-      sourceTree.invalidate();
+      refreshDashboard();
     }
   });
 
-  const enable = vscode.commands.registerCommand("getll.enableSource", async (node?: GetllTreeItem) => {
-    const name = node?.source?.name ?? (await pickSourceName(services, "Enable Package Source"));
-    if (!name) {
-      return;
-    }
-    if (await withSourceErrorHandling("Enable source", () => services.sources.enableSource(name))) {
-      sourceTree.invalidate();
+  const enable = vscode.commands.registerCommand("getll.enableSource", async () => {
+    const name = await pickSourceName(services, "Enable Package Source");
+    if (name && (await withSourceErrorHandling("Enable source", () => services.sources.enableSource(name)))) {
+      refreshDashboard();
     }
   });
 
-  const disable = vscode.commands.registerCommand("getll.disableSource", async (node?: GetllTreeItem) => {
-    const name = node?.source?.name ?? (await pickSourceName(services, "Disable Package Source"));
-    if (!name) {
-      return;
-    }
-    if (await withSourceErrorHandling("Disable source", () => services.sources.disableSource(name))) {
-      sourceTree.invalidate();
+  const disable = vscode.commands.registerCommand("getll.disableSource", async () => {
+    const name = await pickSourceName(services, "Disable Package Source");
+    if (name && (await withSourceErrorHandling("Disable source", () => services.sources.disableSource(name)))) {
+      refreshDashboard();
     }
   });
 
-  const edit = vscode.commands.registerCommand("getll.editSource", async (node?: GetllTreeItem) => {
-    const source = node?.source;
-    if (!source) {
+  const edit = vscode.commands.registerCommand("getll.editSource", async () => {
+    const sources = await listSourcesSafe(services);
+    const picked = await vscode.window.showQuickPick(
+      sources.map((s) => ({ label: s.name, description: s.url })),
+      { title: "Edit Package Source" }
+    );
+    if (!picked) {
       return;
     }
     const url = await vscode.window.showInputBox({
-      title: `Edit URL for "${source.name}"`,
-      value: source.url,
+      title: `Edit URL for "${picked.label}"`,
+      value: picked.description,
       validateInput: (v) => (v.trim().length === 0 ? "URL or path is required" : undefined)
     });
-    if (!url || url === source.url) {
+    if (!url || url === picked.description) {
       return;
     }
-    if (await withSourceErrorHandling("Edit source", () => services.sources.updateSource(source.name, url.trim()))) {
-      sourceTree.invalidate();
+    if (await withSourceErrorHandling("Edit source", () => services.sources.updateSource(picked.label, url.trim()))) {
+      refreshDashboard();
     }
   });
 
-  const openConfig = vscode.commands.registerCommand("getll.openNugetConfig", async (node?: GetllTreeItem) => {
-    const fromNode = node?.source?.configPath;
+  const openConfig = vscode.commands.registerCommand("getll.openNugetConfig", async () => {
     const configs = services.scanner.getModel()?.nugetConfigPaths ?? [];
-    const target =
-      fromNode ??
-      (configs.length === 1 ? configs[0] : await vscode.window.showQuickPick(configs, { title: "Open NuGet.Config" }));
-    if (!target) {
+    if (configs.length === 0) {
       vscode.window.showInformationMessage("GetLL: no NuGet.Config found in this workspace.");
+      return;
+    }
+    const target =
+      configs.length === 1 ? configs[0] : await vscode.window.showQuickPick(configs, { title: "Open NuGet.Config" });
+    if (!target) {
       return;
     }
     const doc = await vscode.workspace.openTextDocument(target);
@@ -132,20 +131,24 @@ export function registerSourceCommands(services: GetllServices, sourceTree: Sour
   return [manage, add, remove, enable, disable, edit, openConfig];
 }
 
-async function pickSourceName(services: GetllServices, title: string): Promise<string | undefined> {
+async function listSourcesSafe(services: GetllServices) {
   try {
-    const sources = await services.sources.listSources();
-    if (sources.length === 0) {
-      vscode.window.showInformationMessage("GetLL: no package sources found.");
-      return undefined;
-    }
-    const picked = await vscode.window.showQuickPick(
-      sources.map((s) => ({ label: s.name, description: `${s.url}${s.enabled ? "" : " (disabled)"}` })),
-      { title }
-    );
-    return picked?.label;
+    return await services.sources.listSources();
   } catch (err) {
     logger.error("Listing sources failed", err);
+    return [];
+  }
+}
+
+async function pickSourceName(services: GetllServices, title: string): Promise<string | undefined> {
+  const sources = await listSourcesSafe(services);
+  if (sources.length === 0) {
+    vscode.window.showInformationMessage("GetLL: no package sources found.");
     return undefined;
   }
+  const picked = await vscode.window.showQuickPick(
+    sources.map((s) => ({ label: s.name, description: `${s.url}${s.enabled ? "" : " (disabled)"}` })),
+    { title }
+  );
+  return picked?.label;
 }

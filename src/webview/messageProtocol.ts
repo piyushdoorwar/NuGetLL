@@ -47,6 +47,7 @@ export type WebviewToExtensionMessage =
   | { type: "checkDeprecated" }
   | { type: "listSources" }
   | { type: "addSource"; name: string; url: string }
+  | { type: "updateSource"; name: string; url: string }
   | { type: "removeSource"; name: string }
   | { type: "enableSource"; name: string }
   | { type: "disableSource"; name: string }

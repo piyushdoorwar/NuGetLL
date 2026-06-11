@@ -48,49 +48,13 @@
     "views": {
       "getll": [
         {
-          "id": "getll.projects",
-          "name": "Projects",
-          "icon": "media/getll.svg"
-        },
-        {
-          "id": "getll.installedPackages",
-          "name": "Installed Packages",
-          "icon": "media/getll.svg"
-        },
-        {
-          "id": "getll.outdatedPackages",
-          "name": "Outdated Packages",
-          "icon": "media/getll.svg"
-        },
-        {
-          "id": "getll.vulnerablePackages",
-          "name": "Vulnerable Packages",
-          "icon": "media/getll.svg"
-        },
-        {
-          "id": "getll.sources",
-          "name": "Package Sources",
+          "id": "getll.home",
+          "name": "GetLL",
+          "type": "webview",
           "icon": "media/getll.svg"
         }
       ]
     },
-    "viewsWelcome": [
-      {
-        "view": "getll.projects",
-        "contents": "No .NET projects found in this workspace.\n[Refresh](command:getll.refreshWorkspace)\n[Open Dashboard](command:getll.openDashboard)",
-        "when": "!getll.hasProjects"
-      },
-      {
-        "view": "getll.outdatedPackages",
-        "contents": "Run a check to find outdated packages.\n[Check Outdated Packages](command:getll.checkOutdated)",
-        "when": "!getll.hasOutdatedResults"
-      },
-      {
-        "view": "getll.vulnerablePackages",
-        "contents": "Run a check to find vulnerable packages.\n[Check Vulnerable Packages](command:getll.checkVulnerable)",
-        "when": "!getll.hasVulnerableResults"
-      }
-    ],
     "commands": [
       {
         "command": "getll.openDashboard",
@@ -220,170 +184,14 @@
         "title": "Open Settings",
         "category": "GetLL",
         "icon": "$(gear)"
-      },
-      {
-        "command": "getll.openProjectFile",
-        "title": "Open Project File",
-        "category": "GetLL",
-        "icon": "$(go-to-file)"
-      },
-      {
-        "command": "getll.copyPackageName",
-        "title": "Copy Package Name",
-        "category": "GetLL"
-      },
-      {
-        "command": "getll.openOnNugetOrg",
-        "title": "Open on nuget.org",
-        "category": "GetLL",
-        "icon": "$(link-external)"
-      },
-      {
-        "command": "getll.viewAdvisory",
-        "title": "View Security Advisory",
-        "category": "GetLL"
       }
     ],
     "menus": {
-      "commandPalette": [
-        {
-          "command": "getll.openProjectFile",
-          "when": "false"
-        },
-        {
-          "command": "getll.copyPackageName",
-          "when": "false"
-        },
-        {
-          "command": "getll.openOnNugetOrg",
-          "when": "false"
-        },
-        {
-          "command": "getll.viewAdvisory",
-          "when": "false"
-        },
-        {
-          "command": "getll.editSource",
-          "when": "false"
-        }
-      ],
       "view/title": [
         {
-          "command": "getll.refreshWorkspace",
-          "when": "view =~ /^getll\\./",
-          "group": "navigation@2"
-        },
-        {
           "command": "getll.openDashboard",
-          "when": "view == getll.projects",
+          "when": "view == getll.home",
           "group": "navigation@1"
-        },
-        {
-          "command": "getll.searchPackages",
-          "when": "view == getll.installedPackages",
-          "group": "navigation@1"
-        },
-        {
-          "command": "getll.checkOutdated",
-          "when": "view == getll.outdatedPackages",
-          "group": "navigation@1"
-        },
-        {
-          "command": "getll.checkVulnerable",
-          "when": "view == getll.vulnerablePackages",
-          "group": "navigation@1"
-        },
-        {
-          "command": "getll.addSource",
-          "when": "view == getll.sources",
-          "group": "navigation@1"
-        }
-      ],
-      "view/item/context": [
-        {
-          "command": "getll.addPackage",
-          "when": "view =~ /^getll\\./ && viewItem == project",
-          "group": "inline@1"
-        },
-        {
-          "command": "getll.addPackage",
-          "when": "view =~ /^getll\\./ && viewItem == project",
-          "group": "1_actions@1"
-        },
-        {
-          "command": "getll.restoreProject",
-          "when": "view =~ /^getll\\./ && viewItem == project",
-          "group": "1_actions@2"
-        },
-        {
-          "command": "getll.checkOutdated",
-          "when": "view =~ /^getll\\./ && viewItem == project",
-          "group": "1_actions@3"
-        },
-        {
-          "command": "getll.openProjectFile",
-          "when": "view =~ /^getll\\./ && viewItem == project",
-          "group": "2_open@1"
-        },
-        {
-          "command": "getll.showPackageDetails",
-          "when": "view =~ /^getll\\./ && viewItem =~ /Package$|^package/",
-          "group": "1_actions@1"
-        },
-        {
-          "command": "getll.updatePackage",
-          "when": "view =~ /^getll\\./ && viewItem =~ /^package|^installedPackage|^outdatedPackage|^vulnerablePackage/",
-          "group": "1_actions@2"
-        },
-        {
-          "command": "getll.removePackage",
-          "when": "view =~ /^getll\\./ && viewItem =~ /^package|^installedPackage/",
-          "group": "1_actions@3"
-        },
-        {
-          "command": "getll.viewAdvisory",
-          "when": "view =~ /^getll\\./ && viewItem == vulnerablePackage",
-          "group": "1_actions@4"
-        },
-        {
-          "command": "getll.openProjectFile",
-          "when": "view =~ /^getll\\./ && viewItem =~ /^package|^outdatedPackage|^vulnerablePackage/",
-          "group": "2_open@1"
-        },
-        {
-          "command": "getll.copyPackageName",
-          "when": "view =~ /^getll\\./ && viewItem =~ /Package$|^package/",
-          "group": "2_open@2"
-        },
-        {
-          "command": "getll.openOnNugetOrg",
-          "when": "view =~ /^getll\\./ && viewItem =~ /Package$|^package/",
-          "group": "2_open@3"
-        },
-        {
-          "command": "getll.enableSource",
-          "when": "view == getll.sources && viewItem == sourceDisabled",
-          "group": "1_actions@1"
-        },
-        {
-          "command": "getll.disableSource",
-          "when": "view == getll.sources && viewItem == sourceEnabled",
-          "group": "1_actions@1"
-        },
-        {
-          "command": "getll.editSource",
-          "when": "view == getll.sources && viewItem =~ /^source/",
-          "group": "1_actions@2"
-        },
-        {
-          "command": "getll.removeSource",
-          "when": "view == getll.sources && viewItem =~ /^source/",
-          "group": "1_actions@3"
-        },
-        {
-          "command": "getll.openNugetConfig",
-          "when": "view == getll.sources && viewItem =~ /^source/",
-          "group": "2_open@1"
         }
       ]
     },

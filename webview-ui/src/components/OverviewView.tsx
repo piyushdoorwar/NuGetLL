@@ -82,6 +82,9 @@ export function OverviewView(props: {
         <button className="btn btn-secondary" onClick={() => post({ type: "checkVulnerable" })}>
           Check vulnerabilities
         </button>
+        <button className="btn btn-ghost" onClick={() => post({ type: "restoreProject", projectPath: "" })}>
+          Restore workspace
+        </button>
       </div>
 
       <table className="data" style={{ marginTop: 8 }}>

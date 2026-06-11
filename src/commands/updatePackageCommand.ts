@@ -3,7 +3,6 @@ import { getConfig } from "../config";
 import { GetllServices } from "../services/container";
 import { installPackage } from "../services/packageOperations";
 import { logger } from "../utils/logger";
-import { GetllTreeItem } from "../views/getllTreeProvider";
 import { pickProjects, pickVersion } from "./pickers";
 import { runOutdatedCheck } from "./checkCommands";
 
@@ -14,44 +13,39 @@ function projectsUsing(services: GetllServices, packageId: string) {
 }
 
 export function registerUpdatePackageCommands(services: GetllServices): vscode.Disposable[] {
-  const updateOne = vscode.commands.registerCommand("getll.updatePackage", async (node?: GetllTreeItem) => {
-    let packageId = node?.packageId;
-    if (!packageId) {
-      const installed = new Set<string>();
-      for (const project of services.scanner.getModel()?.projects ?? []) {
-        for (const pkg of project.packages) {
-          if (!pkg.isTransitive) {
-            installed.add(pkg.id);
-          }
+  const updateOne = vscode.commands.registerCommand("getll.updatePackage", async () => {
+    const installed = new Set<string>();
+    for (const project of services.scanner.getModel()?.projects ?? []) {
+      for (const pkg of project.packages) {
+        if (!pkg.isTransitive) {
+          installed.add(pkg.id);
         }
       }
-      packageId = await vscode.window.showQuickPick([...installed].sort(), { title: "Update Package" });
-      if (!packageId) {
-        return;
-      }
+    }
+    const packageId = await vscode.window.showQuickPick([...installed].sort(), { title: "Update Package" });
+    if (!packageId) {
+      return;
     }
 
-    let projectPaths: string[];
-    if (node?.projectPath) {
-      projectPaths = [node.projectPath];
-    } else {
-      const using = projectsUsing(services, packageId);
-      if (using.length === 0) {
-        vscode.window.showInformationMessage(`GetLL: ${packageId} is not referenced by any project.`);
-        return;
-      }
-      const projects = await pickProjects(services, {
-        title: `Update ${packageId} in...`,
-        projects: using,
-        preselect: using.map((p) => p.path)
-      });
-      if (!projects) {
-        return;
-      }
-      projectPaths = projects.map((p) => p.path);
+    const using = projectsUsing(services, packageId);
+    if (using.length === 0) {
+      vscode.window.showInformationMessage(`GetLL: ${packageId} is not referenced by any project.`);
+      return;
     }
+    const projects = await pickProjects(services, {
+      title: `Update ${packageId} in...`,
+      projects: using,
+      preselect: using.map((p) => p.path)
+    });
+    if (!projects) {
+      return;
+    }
+    const projectPaths = projects.map((p) => p.path);
 
-    const version = await pickVersion(services, packageId, { currentVersion: node?.version });
+    const currentVersion = using[0].packages.find(
+      (pkg) => pkg.id.toLowerCase() === packageId.toLowerCase()
+    )?.version;
+    const version = await pickVersion(services, packageId, { currentVersion });
     if (version === undefined) {
       return;
     }

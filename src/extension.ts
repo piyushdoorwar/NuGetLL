@@ -16,9 +16,8 @@ import { VulnerabilityService } from "./services/vulnerabilityService";
 import { WorkspaceScanner } from "./services/workspaceScanner";
 import { debounce } from "./utils/debounce";
 import { logger } from "./utils/logger";
-import { PackageTreeProvider } from "./views/packageTreeProvider";
-import { ProjectTreeProvider } from "./views/projectTreeProvider";
-import { SourceTreeProvider } from "./views/sourceTreeProvider";
+import { DashboardPanel } from "./webview/dashboardPanel";
+import { HomeViewProvider } from "./webview/homeViewProvider";
 
 const WATCH_PATTERNS = [
   "**/*.{csproj,fsproj,vbproj}",
@@ -50,18 +49,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     dotnet: { available: false }
   };
 
-  // Trees
-  const projectTree = new ProjectTreeProvider(scanner);
-  const installedTree = new PackageTreeProvider("installed", scanner, services.results);
-  const outdatedTree = new PackageTreeProvider("outdated", scanner, services.results);
-  const vulnerableTree = new PackageTreeProvider("vulnerable", scanner, services.results);
-  const sourceTree = new SourceTreeProvider(sources);
+  // All UI lives in webviews: the activity bar hosts a small launcher view
+  // and the dashboard panel carries the full experience.
   context.subscriptions.push(
-    vscode.window.registerTreeDataProvider("getll.projects", projectTree),
-    vscode.window.registerTreeDataProvider("getll.installedPackages", installedTree),
-    vscode.window.registerTreeDataProvider("getll.outdatedPackages", outdatedTree),
-    vscode.window.registerTreeDataProvider("getll.vulnerablePackages", vulnerableTree),
-    vscode.window.registerTreeDataProvider("getll.sources", sourceTree)
+    vscode.window.registerWebviewViewProvider(HomeViewProvider.viewId, new HomeViewProvider(services))
   );
 
   // Commands
@@ -71,20 +62,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     ...registerUpdatePackageCommands(services),
     ...registerCheckCommands(services),
     ...registerRestoreCommands(services),
-    ...registerSourceCommands(services, sourceTree),
+    ...registerSourceCommands(services),
     ...registerDashboardCommands(services)
   );
-
-  // Context keys for views and welcome content.
-  scanner.onDidChangeModel((model) => {
-    vscode.commands.executeCommand("setContext", "getll.hasProjects", model.projects.length > 0);
-  });
 
   // File watchers with a 500ms debounced refresh.
   const refresh = debounce(() => {
     if (getConfig().autoRefreshOnProjectFileChange) {
       scanner.scan().catch((err) => logger.error("Workspace scan failed", err));
-      sourceTree.invalidate();
+      DashboardPanel.pushSources(services);
     }
   }, 500);
   for (const pattern of WATCH_PATTERNS) {

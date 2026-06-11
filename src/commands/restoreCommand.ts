@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import { GetllServices } from "../services/container";
 import { restoreTarget } from "../services/packageOperations";
-import { GetllTreeItem } from "../views/getllTreeProvider";
 import { pickProjects } from "./pickers";
 
 export function registerRestoreCommands(services: GetllServices): vscode.Disposable[] {
@@ -24,16 +23,16 @@ export function registerRestoreCommands(services: GetllServices): vscode.Disposa
     }
   });
 
-  const project = vscode.commands.registerCommand("getll.restoreProject", async (node?: GetllTreeItem | { projectPath?: string }) => {
-    let projectPath = node && "projectPath" in node ? node.projectPath : undefined;
-    if (!projectPath) {
+  const project = vscode.commands.registerCommand("getll.restoreProject", async (projectPath?: string) => {
+    let target = projectPath;
+    if (!target) {
       const picked = await pickProjects(services, { title: "Restore Project", single: true });
       if (!picked) {
         return;
       }
-      projectPath = picked[0].path;
+      target = picked[0].path;
     }
-    await restoreTarget(services, projectPath);
+    await restoreTarget(services, target);
   });
 
   return [workspace, solution, project];

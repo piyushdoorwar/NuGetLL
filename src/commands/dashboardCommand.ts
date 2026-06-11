@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import { GetllServices } from "../services/container";
 import { logger } from "../utils/logger";
-import { GetllTreeItem } from "../views/getllTreeProvider";
 import { DashboardPanel } from "../webview/dashboardPanel";
 
 /** Dashboard + miscellaneous utility commands. */
@@ -34,11 +33,22 @@ export function registerDashboardCommands(services: GetllServices): vscode.Dispo
     DashboardPanel.createOrShow(services, { tab: "browse", query });
   });
 
-  const details = vscode.commands.registerCommand("getll.showPackageDetails", (node?: GetllTreeItem) => {
-    if (!node?.packageId) {
-      return;
+  const details = vscode.commands.registerCommand("getll.showPackageDetails", async (packageId?: string) => {
+    let id = packageId;
+    if (!id) {
+      const installed = new Set<string>();
+      for (const project of services.scanner.getModel()?.projects ?? []) {
+        for (const pkg of project.packages) {
+          if (!pkg.isTransitive) {
+            installed.add(pkg.id);
+          }
+        }
+      }
+      id = await vscode.window.showQuickPick([...installed].sort(), { title: "View Package Details" });
     }
-    DashboardPanel.createOrShow(services, { tab: "details", query: node.packageId });
+    if (id) {
+      DashboardPanel.createOrShow(services, { tab: "details", query: id });
+    }
   });
 
   const openOutput = vscode.commands.registerCommand("getll.openOutputChannel", () => {
@@ -49,32 +59,5 @@ export function registerDashboardCommands(services: GetllServices): vscode.Dispo
     vscode.commands.executeCommand("workbench.action.openSettings", "getll");
   });
 
-  const openProjectFile = vscode.commands.registerCommand("getll.openProjectFile", async (node?: GetllTreeItem) => {
-    if (!node?.projectPath) {
-      return;
-    }
-    const doc = await vscode.workspace.openTextDocument(node.projectPath);
-    await vscode.window.showTextDocument(doc);
-  });
-
-  const copyName = vscode.commands.registerCommand("getll.copyPackageName", async (node?: GetllTreeItem) => {
-    if (node?.packageId) {
-      await vscode.env.clipboard.writeText(node.packageId);
-      vscode.window.showInformationMessage(`GetLL: copied "${node.packageId}".`);
-    }
-  });
-
-  const openNugetOrg = vscode.commands.registerCommand("getll.openOnNugetOrg", (node?: GetllTreeItem) => {
-    if (node?.packageId) {
-      vscode.env.openExternal(vscode.Uri.parse(`https://www.nuget.org/packages/${encodeURIComponent(node.packageId)}`));
-    }
-  });
-
-  const viewAdvisory = vscode.commands.registerCommand("getll.viewAdvisory", (node?: GetllTreeItem) => {
-    if (node?.advisoryUrl && /^https?:\/\//i.test(node.advisoryUrl)) {
-      vscode.env.openExternal(vscode.Uri.parse(node.advisoryUrl));
-    }
-  });
-
-  return [open, refresh, search, details, openOutput, openSettings, openProjectFile, copyName, openNugetOrg, viewAdvisory];
+  return [open, refresh, search, details, openOutput, openSettings];
 }

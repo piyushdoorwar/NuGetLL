@@ -74,6 +74,18 @@ export class DashboardPanel {
     this.panel.webview.postMessage(message);
   }
 
+  /** Pushes a fresh source list to the dashboard, if it is open. */
+  static pushSources(services: GetllServices): void {
+    const panel = DashboardPanel.current;
+    if (!panel) {
+      return;
+    }
+    services.sources
+      .listSources()
+      .then((sources) => panel.post({ type: "sourcesUpdated", sources }))
+      .catch((err) => logger.warn(`Refreshing sources for dashboard failed: ${String(err)}`));
+  }
+
   private settingsSnapshot(): GetllSettingsSnapshot {
     const config = getConfig();
     return {
@@ -196,7 +208,9 @@ export class DashboardPanel {
         break;
       case "installPackage":
         await this.runOperation(`Install ${message.packageId}`, async () => {
-          const outcome = await installPackage(services, message.packageId, message.projectPaths, message.version);
+          const outcome = await installPackage(services, message.packageId, message.projectPaths, message.version, {
+            skipConfirm: true
+          });
           if (outcome.failed.length > 0) {
             throw new Error(outcome.failed.map((f) => `${f.project}: ${f.error}`).join("; "));
           }
@@ -206,7 +220,8 @@ export class DashboardPanel {
       case "updatePackage":
         await this.runOperation(`Update ${message.packageId}`, async () => {
           const outcome = await installPackage(services, message.packageId, message.projectPaths, message.version, {
-            isUpdate: true
+            isUpdate: true,
+            skipConfirm: true
           });
           if (outcome.failed.length > 0) {
             throw new Error(outcome.failed.map((f) => `${f.project}: ${f.error}`).join("; "));
@@ -216,7 +231,9 @@ export class DashboardPanel {
         break;
       case "removePackage":
         await this.runOperation(`Remove ${message.packageId}`, async () => {
-          const outcome = await removePackage(services, message.packageId, message.projectPaths);
+          const outcome = await removePackage(services, message.packageId, message.projectPaths, {
+            skipConfirm: true
+          });
           if (outcome.failed.length > 0) {
             throw new Error(outcome.failed.map((f) => `${f.project}: ${f.error}`).join("; "));
           }
@@ -283,6 +300,13 @@ export class DashboardPanel {
         });
         break;
       }
+      case "updateSource":
+        await this.runOperation(`Edit source ${message.name}`, async () => {
+          await services.sources.updateSource(message.name, message.url);
+          this.post({ type: "sourcesUpdated", sources: await services.sources.listSources() });
+          return "source updated";
+        });
+        break;
       case "enableSource":
         await this.runOperation(`Enable source ${message.name}`, async () => {
           await services.sources.enableSource(message.name);
@@ -298,7 +322,8 @@ export class DashboardPanel {
         });
         break;
       case "restoreProject":
-        await restoreTarget(services, message.projectPath);
+        // An empty path means "restore the whole workspace".
+        await restoreTarget(services, message.projectPath || undefined);
         break;
       case "openExternal":
         if (/^https?:\/\//i.test(message.url)) {

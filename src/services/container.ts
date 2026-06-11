@@ -18,13 +18,11 @@ export class ResultsStore {
 
   setOutdated(results: OutdatedPackage[]): void {
     this.outdated = results;
-    vscode.commands.executeCommand("setContext", "getll.hasOutdatedResults", true);
     this.emitter.fire();
   }
 
   setVulnerable(results: VulnerablePackage[]): void {
     this.vulnerable = results;
-    vscode.commands.executeCommand("setContext", "getll.hasVulnerableResults", true);
     this.emitter.fire();
   }
 
