@@ -3,6 +3,7 @@ import { post } from "../api/vscodeApi";
 import { WorkspaceModel } from "../types";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { EmptyState } from "./EmptyState";
+import { IconPackage } from "./Icons";
 
 interface Row {
   id: string;
@@ -42,10 +43,10 @@ export function InstalledPackages(props: {
   const filtered = rows.filter((row) => row.id.toLowerCase().includes(filter.toLowerCase()));
 
   if (!props.model || props.model.projects.length === 0) {
-    return <EmptyState icon="▦" title="No .NET projects found" hint="Open a workspace containing .csproj, .fsproj, or .vbproj files." />;
+    return <EmptyState title="No .NET projects found" hint="Open a workspace containing .csproj, .fsproj, or .vbproj files." />;
   }
   if (rows.length === 0) {
-    return <EmptyState icon="▣" title="No packages installed" hint="Use Browse to find and install NuGet packages." />;
+    return <EmptyState icon={<IconPackage size={30} />} title="No packages installed" hint="Use Browse to find and install NuGet packages." />;
   }
 
   return (

@@ -22,7 +22,6 @@ export function OverviewView(props: {
   if (model.projects.length === 0) {
     return (
       <EmptyState
-        icon="▦"
         title="No .NET projects found"
         hint="Open a workspace containing .csproj, .fsproj, or .vbproj files, then refresh."
         actionLabel="Rescan workspace"

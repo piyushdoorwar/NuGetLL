@@ -2,6 +2,7 @@ import { useState } from "react";
 import { post } from "../api/vscodeApi";
 import { DeprecatedPackage, VulnerablePackage } from "../types";
 import { EmptyState } from "./EmptyState";
+import { IconCheck, IconShield } from "./Icons";
 
 export function VulnerabilitiesView(props: {
   vulnerable?: VulnerablePackage[];
@@ -44,7 +45,7 @@ export function VulnerabilitiesView(props: {
 
       {props.vulnerable === undefined && !props.checkingVulnerable && (
         <EmptyState
-          icon="⛨"
+          icon={<IconShield size={30} />}
           title="No vulnerability check yet"
           hint="Run a check to scan top-level and transitive packages for known advisories."
           actionLabel="Check vulnerabilities"
@@ -52,7 +53,11 @@ export function VulnerabilitiesView(props: {
         />
       )}
       {props.vulnerable !== undefined && props.vulnerable.length === 0 && !props.checkingVulnerable && (
-        <EmptyState icon="✓" title="No known vulnerabilities" hint="No advisories were found for the restored packages." />
+        <EmptyState
+          icon={<IconCheck size={30} />}
+          title="No known vulnerabilities"
+          hint="No advisories were found for the restored packages."
+        />
       )}
 
       {(props.vulnerable?.length ?? 0) > 0 && (

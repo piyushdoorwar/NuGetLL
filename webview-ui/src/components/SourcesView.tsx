@@ -3,6 +3,7 @@ import { post } from "../api/vscodeApi";
 import { PackageSource } from "../types";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { EmptyState } from "./EmptyState";
+import { IconGlobe } from "./Icons";
 
 export function SourcesView(props: { sources?: PackageSource[]; busy: boolean }) {
   const [name, setName] = useState("");
@@ -64,7 +65,7 @@ export function SourcesView(props: { sources?: PackageSource[]; busy: boolean })
       <div style={{ marginTop: 16 }}>
         {props.sources === undefined && <p className="section-hint">Loading sources…</p>}
         {props.sources !== undefined && props.sources.length === 0 && (
-          <EmptyState icon="⊕" title="No package sources found" hint="Add a source above or check your NuGet.Config." />
+          <EmptyState icon={<IconGlobe size={30} />} title="No package sources found" hint="Add a source above or check your NuGet.Config." />
         )}
         {props.sources?.map((source) => (
           <div key={source.name} className="card">

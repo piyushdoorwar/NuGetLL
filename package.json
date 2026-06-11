@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "publisher": "piyushdoorwar",
   "license": "MIT",
+  "icon": "media/getll.png",
   "author": {
     "name": "Piyush Doorwar"
   },

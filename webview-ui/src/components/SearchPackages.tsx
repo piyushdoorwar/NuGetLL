@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { PackageSearchResult } from "../types";
 import { EmptyState } from "./EmptyState";
+import { IconCheck, IconDownload, IconPackage, IconSearch } from "./Icons";
 
 function formatDownloads(count?: number): string | undefined {
   if (count === undefined) {
@@ -75,7 +76,7 @@ export function SearchPackages(props: {
       )}
 
       {props.results && props.results.length === 0 && (
-        <EmptyState icon="⌕" title="No packages found" hint={`Nothing matched "${props.query}".`} />
+        <EmptyState icon={<IconSearch size={30} />} title="No packages found" hint={`Nothing matched "${props.query}".`} />
       )}
 
       {props.results?.map((result) => (
@@ -85,7 +86,7 @@ export function SearchPackages(props: {
           onClick={() => props.onSelect(result.id)}
         >
           <div className="pkg-icon">
-            {result.iconUrl ? <img src={result.iconUrl} alt="" loading="lazy" /> : <span>▣</span>}
+            {result.iconUrl ? <img src={result.iconUrl} alt="" loading="lazy" /> : <IconPackage size={19} />}
           </div>
           <div className="pkg-main">
             <div className="pkg-title">
@@ -93,13 +94,17 @@ export function SearchPackages(props: {
               <span className="version">{result.version}</span>
               {result.verified && (
                 <span className="verified" title="Verified owner">
-                  ✓ verified
+                  <IconCheck size={11} /> verified
                 </span>
               )}
             </div>
             {result.description && <p className="pkg-desc">{result.description}</p>}
             <div className="pkg-meta">
-              {formatDownloads(result.totalDownloads) && <span>⬇ {formatDownloads(result.totalDownloads)} downloads</span>}
+              {formatDownloads(result.totalDownloads) && (
+                <span className="meta-item">
+                  <IconDownload size={11} /> {formatDownloads(result.totalDownloads)}
+                </span>
+              )}
               {result.authors.length > 0 && <span>by {result.authors.join(", ")}</span>}
               <span>{result.source}</span>
               {result.tags.slice(0, 5).map((tag) => (

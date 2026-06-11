@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { onMessage, post } from "./api/vscodeApi";
 import { Header } from "./components/Header";
+import { IconCheck, IconClose } from "./components/Icons";
 import { InstalledPackages } from "./components/InstalledPackages";
 import { OverviewView } from "./components/OverviewView";
 import { PackageDetails } from "./components/PackageDetails";
@@ -250,15 +251,19 @@ export function App() {
         {Object.entries(operations).map(([id, op]) => (
           <div key={id} className={`status-item ${op.status}`}>
             {op.status === "running" && <span className="spinner" />}
-            {op.status === "failed" && <span>⚠</span>}
-            {op.status === "completed" && <span style={{ color: "var(--accent)" }}>✓</span>}
+            {op.status === "failed" && <IconClose size={13} />}
+            {op.status === "completed" && (
+              <span style={{ color: "var(--accent)", display: "inline-flex" }}>
+                <IconCheck size={13} />
+              </span>
+            )}
             <span>
               {op.label}
               {op.message ? ` — ${op.message}` : ""}
             </span>
             {op.status !== "running" && (
               <button className="dismiss" onClick={() => dismissOperation(id)} title="Dismiss">
-                ✕
+                <IconClose size={12} />
               </button>
             )}
           </div>

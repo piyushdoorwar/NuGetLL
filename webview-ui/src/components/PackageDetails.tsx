@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { post } from "../api/vscodeApi";
 import { PackageDetails as Details, ProjectInfo } from "../types";
 import { ConfirmDialog } from "./ConfirmDialog";
+import { IconClose } from "./Icons";
 import { ProjectPicker } from "./ProjectPicker";
 import { VersionPicker } from "./VersionPicker";
 
@@ -84,8 +85,8 @@ export function PackageDetails(props: {
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <h3>{details.id}</h3>
-        <button className="btn btn-ghost btn-sm" onClick={props.onClose}>
-          ✕
+        <button className="btn btn-ghost btn-sm icon-btn" onClick={props.onClose} title="Close">
+          <IconClose size={14} />
         </button>
       </div>
       <p style={{ color: "var(--text-secondary)", marginTop: 4 }}>{details.description}</p>

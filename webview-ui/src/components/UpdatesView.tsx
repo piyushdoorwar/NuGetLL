@@ -3,6 +3,7 @@ import { post } from "../api/vscodeApi";
 import { OutdatedPackage } from "../types";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { EmptyState } from "./EmptyState";
+import { IconCheck, IconUpdate } from "./Icons";
 
 type DiffLevel = "patch" | "minor" | "major" | "other";
 
@@ -95,7 +96,7 @@ export function UpdatesView(props: {
 
       {props.outdated === undefined && !props.checking && (
         <EmptyState
-          icon="↑"
+          icon={<IconUpdate size={30} />}
           title="No update check yet"
           hint="Run a check to see which packages have newer versions."
           actionLabel="Check for updates"
@@ -103,7 +104,11 @@ export function UpdatesView(props: {
         />
       )}
       {props.outdated !== undefined && visible.length === 0 && !props.checking && (
-        <EmptyState icon="✓" title="No outdated packages" hint="Everything is up to date (ignored packages are hidden)." />
+        <EmptyState
+          icon={<IconCheck size={30} />}
+          title="No outdated packages"
+          hint="Everything is up to date (ignored packages are hidden)."
+        />
       )}
 
       {visible.length > 0 && (

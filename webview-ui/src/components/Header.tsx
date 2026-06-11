@@ -1,4 +1,5 @@
 import { GetllSettingsSnapshot } from "../types";
+import { IconLogo, IconRefresh } from "./Icons";
 
 export function Header(props: {
   settings?: GetllSettingsSnapshot;
@@ -8,13 +9,17 @@ export function Header(props: {
   const { settings, projectCount, onRefresh } = props;
   return (
     <header className="header">
-      <div className="logo">G</div>
+      <div className="logo">
+        <IconLogo size={24} stroke="#0c1f12" />
+      </div>
       <div>
         <h1>GetLL</h1>
         <p className="subtitle">Visual NuGet package management for VS Code workspaces.</p>
       </div>
       <div className="spacer" />
-      <span className="badge">{projectCount} project{projectCount === 1 ? "" : "s"}</span>
+      <span className="badge">
+        {projectCount} project{projectCount === 1 ? "" : "s"}
+      </span>
       {settings &&
         (settings.dotnetAvailable ? (
           <span className="badge ok">dotnet {settings.dotnetSdkVersion ?? "SDK"}</span>
@@ -22,7 +27,8 @@ export function Header(props: {
           <span className="badge error">dotnet SDK not found</span>
         ))}
       <button className="btn btn-ghost btn-sm" onClick={onRefresh}>
-        ⟳ Refresh
+        <IconRefresh size={13} />
+        Refresh
       </button>
     </header>
   );

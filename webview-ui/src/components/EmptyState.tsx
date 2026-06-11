@@ -1,5 +1,8 @@
+import { ReactNode } from "react";
+import { IconPackage } from "./Icons";
+
 export function EmptyState(props: {
-  icon?: string;
+  icon?: ReactNode;
   title: string;
   hint?: string;
   actionLabel?: string;
@@ -8,7 +11,7 @@ export function EmptyState(props: {
   return (
     <div className="empty-state">
       <div className="icon" aria-hidden="true">
-        {props.icon ?? "▦"}
+        {props.icon ?? <IconPackage size={30} />}
       </div>
       <h3>{props.title}</h3>
       {props.hint && <p>{props.hint}</p>}

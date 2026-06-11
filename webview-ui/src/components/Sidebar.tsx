@@ -1,14 +1,14 @@
+import { ReactNode } from "react";
 import { TabId } from "../types";
-
-const TABS: { id: TabId; label: string; icon: string; countKey?: keyof Counts }[] = [
-  { id: "overview", label: "Overview", icon: "◫" },
-  { id: "browse", label: "Browse", icon: "⌕" },
-  { id: "installed", label: "Installed", icon: "▣", countKey: "installed" },
-  { id: "updates", label: "Updates", icon: "↑", countKey: "outdated" },
-  { id: "vulnerabilities", label: "Vulnerabilities", icon: "⛨", countKey: "vulnerable" },
-  { id: "sources", label: "Sources", icon: "⊕", countKey: "sources" },
-  { id: "settings", label: "Settings", icon: "⚙" }
-];
+import {
+  IconDashboard,
+  IconGlobe,
+  IconPackage,
+  IconSearch,
+  IconSettings,
+  IconShield,
+  IconUpdate
+} from "./Icons";
 
 interface Counts {
   projects: number;
@@ -17,6 +17,16 @@ interface Counts {
   vulnerable?: number;
   sources?: number;
 }
+
+const TABS: { id: TabId; label: string; icon: ReactNode; countKey?: keyof Counts }[] = [
+  { id: "overview", label: "Overview", icon: <IconDashboard size={15} /> },
+  { id: "browse", label: "Browse", icon: <IconSearch size={15} /> },
+  { id: "installed", label: "Installed", icon: <IconPackage size={15} />, countKey: "installed" },
+  { id: "updates", label: "Updates", icon: <IconUpdate size={15} />, countKey: "outdated" },
+  { id: "vulnerabilities", label: "Vulnerabilities", icon: <IconShield size={15} />, countKey: "vulnerable" },
+  { id: "sources", label: "Sources", icon: <IconGlobe size={15} />, countKey: "sources" },
+  { id: "settings", label: "Settings", icon: <IconSettings size={15} /> }
+];
 
 export function Sidebar(props: { tab: TabId; counts: Counts; onSelect: (tab: TabId) => void }) {
   return (
@@ -29,7 +39,7 @@ export function Sidebar(props: { tab: TabId; counts: Counts; onSelect: (tab: Tab
             className={props.tab === t.id ? "active" : ""}
             onClick={() => props.onSelect(t.id)}
           >
-            <span aria-hidden="true">{t.icon}</span>
+            <span className="tab-icon">{t.icon}</span>
             {t.label}
             {count !== undefined && <span className="count">{count}</span>}
           </button>
