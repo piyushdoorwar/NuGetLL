@@ -56,6 +56,9 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
       if (message.command === "open") {
         DashboardPanel.createOrShow(this.services, { tab: message.tab });
       }
+      if (message.command === "ready") {
+        this.push();
+      }
     });
 
     // Clicking the activity bar icon is the "open NuGet LL" gesture: surface the
@@ -248,6 +251,7 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
   <script>
     const vscode = acquireVsCodeApi();
     function open_(tab) { vscode.postMessage({ command: "open", tab }); }
+    vscode.postMessage({ command: "ready" });
     window.addEventListener("message", (e) => {
       const m = e.data;
       if (m.type !== "stats") return;
