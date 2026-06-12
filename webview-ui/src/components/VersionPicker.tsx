@@ -8,18 +8,33 @@ export function VersionPicker(props: {
   onTogglePrerelease: (include: boolean) => void;
 }) {
   const visible = props.versions.filter((v) => props.includePrerelease || !v.isPrerelease);
+
   return (
-    <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-      <select value={props.value} onChange={(e) => props.onChange(e.target.value)}>
-        <option value="">Latest stable</option>
+    <div>
+      <div className="version-list">
+        <div
+          className={`version-item${!props.value ? " selected" : ""}`}
+          onClick={() => props.onChange("")}
+        >
+          Latest stable
+        </div>
         {visible.map((v) => (
-          <option key={v.version} value={v.version}>
+          <div
+            key={v.version}
+            className={`version-item${props.value === v.version ? " selected" : ""}${v.isPrerelease ? " prerelease" : ""}`}
+            onClick={() => props.onChange(v.version)}
+          >
             {v.version}
-            {v.isPrerelease ? " (prerelease)" : ""}
-          </option>
+            {v.isPrerelease && <span className="pre-badge">pre</span>}
+          </div>
         ))}
-      </select>
-      <label className="checkbox">
+        {visible.length === 0 && (
+          <div className="version-item" style={{ color: "var(--text-muted)", cursor: "default" }}>
+            No versions available
+          </div>
+        )}
+      </div>
+      <label className="checkbox" style={{ marginTop: 8 }}>
         <input
           type="checkbox"
           checked={props.includePrerelease}

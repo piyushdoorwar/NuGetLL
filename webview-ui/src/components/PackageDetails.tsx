@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { post } from "../api/vscodeApi";
 import { PackageDetails as Details, ProjectInfo } from "../types";
 import { ConfirmDialog } from "./ConfirmDialog";
-import { IconClose } from "./Icons";
+import { IconClose, IconVerified } from "./Icons";
 import { ProjectPicker } from "./ProjectPicker";
 import { VersionPicker } from "./VersionPicker";
 
@@ -84,7 +84,14 @@ export function PackageDetails(props: {
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <h3>{details.id}</h3>
+        <h3 style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          {details.id}
+          {details.verified && (
+            <span title="Verified" style={{ display: "inline-flex", lineHeight: 1 }}>
+              <IconVerified size={18} />
+            </span>
+          )}
+        </h3>
         <button className="btn btn-ghost btn-sm icon-btn" onClick={props.onClose} title="Close">
           <IconClose size={14} />
         </button>

@@ -5,6 +5,22 @@ import { ConfirmDialog } from "./ConfirmDialog";
 import { EmptyState } from "./EmptyState";
 import { IconPackage } from "./Icons";
 
+function NuGetIcon({ id, version }: { id: string; version?: string }) {
+  const [failed, setFailed] = useState(false);
+  if (version && !failed) {
+    return (
+      <img
+        src={`https://api.nuget.org/v3-flatcontainer/${id.toLowerCase()}/${version}/icon`}
+        alt=""
+        loading="lazy"
+        onError={() => setFailed(true)}
+        style={{ width: 22, height: 22, objectFit: "contain" }}
+      />
+    );
+  }
+  return <IconPackage size={19} />;
+}
+
 interface Row {
   id: string;
   versions: string[];
@@ -77,7 +93,7 @@ export function InstalledPackages(props: {
           onClick={() => props.onDetails(row.id)}
         >
           <div className="pkg-icon">
-            <IconPackage size={19} />
+            <NuGetIcon id={row.id} version={row.versions[0]} />
           </div>
           <div className="pkg-main">
             <div className="pkg-title">
