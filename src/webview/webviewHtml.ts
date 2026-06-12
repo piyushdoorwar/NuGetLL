@@ -22,7 +22,7 @@ export function getWebviewHtml(webview: vscode.Webview, extensionUri: vscode.Uri
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} https: data:; style-src ${webview.cspSource} 'unsafe-inline'; font-src ${webview.cspSource}; script-src 'nonce-${scriptNonce}';" />
   <link rel="stylesheet" href="${styleUri}" />
-  <title>NeuGetLL</title>
+  <title>NuGet LL</title>
 </head>
 <body>
   <div id="root"></div>

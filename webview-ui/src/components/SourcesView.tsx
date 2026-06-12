@@ -41,7 +41,7 @@ export function SourcesView(props: { sources?: PackageSource[]; busy: boolean })
       <h2>Package sources</h2>
       <p className="section-hint">
         Sources are managed through dotnet nuget and your NuGet.Config files. Credentials are never stored or logged
-        by NeuGetLL — use a credential provider for private feeds.
+        by NuGet LL — use a credential provider for private feeds.
       </p>
 
       <div className="card">

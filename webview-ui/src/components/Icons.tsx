@@ -145,7 +145,7 @@ export const IconDownload = (p: { size?: number }) => (
   </StrokeIcon>
 );
 
-/** The NeuGetLL brand mark: package box with a check (media/getll.svg). */
+/** The NuGet LL brand mark: package box with a check (media/getll.svg). */
 export const IconLogo = (p: { size?: number; stroke?: string }) => (
   <svg
     width={p.size ?? 24}

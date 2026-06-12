@@ -1,7 +1,7 @@
 /**
  * Helpers to keep secrets out of logs and UI output.
  * These are intentionally aggressive: a false-positive mask is preferable
- * to leaking a token in the NeuGetLL output channel.
+ * to leaking a token in the NuGet LL output channel.
  */
 
 const KEY_VALUE_PATTERN =

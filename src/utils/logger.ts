@@ -5,7 +5,7 @@ let channel: vscode.OutputChannel | undefined;
 
 export function getOutputChannel(): vscode.OutputChannel {
   if (!channel) {
-    channel = vscode.window.createOutputChannel("NeuGetLL");
+    channel = vscode.window.createOutputChannel("NuGet LL");
   }
   return channel;
 }

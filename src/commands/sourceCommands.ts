@@ -10,7 +10,7 @@ async function withSourceErrorHandling(action: string, work: () => Promise<void>
   } catch (err) {
     logger.error(`${action} failed`, err);
     vscode.window
-      .showErrorMessage(`NeuGetLL: ${action} failed. See output for details.`, "Open Output")
+      .showErrorMessage(`NuGet LL: ${action} failed. See output for details.`, "Open Output")
       .then((choice) => {
         if (choice === "Open Output") {
           logger.show();
@@ -48,12 +48,12 @@ export function registerSourceCommands(services: GetllServices): vscode.Disposab
     }
     if (/:\/\/[^/]*:[^/@]*@/.test(url)) {
       vscode.window.showErrorMessage(
-        "NeuGetLL: do not embed credentials in the source URL. Use a NuGet credential provider instead."
+        "NuGet LL: do not embed credentials in the source URL. Use a NuGet credential provider instead."
       );
       return;
     }
     if (await withSourceErrorHandling("Add source", () => services.sources.addSource(name.trim(), url.trim()))) {
-      vscode.window.showInformationMessage(`NeuGetLL: source "${name}" added. For authenticated feeds, configure a NuGet credential provider.`);
+      vscode.window.showInformationMessage(`NuGet LL: source "${name}" added. For authenticated feeds, configure a NuGet credential provider.`);
       refreshDashboard();
     }
   });
@@ -72,7 +72,7 @@ export function registerSourceCommands(services: GetllServices): vscode.Disposab
       return;
     }
     if (await withSourceErrorHandling("Remove source", () => services.sources.removeSource(name))) {
-      vscode.window.showInformationMessage(`NeuGetLL: source "${name}" removed.`);
+      vscode.window.showInformationMessage(`NuGet LL: source "${name}" removed.`);
       refreshDashboard();
     }
   });
@@ -116,7 +116,7 @@ export function registerSourceCommands(services: GetllServices): vscode.Disposab
   const openConfig = vscode.commands.registerCommand("getll.openNugetConfig", async () => {
     const configs = services.scanner.getModel()?.nugetConfigPaths ?? [];
     if (configs.length === 0) {
-      vscode.window.showInformationMessage("NeuGetLL: no NuGet.Config found in this workspace.");
+      vscode.window.showInformationMessage("NuGet LL: no NuGet.Config found in this workspace.");
       return;
     }
     const target =
@@ -143,7 +143,7 @@ async function listSourcesSafe(services: GetllServices) {
 async function pickSourceName(services: GetllServices, title: string): Promise<string | undefined> {
   const sources = await listSourcesSafe(services);
   if (sources.length === 0) {
-    vscode.window.showInformationMessage("NeuGetLL: no package sources found.");
+    vscode.window.showInformationMessage("NuGet LL: no package sources found.");
     return undefined;
   }
   const picked = await vscode.window.showQuickPick(

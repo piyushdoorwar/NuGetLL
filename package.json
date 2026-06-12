@@ -1,6 +1,6 @@
 {
   "name": "getll",
-  "displayName": "NeuGetLL: NuGet Package Manager",
+  "displayName": "NuGet LL: Package Manager & Library Lens",
   "description": "Visual NuGet package management for VS Code workspaces.",
   "version": "0.1.0",
   "publisher": "piyushdoorwar",
@@ -31,7 +31,6 @@
   "main": "./dist/extension.js",
   "activationEvents": [
     "onStartupFinished",
-    "onCommand:getll.openDashboard",
     "workspaceContains:**/*.csproj",
     "workspaceContains:**/*.fsproj",
     "workspaceContains:**/*.vbproj"
@@ -41,7 +40,7 @@
       "activitybar": [
         {
           "id": "getll",
-          "title": "NeuGetLL",
+          "title": "NuGet LL",
           "icon": "media/getll.svg"
         }
       ]
@@ -50,7 +49,7 @@
       "getll": [
         {
           "id": "getll.home",
-          "name": "NeuGetLL",
+          "name": "NuGet LL",
           "type": "webview",
           "icon": "media/getll.svg"
         }
@@ -60,130 +59,130 @@
       {
         "command": "getll.openDashboard",
         "title": "Open Dashboard",
-        "category": "NeuGetLL",
+        "category": "NuGet LL",
         "icon": "$(dashboard)"
       },
       {
         "command": "getll.refreshWorkspace",
         "title": "Refresh Workspace",
-        "category": "NeuGetLL",
+        "category": "NuGet LL",
         "icon": "$(refresh)"
       },
       {
         "command": "getll.searchPackages",
         "title": "Search Packages",
-        "category": "NeuGetLL",
+        "category": "NuGet LL",
         "icon": "$(search)"
       },
       {
         "command": "getll.addPackage",
         "title": "Add Package",
-        "category": "NeuGetLL",
+        "category": "NuGet LL",
         "icon": "$(add)"
       },
       {
         "command": "getll.removePackage",
         "title": "Remove Package",
-        "category": "NeuGetLL",
+        "category": "NuGet LL",
         "icon": "$(trash)"
       },
       {
         "command": "getll.updatePackage",
         "title": "Update Package",
-        "category": "NeuGetLL",
+        "category": "NuGet LL",
         "icon": "$(arrow-up)"
       },
       {
         "command": "getll.updateAllPackages",
         "title": "Update All Packages",
-        "category": "NeuGetLL"
+        "category": "NuGet LL"
       },
       {
         "command": "getll.showPackageDetails",
         "title": "View Package Details",
-        "category": "NeuGetLL",
+        "category": "NuGet LL",
         "icon": "$(info)"
       },
       {
         "command": "getll.restoreWorkspace",
         "title": "Restore Workspace",
-        "category": "NeuGetLL"
+        "category": "NuGet LL"
       },
       {
         "command": "getll.restoreSolution",
         "title": "Restore Solution",
-        "category": "NeuGetLL"
+        "category": "NuGet LL"
       },
       {
         "command": "getll.restoreProject",
         "title": "Restore Project",
-        "category": "NeuGetLL",
+        "category": "NuGet LL",
         "icon": "$(sync)"
       },
       {
         "command": "getll.manageSources",
         "title": "Manage Package Sources",
-        "category": "NeuGetLL"
+        "category": "NuGet LL"
       },
       {
         "command": "getll.addSource",
         "title": "Add Package Source",
-        "category": "NeuGetLL",
+        "category": "NuGet LL",
         "icon": "$(add)"
       },
       {
         "command": "getll.removeSource",
         "title": "Remove Package Source",
-        "category": "NeuGetLL",
+        "category": "NuGet LL",
         "icon": "$(trash)"
       },
       {
         "command": "getll.enableSource",
         "title": "Enable Package Source",
-        "category": "NeuGetLL"
+        "category": "NuGet LL"
       },
       {
         "command": "getll.disableSource",
         "title": "Disable Package Source",
-        "category": "NeuGetLL"
+        "category": "NuGet LL"
       },
       {
         "command": "getll.editSource",
         "title": "Edit Package Source",
-        "category": "NeuGetLL",
+        "category": "NuGet LL",
         "icon": "$(edit)"
       },
       {
         "command": "getll.openNugetConfig",
         "title": "Open NuGet.Config",
-        "category": "NeuGetLL"
+        "category": "NuGet LL"
       },
       {
         "command": "getll.checkOutdated",
         "title": "Check Outdated Packages",
-        "category": "NeuGetLL",
+        "category": "NuGet LL",
         "icon": "$(versions)"
       },
       {
         "command": "getll.checkVulnerable",
         "title": "Check Vulnerable Packages",
-        "category": "NeuGetLL",
+        "category": "NuGet LL",
         "icon": "$(shield)"
       },
       {
         "command": "getll.checkDeprecated",
         "title": "Check Deprecated Packages",
-        "category": "NeuGetLL"
+        "category": "NuGet LL"
       },
       {
         "command": "getll.openOutputChannel",
         "title": "Open Output Channel",
-        "category": "NeuGetLL"
+        "category": "NuGet LL"
       },
       {
         "command": "getll.openSettings",
         "title": "Open Settings",
-        "category": "NeuGetLL",
+        "category": "NuGet LL",
         "icon": "$(gear)"
       }
     ],
@@ -197,7 +196,7 @@
       ]
     },
     "configuration": {
-      "title": "NeuGetLL",
+      "title": "NuGet LL",
       "properties": {
         "getll.defaultPackageSource": {
           "type": "string",

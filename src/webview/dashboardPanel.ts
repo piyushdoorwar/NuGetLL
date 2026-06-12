@@ -26,7 +26,7 @@ export class DashboardPanel {
       }
       return;
     }
-    const panel = vscode.window.createWebviewPanel("getll.dashboard", "NeuGetLL", vscode.ViewColumn.One, {
+    const panel = vscode.window.createWebviewPanel("getll.dashboard", "NuGet LL", vscode.ViewColumn.One, {
       enableScripts: true,
       retainContextWhenHidden: true,
       localResourceRoots: [vscode.Uri.joinPath(services.context.extensionUri, "dist", "webview")]

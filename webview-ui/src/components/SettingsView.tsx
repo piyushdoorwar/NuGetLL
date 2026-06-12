@@ -18,7 +18,7 @@ export function SettingsView(props: { settings?: GetllSettingsSnapshot }) {
   return (
     <div>
       <h2>Settings</h2>
-      <p className="section-hint">NeuGetLL settings are managed in VS Code settings under the "getll" namespace.</p>
+      <p className="section-hint">NuGet LL settings are managed in VS Code settings under the "getll" namespace.</p>
       <div className="card settings-list">
         {props.settings ? (
           ROWS.map((row) => {

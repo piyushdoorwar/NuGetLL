@@ -52,11 +52,11 @@ function summarize(outcome: OperationOutcome, verb: string, packageId: string): 
   const skipped = outcome.skipped.length;
   if (failed === 0 && ok > 0) {
     const skippedNote = skipped > 0 ? ` (${skipped} skipped)` : "";
-    vscode.window.showInformationMessage(`NeuGetLL: ${verb} ${packageId} in ${ok} project(s)${skippedNote}.`);
+    vscode.window.showInformationMessage(`NuGet LL: ${verb} ${packageId} in ${ok} project(s)${skippedNote}.`);
   } else if (failed > 0) {
     vscode.window
       .showErrorMessage(
-        `NeuGetLL: failed to ${verb.toLowerCase()} ${packageId} in ${failed} project(s). See output for details.`,
+        `NuGet LL: failed to ${verb.toLowerCase()} ${packageId} in ${failed} project(s). See output for details.`,
         "Open Output"
       )
       .then((choice) => {
@@ -65,7 +65,7 @@ function summarize(outcome: OperationOutcome, verb: string, packageId: string): 
         }
       });
   } else if (skipped > 0 && ok === 0) {
-    vscode.window.showWarningMessage(`NeuGetLL: nothing changed — ${skipped} project(s) skipped.`);
+    vscode.window.showWarningMessage(`NuGet LL: nothing changed — ${skipped} project(s) skipped.`);
   }
 }
 
@@ -85,7 +85,7 @@ export async function installPackage(
   const outcome: OperationOutcome = { succeeded: [], failed: [], skipped: [] };
 
   if (!services.dotnet.available) {
-    vscode.window.showErrorMessage("NeuGetLL: dotnet SDK not found. Package actions are disabled.");
+    vscode.window.showErrorMessage("NuGet LL: dotnet SDK not found. Package actions are disabled.");
     return outcome;
   }
   if (projectPaths.length === 0) {
@@ -133,7 +133,7 @@ export async function installPackage(
         outcome.failed.push({ project: project.name, error: "could not resolve latest version" });
       }
       vscode.window.showErrorMessage(
-        `NeuGetLL: could not determine the latest version of ${packageId} for centrally managed projects.`
+        `NuGet LL: could not determine the latest version of ${packageId} for centrally managed projects.`
       );
       return outcome;
     }
@@ -159,7 +159,7 @@ export async function installPackage(
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: `NeuGetLL: ${verb} ${packageId}${version ? ` ${version}` : ""}`,
+      title: `NuGet LL: ${verb} ${packageId}${version ? ` ${version}` : ""}`,
       cancellable: true
     },
     async (progress, token) => {
@@ -237,7 +237,7 @@ export async function removePackage(
 ): Promise<OperationOutcome> {
   const outcome: OperationOutcome = { succeeded: [], failed: [], skipped: [] };
   if (!services.dotnet.available) {
-    vscode.window.showErrorMessage("NeuGetLL: dotnet SDK not found. Package actions are disabled.");
+    vscode.window.showErrorMessage("NuGet LL: dotnet SDK not found. Package actions are disabled.");
     return outcome;
   }
   if (projectPaths.length === 0) {
@@ -259,7 +259,7 @@ export async function removePackage(
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: `NeuGetLL: Removing ${packageId}`,
+      title: `NuGet LL: Removing ${packageId}`,
       cancellable: true
     },
     async (progress, token) => {
@@ -331,7 +331,7 @@ export async function removePackage(
 /** Runs dotnet restore for a target with progress + output channel logging. */
 export async function restoreTarget(services: GetllServices, targetPath?: string, label?: string): Promise<boolean> {
   if (!services.dotnet.available) {
-    vscode.window.showErrorMessage("NeuGetLL: dotnet SDK not found. Restore is disabled.");
+    vscode.window.showErrorMessage("NuGet LL: dotnet SDK not found. Restore is disabled.");
     return false;
   }
   if (targetPath) {
@@ -341,7 +341,7 @@ export async function restoreTarget(services: GetllServices, targetPath?: string
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: `NeuGetLL: Restoring ${label ?? targetPath ?? "workspace"}`,
+      title: `NuGet LL: Restoring ${label ?? targetPath ?? "workspace"}`,
       cancellable: true
     },
     async (_progress, token) => {
@@ -354,10 +354,10 @@ export async function restoreTarget(services: GetllServices, targetPath?: string
         return;
       }
       if (success) {
-        vscode.window.showInformationMessage(`NeuGetLL: restore completed for ${label ?? targetPath ?? "workspace"}.`);
+        vscode.window.showInformationMessage(`NuGet LL: restore completed for ${label ?? targetPath ?? "workspace"}.`);
       } else {
         vscode.window
-          .showErrorMessage("NeuGetLL: restore failed. See output for details.", "Open Output")
+          .showErrorMessage("NuGet LL: restore failed. See output for details.", "Open Output")
           .then((choice) => {
             if (choice === "Open Output") {
               logger.show();

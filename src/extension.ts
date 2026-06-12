@@ -28,7 +28,7 @@ const WATCH_PATTERNS = [
 ];
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-  logger.info("NeuGetLL activating...");
+  logger.info("NuGet LL activating...");
 
   const scanner = new WorkspaceScanner(
     () => (vscode.workspace.workspaceFolders ?? []).map((f) => f.uri.fsPath),
@@ -99,7 +99,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       logger.warn("dotnet SDK not found on PATH. Package actions are disabled.");
       vscode.window
         .showErrorMessage(
-          "NeuGetLL: the dotnet SDK was not found. Install the .NET SDK to enable package management.",
+          "NuGet LL: the dotnet SDK was not found. Install the .NET SDK to enable package management.",
           "Open .NET install instructions"
         )
         .then((choice) => {

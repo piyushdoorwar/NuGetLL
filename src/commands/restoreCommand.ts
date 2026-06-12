@@ -11,7 +11,7 @@ export function registerRestoreCommands(services: GetllServices): vscode.Disposa
   const solution = vscode.commands.registerCommand("getll.restoreSolution", async () => {
     const solutions = services.scanner.getModel()?.solutions ?? [];
     if (solutions.length === 0) {
-      vscode.window.showInformationMessage("NeuGetLL: no solution files found in this workspace.");
+      vscode.window.showInformationMessage("NuGet LL: no solution files found in this workspace.");
       return;
     }
     const target =

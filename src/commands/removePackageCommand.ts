@@ -20,7 +20,7 @@ export function registerRemovePackageCommand(services: GetllServices): vscode.Di
       }
     }
     if (installed.size === 0) {
-      vscode.window.showInformationMessage("NeuGetLL: no packages installed in this workspace.");
+      vscode.window.showInformationMessage("NuGet LL: no packages installed in this workspace.");
       return;
     }
     const packageId = await vscode.window.showQuickPick([...installed].sort(), { title: "Remove Package" });
@@ -30,7 +30,7 @@ export function registerRemovePackageCommand(services: GetllServices): vscode.Di
 
     const using = projectsUsing(services, packageId);
     if (using.length === 0) {
-      vscode.window.showInformationMessage(`NeuGetLL: ${packageId} is not referenced by any project.`);
+      vscode.window.showInformationMessage(`NuGet LL: ${packageId} is not referenced by any project.`);
       return;
     }
     const projects =

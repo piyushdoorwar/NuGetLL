@@ -42,7 +42,7 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
       }
     });
 
-    // Clicking the activity bar icon is the "open NeuGetLL" gesture: surface the
+    // Clicking the activity bar icon is the "open NuGet LL" gesture: surface the
     // dashboard immediately the first time the view becomes visible.
     if (!this.autoOpened) {
       this.autoOpened = true;
@@ -135,7 +135,7 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
 </head>
 <body>
   <div class="logo">${strokeIcon(`<path d="${logoPath}"/>`, 26)}</div>
-  <h2>NeuGetLL</h2>
+  <h2>NuGet LL</h2>
   <p>Visual NuGet package management.</p>
   <button class="primary" onclick="open_('overview')">Open Dashboard</button>
   <div class="cards">

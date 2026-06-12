@@ -12,7 +12,7 @@ export async function pickProjects(
   const all = options.projects ?? services.scanner.getModel()?.projects ?? [];
   const writable = all.filter((p) => !p.usesPackagesConfig);
   if (writable.length === 0) {
-    vscode.window.showWarningMessage("NeuGetLL: no writable .NET projects found in this workspace.");
+    vscode.window.showWarningMessage("NuGet LL: no writable .NET projects found in this workspace.");
     return undefined;
   }
   if (writable.length === 1 && options.single) {
@@ -51,11 +51,11 @@ export async function pickPackage(services: GetllServices): Promise<string | und
   const config = getConfig();
   try {
     const results = await vscode.window.withProgress(
-      { location: vscode.ProgressLocation.Notification, title: `NeuGetLL: Searching "${query}"...` },
+      { location: vscode.ProgressLocation.Notification, title: `NuGet LL: Searching "${query}"...` },
       () => services.api.searchPackages(query, { includePrerelease: config.includePrerelease, take: config.maxSearchResults })
     );
     if (results.length === 0) {
-      vscode.window.showInformationMessage(`NeuGetLL: no packages found for "${query}".`);
+      vscode.window.showInformationMessage(`NuGet LL: no packages found for "${query}".`);
       return undefined;
     }
     const picked = await vscode.window.showQuickPick(
