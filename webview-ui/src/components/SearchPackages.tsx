@@ -56,6 +56,7 @@ export function SearchPackages(props: {
       <p className="section-hint">Search nuget.org and configured feeds. Press Enter to search.</p>
       <div className="search-bar">
         <div className="search-input-wrap">
+          <span className="search-icon"><IconSearch size={14} /></span>
           <input
             type="text"
             value={text}

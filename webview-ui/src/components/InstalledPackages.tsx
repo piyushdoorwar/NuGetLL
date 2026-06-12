@@ -3,7 +3,7 @@ import { post } from "../api/vscodeApi";
 import { WorkspaceModel } from "../types";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { EmptyState } from "./EmptyState";
-import { IconPackage } from "./Icons";
+import { IconPackage, IconSearch } from "./Icons";
 
 function NuGetIcon({ id, version }: { id: string; version?: string }) {
   const [failed, setFailed] = useState(false);
@@ -73,13 +73,20 @@ export function InstalledPackages(props: {
         {rows.length} unique package(s) across {props.model.projects.length} project(s). Click a package for details.
       </p>
       <div className="toolbar">
-        <input
-          type="search"
-          placeholder="Filter installed packages..."
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          style={{ flex: 1, maxWidth: 340 }}
-        />
+        <div className="search-input-wrap" style={{ maxWidth: 340 }}>
+          <span className="search-icon"><IconSearch size={14} /></span>
+          <input
+            type="text"
+            placeholder="Filter installed packages..."
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          />
+          {filter && (
+            <button className="search-clear" onClick={() => setFilter("")} title="Clear">
+              <span style={{ fontSize: 14, lineHeight: 1 }}>×</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {filtered.length === 0 && (
