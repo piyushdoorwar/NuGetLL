@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PackageSearchResult } from "../types";
 import { EmptyState } from "./EmptyState";
-import { IconDownload, IconPackage, IconSearch, IconVerified } from "./Icons";
+import { IconClose, IconDownload, IconPackage, IconSearch, IconVerified } from "./Icons";
 
 function formatDownloads(count?: number): string | undefined {
   if (count === undefined) {
@@ -31,28 +31,47 @@ export function SearchPackages(props: {
   const [text, setText] = useState(props.query);
   const [prerelease, setPrerelease] = useState(props.defaultPrerelease);
   const [exact, setExact] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => setText(props.query), [props.query]);
 
-  const submit = () => props.onSearch(text, prerelease, exact);
+  // Auto-search with debounce as the user types.
+  useEffect(() => {
+    clearTimeout(debounceRef.current);
+    if (text.trim().length < 2) return;
+    debounceRef.current = setTimeout(() => {
+      props.onSearch(text, prerelease, exact);
+    }, 450);
+    return () => clearTimeout(debounceRef.current);
+  }, [text, prerelease, exact]);
+
+  const submit = () => {
+    clearTimeout(debounceRef.current);
+    props.onSearch(text, prerelease, exact);
+  };
 
   return (
     <div>
       <h2>Browse packages</h2>
       <p className="section-hint">Search nuget.org and configured feeds. Press Enter to search.</p>
       <div className="search-bar">
-        <input
-          type="search"
-          value={text}
-          placeholder="Search packages, e.g. Serilog.AspNetCore"
-          autoFocus
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              submit();
-            }
-          }}
-        />
+        <div className="search-input-wrap">
+          <input
+            type="text"
+            value={text}
+            placeholder="Search packages, e.g. Serilog.AspNetCore"
+            autoFocus
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") submit();
+            }}
+          />
+          {text && (
+            <button className="search-clear" onClick={() => setText("")} title="Clear">
+              <IconClose size={11} />
+            </button>
+          )}
+        </div>
         <button className="btn btn-primary" onClick={submit} disabled={props.searching || text.trim().length === 0}>
           {props.searching ? "Searching..." : "Search"}
         </button>

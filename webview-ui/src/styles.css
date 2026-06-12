@@ -427,13 +427,14 @@ input[type="checkbox"]:checked {
 input[type="checkbox"]::after {
   content: "";
   position: absolute;
-  left: 4.5px;
-  top: 1.5px;
+  left: 5px;
+  top: 2px;
   width: 4px;
   height: 8px;
   border: solid #0b1a0f;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg) scale(0);
+  transform-origin: 60% 60%;
   transition: transform 0.12s ease;
 }
 
@@ -553,13 +554,49 @@ table.data td.pkg {
 .search-bar {
   display: flex;
   gap: 10px;
-  align-items: center;
+  align-items: stretch;
   margin-bottom: 12px;
 }
 
-.search-bar input[type="search"] {
+.search-input-wrap {
   flex: 1;
-  padding: 10px 14px;
+  position: relative;
+  display: flex;
+}
+
+.search-input-wrap input {
+  flex: 1;
+  width: 100%;
+  padding: 10px 36px 10px 14px;
+}
+
+.search-clear {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition), background var(--transition);
+}
+
+.search-clear:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.search-bar .btn {
+  align-self: stretch;
+  height: auto;
 }
 
 .search-filters {
