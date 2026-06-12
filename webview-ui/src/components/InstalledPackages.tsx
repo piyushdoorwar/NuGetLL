@@ -13,6 +13,7 @@ interface Row {
 
 export function InstalledPackages(props: {
   model?: WorkspaceModel;
+  selectedId?: string;
   onDetails: (packageId: string) => void;
 }) {
   const [filter, setFilter] = useState("");
@@ -53,7 +54,7 @@ export function InstalledPackages(props: {
     <div>
       <h2>Installed packages</h2>
       <p className="section-hint">
-        {rows.length} unique package(s) across {props.model.projects.length} project(s).
+        {rows.length} unique package(s) across {props.model.projects.length} project(s). Click a package for details.
       </p>
       <div className="toolbar">
         <input
@@ -61,38 +62,46 @@ export function InstalledPackages(props: {
           placeholder="Filter installed packages..."
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          style={{ width: 280 }}
+          style={{ flex: 1, maxWidth: 340 }}
         />
       </div>
-      <table className="data">
-        <thead>
-          <tr>
-            <th>Package</th>
-            <th>Version(s)</th>
-            <th>Projects</th>
-            <th style={{ width: 180 }}>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filtered.map((row) => (
-            <tr key={row.id}>
-              <td className="pkg">{row.id}</td>
-              <td className="mono">{row.versions.join(", ") || "central"}</td>
-              <td>{row.projects.map((p) => p.name).join(", ")}</td>
-              <td>
-                <div style={{ display: "flex", gap: 6 }}>
-                  <button className="btn btn-ghost btn-sm" onClick={() => props.onDetails(row.id)}>
-                    Details
-                  </button>
-                  <button className="btn btn-danger btn-sm" onClick={() => setRemoveTarget(row)}>
-                    Remove
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+
+      {filtered.length === 0 && (
+        <EmptyState icon={<IconPackage size={30} />} title="No matches" hint={`Nothing matched "${filter}".`} />
+      )}
+
+      {filtered.map((row) => (
+        <div
+          key={row.id}
+          className={`pkg-card ${props.selectedId?.toLowerCase() === row.id.toLowerCase() ? "selected" : ""}`}
+          onClick={() => props.onDetails(row.id)}
+        >
+          <div className="pkg-icon">
+            <IconPackage size={19} />
+          </div>
+          <div className="pkg-main">
+            <div className="pkg-title">
+              <span className="name">{row.id}</span>
+              <span className="version">{row.versions.join(", ") || "central"}</span>
+            </div>
+            <div className="pkg-meta">
+              {row.projects.map((p) => (
+                <span key={p.path} className="tag">
+                  {p.name}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="pkg-actions" onClick={(e) => e.stopPropagation()}>
+            <button className="btn btn-ghost btn-sm" onClick={() => props.onDetails(row.id)}>
+              Details
+            </button>
+            <button className="btn btn-danger btn-sm" onClick={() => setRemoveTarget(row)}>
+              Remove
+            </button>
+          </div>
+        </div>
+      ))}
 
       <ConfirmDialog
         open={removeTarget !== undefined}

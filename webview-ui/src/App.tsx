@@ -178,6 +178,19 @@ export function App() {
       return copy;
     });
 
+  // Shared right-hand details panel, reused by the Browse and Installed tabs.
+  const detailsPanel =
+    details || isRunning("Load details") ? (
+      <div className="details-panel card">
+        <PackageDetails
+          details={details}
+          loading={!details && isRunning("Load details")}
+          projects={model?.projects ?? []}
+          onClose={() => setDetails(undefined)}
+        />
+      </div>
+    ) : null;
+
   return (
     <div className="app">
       <Header
@@ -210,20 +223,16 @@ export function App() {
                   selectedId={details?.id}
                 />
               </div>
-              {(details || isRunning("Load details")) && (
-                <div className="details-panel card">
-                  <PackageDetails
-                    details={details}
-                    loading={!details && isRunning("Load details")}
-                    projects={model?.projects ?? []}
-                    onClose={() => setDetails(undefined)}
-                  />
-                </div>
-              )}
+              {detailsPanel}
             </div>
           )}
           {tab === "installed" && (
-            <InstalledPackages model={model} onDetails={(id) => { setTab("browse"); showDetails(id); }} />
+            <div className="browse-layout split">
+              <div className="browse-results">
+                <InstalledPackages model={model} onDetails={showDetails} selectedId={details?.id} />
+              </div>
+              {detailsPanel}
+            </div>
           )}
           {tab === "updates" && (
             <UpdatesView
