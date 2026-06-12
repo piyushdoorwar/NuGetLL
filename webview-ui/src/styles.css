@@ -1104,6 +1104,53 @@ table.data td.pkg {
   }
 }
 
+/* ---------- Skeleton ---------- */
+
+.skel {
+  background: var(--card);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.skel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 40%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.06) 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skel-title { height: 22px; width: 55%; margin-bottom: 10px; }
+.skel-desc-1 { height: 13px; width: 90%; margin-bottom: 6px; }
+.skel-desc-2 { height: 13px; width: 70%; margin-bottom: 20px; }
+
+.skel-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.skel-meta-k { height: 12px; width: 28%; }
+.skel-meta-v { height: 12px; width: 38%; }
+
+.skel-h4 { height: 13px; width: 22%; margin-bottom: 12px; }
+.skel-tag { height: 22px; width: 56px; border-radius: 12px; display: inline-block; }
+.skel-btn { height: 32px; width: 110px; border-radius: 6px; }
+
 /* ---------- Sources ---------- */
 
 .source-row {

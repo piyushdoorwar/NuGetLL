@@ -26,9 +26,41 @@ export function PackageDetails(props: {
 
   if (props.loading || !details) {
     return (
-      <div style={{ textAlign: "center", padding: 30 }}>
-        <span className="spinner" style={{ display: "inline-block" }} />
-        <p style={{ color: "var(--text-muted)" }}>Loading package details…</p>
+      <div style={{ padding: "4px 0" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
+          <div className="skel skel-title" />
+          <div className="skel" style={{ width: 24, height: 24, borderRadius: 6 }} />
+        </div>
+        <div className="skel skel-desc-1" />
+        <div className="skel skel-desc-2" />
+
+        <div className="details-section">
+          {[90, 70, 80, 60, 75, 65].map((w, i) => (
+            <div key={i} className="skel-meta-row">
+              <div className="skel skel-meta-k" />
+              <div className="skel skel-meta-v" style={{ width: `${w * 0.4}%` }} />
+            </div>
+          ))}
+        </div>
+
+        <div className="details-section">
+          <div className="skel skel-h4" />
+          <div style={{ display: "flex", gap: 6 }}>
+            <div className="skel skel-tag" />
+            <div className="skel skel-tag" style={{ width: 72 }} />
+            <div className="skel skel-tag" style={{ width: 48 }} />
+          </div>
+        </div>
+
+        <div className="details-section">
+          <div className="skel skel-h4" />
+          <div className="skel" style={{ height: 36, borderRadius: 6 }} />
+        </div>
+
+        <div className="details-section" style={{ display: "flex", gap: 8 }}>
+          <div className="skel skel-btn" />
+          <div className="skel skel-btn" style={{ width: 80 }} />
+        </div>
       </div>
     );
   }
