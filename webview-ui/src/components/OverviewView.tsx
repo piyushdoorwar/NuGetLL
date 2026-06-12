@@ -7,6 +7,7 @@ import {
   WorkspaceModel
 } from "../types";
 import { EmptyState } from "./EmptyState";
+import { IconCrate, IconHourglass, IconProjectsGrid, IconShieldWarning } from "./Icons";
 
 export function OverviewView(props: {
   model?: WorkspaceModel;
@@ -50,20 +51,24 @@ export function OverviewView(props: {
 
       <div className="grid stats">
         <div className="stat-card">
+          <div className="stat-icon"><IconProjectsGrid size={15} /></div>
           <div className="value neutral">{model.projects.length}</div>
           <div className="label">Projects</div>
         </div>
         <div className="stat-card">
+          <div className="stat-icon"><IconCrate size={16} /></div>
           <div className="value">{uniquePackages}</div>
           <div className="label">Packages</div>
         </div>
         <div className="stat-card" style={{ cursor: "pointer" }} onClick={() => props.onNavigate("updates")}>
+          <div className="stat-icon"><IconHourglass size={16} /></div>
           <div className={`value ${props.outdated && props.outdated.length > 0 ? "bad" : ""}`}>
             {props.outdated?.length ?? "—"}
           </div>
           <div className="label">Outdated</div>
         </div>
         <div className="stat-card" style={{ cursor: "pointer" }} onClick={() => props.onNavigate("vulnerabilities")}>
+          <div className="stat-icon"><IconShieldWarning size={16} /></div>
           <div className={`value ${props.vulnerable && props.vulnerable.length > 0 ? "bad" : ""}`}>
             {props.vulnerable?.length ?? "—"}
           </div>
