@@ -1,7 +1,7 @@
 {
   "name": "getll",
   "displayName": "NuGet LL: Package Manager & Library Lens",
-  "description": "Visual NuGet package management for VS Code workspaces.",
+  "description": "NuGet package management and Library Lens for VS Code workspaces.",
   "version": "0.1.0",
   "publisher": "piyushdoorwar",
   "license": "MIT",

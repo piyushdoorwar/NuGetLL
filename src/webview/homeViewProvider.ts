@@ -195,7 +195,7 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
 <body>
   <div class="logo">${si(`<path d="${logoPath}"/>`, 26)}</div>
   <h2>NuGet LL</h2>
-  <p>Visual NuGet package management.</p>
+  <p>NuGet package management and Library Lens.</p>
   <button class="primary" onclick="open_('overview')">Open Dashboard</button>
 
   <div class="cards">
@@ -219,22 +219,6 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
       <div class="value neutral" id="val-sources">${sources}</div>
       <div class="label">Sources</div>
     </div>
-  </div>
-
-  <div class="sec">Quick Actions</div>
-  <div class="actions">
-    <button class="action" onclick="open_('updates')">
-      ${si(`<path d="M21 3V8M21 8H16M21 8L18 5.29168C16.4077 3.86656 14.3051 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.2832 21 19.8675 18.008 20.777 14"/>`)}
-      Check for Updates
-    </button>
-    <button class="action" onclick="open_('vulnerabilities')">
-      ${si(`<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>`)}
-      Scan Vulnerabilities
-    </button>
-    <button class="action" onclick="open_('browse')">
-      ${si(`<path d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"/>`)}
-      Browse Packages
-    </button>
   </div>
 
   <div class="sec">Workspace</div>
