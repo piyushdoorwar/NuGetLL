@@ -1,7 +1,5 @@
 import { useMemo, useState } from "react";
-import { post } from "../api/vscodeApi";
 import { WorkspaceModel } from "../types";
-import { ConfirmDialog } from "./ConfirmDialog";
 import { EmptyState } from "./EmptyState";
 import { IconPackage, IconSearch } from "./Icons";
 
@@ -33,7 +31,6 @@ export function InstalledPackages(props: {
   onDetails: (packageId: string) => void;
 }) {
   const [filter, setFilter] = useState("");
-  const [removeTarget, setRemoveTarget] = useState<Row>();
 
   const rows = useMemo<Row[]>(() => {
     const byId = new Map<string, Row>();
@@ -115,37 +112,9 @@ export function InstalledPackages(props: {
               ))}
             </div>
           </div>
-          <div className="pkg-actions" onClick={(e) => e.stopPropagation()}>
-            <button className="btn btn-ghost btn-sm" onClick={() => props.onDetails(row.id)}>
-              Details
-            </button>
-            <button className="btn btn-danger btn-sm" onClick={() => setRemoveTarget(row)}>
-              Remove
-            </button>
-          </div>
         </div>
       ))}
 
-      <ConfirmDialog
-        open={removeTarget !== undefined}
-        title={`Remove ${removeTarget?.id}`}
-        body={`The package will be removed from:\n${(removeTarget?.projects ?? [])
-          .map((p) => `  • ${p.name}`)
-          .join("\n")}`}
-        danger
-        confirmLabel="Remove"
-        onConfirm={() => {
-          if (removeTarget) {
-            post({
-              type: "removePackage",
-              packageId: removeTarget.id,
-              projectPaths: removeTarget.projects.map((p) => p.path)
-            });
-          }
-          setRemoveTarget(undefined);
-        }}
-        onCancel={() => setRemoveTarget(undefined)}
-      />
     </div>
   );
 }
