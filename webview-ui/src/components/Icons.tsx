@@ -37,6 +37,22 @@ function FillIcon(props: { size?: number; viewBox: string; children: ReactNode }
   );
 }
 
+export const IconVerified = (p: { size?: number }) => (
+  <svg
+    width={p.size ?? 16}
+    height={p.size ?? 16}
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="12" fill="#1D9BF0" />
+    <path
+      d="M9.5 17L4.5 12l1.77-1.77L9.5 13.46l8.23-8.23L19.5 7z"
+      fill="white"
+    />
+  </svg>
+);
+
 export const IconDashboard = (p: { size?: number }) => (
   <StrokeIcon size={p.size} strokeWidth={1.8}>
     <rect width="7" height="9" x="3" y="3" rx="1.5" />

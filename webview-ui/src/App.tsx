@@ -211,7 +211,7 @@ export function App() {
             />
           )}
           {tab === "browse" && (
-            <div className="browse-layout">
+            <div className="browse-layout split">
               <div className="browse-results">
                 <SearchPackages
                   query={searchQuery}

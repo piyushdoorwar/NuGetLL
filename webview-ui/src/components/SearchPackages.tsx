@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { PackageSearchResult } from "../types";
 import { EmptyState } from "./EmptyState";
-import { IconCheck, IconDownload, IconPackage, IconSearch } from "./Icons";
+import { IconDownload, IconPackage, IconSearch, IconVerified } from "./Icons";
 
 function formatDownloads(count?: number): string | undefined {
   if (count === undefined) {
@@ -93,8 +93,8 @@ export function SearchPackages(props: {
               <span className="name">{result.id}</span>
               <span className="version">{result.version}</span>
               {result.verified && (
-                <span className="verified" title="Verified owner">
-                  <IconCheck size={11} /> verified
+                <span className="verified" title="Verified">
+                  <IconVerified size={15} />
                 </span>
               )}
             </div>
