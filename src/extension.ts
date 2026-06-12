@@ -51,8 +51,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
   // All UI lives in webviews: the activity bar hosts a small launcher view
   // and the dashboard panel carries the full experience.
+  const homeProvider = new HomeViewProvider(services);
   context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider(HomeViewProvider.viewId, new HomeViewProvider(services))
+    vscode.window.registerWebviewViewProvider(HomeViewProvider.viewId, homeProvider)
   );
 
   // Commands
@@ -69,7 +70,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   // File watchers with a 500ms debounced refresh.
   const refresh = debounce(() => {
     if (getConfig().autoRefreshOnProjectFileChange) {
-      scanner.scan().catch((err) => logger.error("Workspace scan failed", err));
+      scanner.scan().then(() => homeProvider.push()).catch((err) => logger.error("Workspace scan failed", err));
       DashboardPanel.pushSources(services);
     }
   }, 500);
@@ -82,6 +83,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   }
   context.subscriptions.push(
     vscode.workspace.onDidChangeWorkspaceFolders(() => refresh()),
+    services.results.onDidChange(() => homeProvider.push()),
     { dispose: () => refresh.cancel() },
     { dispose: () => logger.dispose() }
   );
@@ -119,6 +121,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         for (const issue of result.issues) {
           logger.warn(`${issue.file}: ${issue.message}`);
         }
+        homeProvider.push();
       })
       .catch((err) => logger.error("Initial workspace scan failed", err));
   }
