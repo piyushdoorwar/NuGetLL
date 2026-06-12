@@ -18,17 +18,19 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
     if (!this.view) {
       return;
     }
-    const model = this.services.scanner.getModel();
-    const projects = model?.projects.length ?? 0;
-    const packages = new Set(
-      (model?.projects ?? []).flatMap((p) =>
-        p.packages.filter((pkg) => !pkg.isTransitive).map((pkg) => pkg.id)
-      )
-    ).size;
-    const outdated = this.services.results.outdated?.length ?? "—";
-    const vulnerable = this.services.results.vulnerable?.length ?? "—";
-    const sources = model?.sources?.length ?? "—";
-    this.view.webview.postMessage({ type: "stats", projects, packages, outdated, vulnerable, sources });
+    const { projects, packages, outdated, vulnerable, sources, sdk, frameworks, projectList } =
+      this.stats();
+    this.view.webview.postMessage({
+      type: "stats",
+      projects,
+      packages,
+      outdated,
+      vulnerable,
+      sources,
+      sdk,
+      frameworks,
+      projectList
+    });
   }
 
   resolveWebviewView(view: vscode.WebviewView): void {
@@ -61,15 +63,45 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
     const outdated = this.services.results.outdated?.length ?? "—";
     const vulnerable = this.services.results.vulnerable?.length ?? "—";
     const sources = model?.sources?.length ?? "—";
-    return { projects, packages, outdated, vulnerable, sources };
+    const sdk = model?.dotnetSdkVersion ?? this.services.dotnet.version ?? null;
+    const frameworks = [
+      ...new Set((model?.projects ?? []).flatMap((p) => p.targetFrameworks))
+    ].sort();
+    const projectList = (model?.projects ?? []).map((p) => ({
+      name: p.name,
+      tfm: p.targetFrameworks[0] ?? "",
+      pkgCount: p.packages.filter((pkg) => !pkg.isTransitive).length
+    }));
+    return { projects, packages, outdated, vulnerable, sources, sdk, frameworks, projectList };
   }
 
   private html(): string {
-    const { projects, packages, outdated, vulnerable, sources } = this.stats();
+    const { projects, packages, outdated, vulnerable, sources, sdk, frameworks, projectList } =
+      this.stats();
+
     const logoPath =
       "M20.5 7.27783L12 12.0001M12 12.0001L3.49997 7.27783M12 12.0001L12 21.5001M14 20.889L12.777 21.5684C12.4934 21.726 12.3516 21.8047 12.2015 21.8356C12.0685 21.863 11.9315 21.863 11.7986 21.8356C11.6484 21.8047 11.5066 21.726 11.223 21.5684L3.82297 17.4573C3.52346 17.2909 3.37368 17.2077 3.26463 17.0893C3.16816 16.9847 3.09515 16.8606 3.05048 16.7254C3 16.5726 3 16.4013 3 16.0586V7.94153C3 7.59889 3 7.42757 3.05048 7.27477C3.09515 7.13959 3.16816 7.01551 3.26463 6.91082C3.37368 6.79248 3.52345 6.70928 3.82297 6.54288L11.223 2.43177C11.5066 2.27421 11.6484 2.19543 11.7986 2.16454C11.9315 2.13721 12.0685 2.13721 12.2015 2.16454C12.3516 2.19543 12.4934 2.27421 12.777 2.43177L20.177 6.54288C20.4766 6.70928 20.6263 6.79248 20.7354 6.91082C20.8318 7.01551 20.9049 7.13959 20.9495 7.27477C21 7.42757 21 7.59889 21 7.94153L21 12.5001M7.5 4.50008L16.5 9.50008M16 18.0001L18 20.0001L22 16.0001";
-    const strokeIcon = (paths: string, size = 15, viewBox = "0 0 24 24", strokeWidth = 2) =>
-      `<svg width="${size}" height="${size}" viewBox="${viewBox}" fill="none" stroke="currentColor" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+
+    const si = (paths: string, sz = 14, vb = "0 0 24 24", sw = 2) =>
+      `<svg width="${sz}" height="${sz}" viewBox="${vb}" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+
+    const frameworksHtml = (tfms: string[]) =>
+      tfms.length
+        ? tfms.map((f) => `<span class="chip">${f}</span>`).join("")
+        : `<span class="chip muted">—</span>`;
+
+    const projectListHtml = (list: { name: string; tfm: string; pkgCount: number }[]) =>
+      list.length
+        ? list
+            .map(
+              (p) =>
+                `<div class="proj-row" onclick="open_('installed')">
+                  <span class="proj-name">${p.name}</span>
+                  <span class="proj-meta">${p.pkgCount} pkg${p.pkgCount !== 1 ? "s" : ""}</span>
+                </div>`
+            )
+            .join("")
+        : `<div style="color:#7a7a7a;font-size:11px;padding:6px 0">No projects found.</div>`;
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -84,7 +116,7 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
     font-family: var(--vscode-font-family);
     color: #f4f4f4;
     background: transparent;
-    padding: 16px 12px;
+    padding: 16px 12px 24px;
     -webkit-font-smoothing: antialiased;
   }
   .logo {
@@ -107,37 +139,65 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
     transition: filter 0.15s ease;
   }
   button.primary:hover { filter: brightness(1.07); }
-  .cards {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
+  /* stat cards */
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
   .card {
-    background: #181818;
-    border: 1px solid #262626;
-    border-radius: 10px;
-    padding: 12px 13px;
-    cursor: pointer;
-    transition: border-color 0.15s ease, transform 0.15s ease;
+    background: #181818; border: 1px solid #262626;
+    border-radius: 10px; padding: 12px 13px;
+    cursor: pointer; transition: border-color 0.15s ease, transform 0.15s ease;
   }
   .card:hover { border-color: #1f9f45; transform: translateY(-1px); }
-  .card .value {
-    font-size: 24px; font-weight: 700; letter-spacing: -0.5px;
-    color: #35c75a; line-height: 1.1;
-  }
+  .card .value { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; color: #35c75a; line-height: 1.1; }
   .card .value.neutral { color: #f4f4f4; }
   .card .value.bad { color: #e5534b; }
-  .card .label {
-    font-size: 10px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.7px; color: #7a7a7a; margin-top: 3px;
+  .card .label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; color: #7a7a7a; margin-top: 3px; }
+  /* section label */
+  .sec { font-size: 10px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: #5a5a5a; margin: 18px 0 8px; }
+  /* quick actions */
+  .actions { display: flex; flex-direction: column; gap: 6px; }
+  .action {
+    display: flex; align-items: center; gap: 9px; width: 100%;
+    background: #181818; border: 1px solid #262626; color: #c8c8c8;
+    border-radius: 8px; padding: 8px 12px;
+    font-size: 12px; cursor: pointer; font-family: inherit;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
   }
+  .action:hover { border-color: #1f9f45; color: #f4f4f4; background: #1e1e1e; }
+  .action svg { color: #1f9f45; flex-shrink: 0; }
+  /* workspace info */
+  .info-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .info-key { font-size: 11.5px; color: #7a7a7a; }
+  .sdk-badge {
+    font-family: "SF Mono", Consolas, monospace; font-size: 11px;
+    background: rgba(53,199,90,0.1); color: #35c75a;
+    border: 1px solid rgba(53,199,90,0.25); border-radius: 99px;
+    padding: 2px 9px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .chip {
+    background: #1e1e1e; border: 1px solid #2a2a2a;
+    border-radius: 99px; padding: 2px 9px;
+    font-size: 10.5px; color: #a0a0a0;
+    font-family: "SF Mono", Consolas, monospace;
+  }
+  .chip.muted { color: #5a5a5a; }
+  /* projects list */
+  .proj-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 7px 10px; border-radius: 7px; cursor: pointer;
+    transition: background 0.12s;
+  }
+  .proj-row:hover { background: #1e1e1e; }
+  .proj-name { font-size: 12px; color: #d0d0d0; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .proj-meta { font-size: 10.5px; color: #5a5a5a; flex-shrink: 0; margin-left: 8px; }
 </style>
 </head>
 <body>
-  <div class="logo">${strokeIcon(`<path d="${logoPath}"/>`, 26)}</div>
+  <div class="logo">${si(`<path d="${logoPath}"/>`, 26)}</div>
   <h2>NuGet LL</h2>
   <p>Visual NuGet package management.</p>
   <button class="primary" onclick="open_('overview')">Open Dashboard</button>
+
   <div class="cards">
     <div class="card" onclick="open_('overview')">
       <div class="value neutral" id="val-projects">${projects}</div>
@@ -160,6 +220,33 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
       <div class="label">Sources</div>
     </div>
   </div>
+
+  <div class="sec">Quick Actions</div>
+  <div class="actions">
+    <button class="action" onclick="open_('updates')">
+      ${si(`<path d="M21 3V8M21 8H16M21 8L18 5.29168C16.4077 3.86656 14.3051 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.2832 21 19.8675 18.008 20.777 14"/>`)}
+      Check for Updates
+    </button>
+    <button class="action" onclick="open_('vulnerabilities')">
+      ${si(`<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>`)}
+      Scan Vulnerabilities
+    </button>
+    <button class="action" onclick="open_('browse')">
+      ${si(`<path d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"/>`)}
+      Browse Packages
+    </button>
+  </div>
+
+  <div class="sec">Workspace</div>
+  <div class="info-row">
+    <span class="info-key">SDK</span>
+    <span class="sdk-badge" id="val-sdk">${sdk ? `dotnet ${sdk}` : "—"}</span>
+  </div>
+  <div class="chips" id="val-frameworks">${frameworksHtml(frameworks)}</div>
+
+  <div class="sec">Projects</div>
+  <div id="val-project-list">${projectListHtml(projectList)}</div>
+
   <script>
     const vscode = acquireVsCodeApi();
     function open_(tab) { vscode.postMessage({ command: "open", tab }); }
@@ -171,6 +258,18 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
       set("val-outdated", m.outdated, true);
       set("val-vulnerable", m.vulnerable, true);
       set("val-sources", m.sources, false);
+      const sdkEl = document.getElementById("val-sdk");
+      if (sdkEl) sdkEl.textContent = m.sdk ? "dotnet " + m.sdk : "—";
+      const fwEl = document.getElementById("val-frameworks");
+      if (fwEl) fwEl.innerHTML = m.frameworks.length
+        ? m.frameworks.map(f => '<span class="chip">' + f + '</span>').join("")
+        : '<span class="chip muted">—</span>';
+      const plEl = document.getElementById("val-project-list");
+      if (plEl) plEl.innerHTML = m.projectList.length
+        ? m.projectList.map(p => '<div class="proj-row" onclick="open_(\'installed\')">' +
+            '<span class="proj-name">' + p.name + '</span>' +
+            '<span class="proj-meta">' + p.pkgCount + ' pkg' + (p.pkgCount !== 1 ? 's' : '') + '</span></div>').join("")
+        : '<div style="color:#7a7a7a;font-size:11px;padding:6px 0">No projects found.</div>';
     });
     function set(id, val, bad) {
       const el = document.getElementById(id);
