@@ -10,12 +10,26 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
   static readonly viewId = "getll.home";
   private autoOpened = false;
   private view?: vscode.WebviewView;
+  private cachedSourceCount: number | "—" = "—";
 
-  constructor(private readonly services: GetllServices) {}
+  constructor(private readonly services: GetllServices) {
+    this.refreshSources();
+  }
+
+  private refreshSources(): void {
+    this.services.sources.listSources().then((sources) => {
+      this.cachedSourceCount = sources.length;
+      this.push();
+    }).catch(() => {});
+  }
 
   /** Push fresh stats to the sidebar (called after scan / check operations). */
-  push(): void {
+  push(refreshSources = false): void {
     if (!this.view) {
+      return;
+    }
+    if (refreshSources) {
+      this.refreshSources();
       return;
     }
     const { projects, packages, outdated, vulnerable, sources, sdk, frameworks, projectList } =
@@ -62,7 +76,7 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
     ).size;
     const outdated = this.services.results.outdated?.length ?? "—";
     const vulnerable = this.services.results.vulnerable?.length ?? "—";
-    const sources = model?.sources?.length ?? "—";
+    const sources = this.cachedSourceCount;
     const sdk = model?.dotnetSdkVersion ?? this.services.dotnet.version ?? null;
     const frameworks = [
       ...new Set((model?.projects ?? []).flatMap((p) => p.targetFrameworks))
