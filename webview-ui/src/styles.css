@@ -460,10 +460,18 @@ input[type="checkbox"]:checked {
   border-radius: var(--radius);
   padding: 16px 18px;
   transition: border-color var(--transition), transform var(--transition);
+  display: flex;
+  flex-direction: column;
 }
 
 .stat-card:hover {
   border-color: #333;
+}
+
+.stat-card .stat-body {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
 }
 
 .stat-card .value {
@@ -487,13 +495,14 @@ input[type="checkbox"]:checked {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.8px;
+  margin-top: 4px;
 }
 
 .stat-icon {
   color: var(--text-muted);
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  opacity: 0.45;
 }
 
 table.data {
