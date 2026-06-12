@@ -1,6 +1,6 @@
 {
   "name": "getll",
-  "displayName": "GetLL: NuGet Package Manager",
+  "displayName": "NeuGetLL: NuGet Package Manager",
   "description": "Visual NuGet package management for VS Code workspaces.",
   "version": "0.1.0",
   "publisher": "piyushdoorwar",
@@ -41,7 +41,7 @@
       "activitybar": [
         {
           "id": "getll",
-          "title": "GetLL",
+          "title": "NeuGetLL",
           "icon": "media/getll.svg"
         }
       ]
@@ -50,7 +50,7 @@
       "getll": [
         {
           "id": "getll.home",
-          "name": "GetLL",
+          "name": "NeuGetLL",
           "type": "webview",
           "icon": "media/getll.svg"
         }
@@ -60,130 +60,130 @@
       {
         "command": "getll.openDashboard",
         "title": "Open Dashboard",
-        "category": "GetLL",
+        "category": "NeuGetLL",
         "icon": "$(dashboard)"
       },
       {
         "command": "getll.refreshWorkspace",
         "title": "Refresh Workspace",
-        "category": "GetLL",
+        "category": "NeuGetLL",
         "icon": "$(refresh)"
       },
       {
         "command": "getll.searchPackages",
         "title": "Search Packages",
-        "category": "GetLL",
+        "category": "NeuGetLL",
         "icon": "$(search)"
       },
       {
         "command": "getll.addPackage",
         "title": "Add Package",
-        "category": "GetLL",
+        "category": "NeuGetLL",
         "icon": "$(add)"
       },
       {
         "command": "getll.removePackage",
         "title": "Remove Package",
-        "category": "GetLL",
+        "category": "NeuGetLL",
         "icon": "$(trash)"
       },
       {
         "command": "getll.updatePackage",
         "title": "Update Package",
-        "category": "GetLL",
+        "category": "NeuGetLL",
         "icon": "$(arrow-up)"
       },
       {
         "command": "getll.updateAllPackages",
         "title": "Update All Packages",
-        "category": "GetLL"
+        "category": "NeuGetLL"
       },
       {
         "command": "getll.showPackageDetails",
         "title": "View Package Details",
-        "category": "GetLL",
+        "category": "NeuGetLL",
         "icon": "$(info)"
       },
       {
         "command": "getll.restoreWorkspace",
         "title": "Restore Workspace",
-        "category": "GetLL"
+        "category": "NeuGetLL"
       },
       {
         "command": "getll.restoreSolution",
         "title": "Restore Solution",
-        "category": "GetLL"
+        "category": "NeuGetLL"
       },
       {
         "command": "getll.restoreProject",
         "title": "Restore Project",
-        "category": "GetLL",
+        "category": "NeuGetLL",
         "icon": "$(sync)"
       },
       {
         "command": "getll.manageSources",
         "title": "Manage Package Sources",
-        "category": "GetLL"
+        "category": "NeuGetLL"
       },
       {
         "command": "getll.addSource",
         "title": "Add Package Source",
-        "category": "GetLL",
+        "category": "NeuGetLL",
         "icon": "$(add)"
       },
       {
         "command": "getll.removeSource",
         "title": "Remove Package Source",
-        "category": "GetLL",
+        "category": "NeuGetLL",
         "icon": "$(trash)"
       },
       {
         "command": "getll.enableSource",
         "title": "Enable Package Source",
-        "category": "GetLL"
+        "category": "NeuGetLL"
       },
       {
         "command": "getll.disableSource",
         "title": "Disable Package Source",
-        "category": "GetLL"
+        "category": "NeuGetLL"
       },
       {
         "command": "getll.editSource",
         "title": "Edit Package Source",
-        "category": "GetLL",
+        "category": "NeuGetLL",
         "icon": "$(edit)"
       },
       {
         "command": "getll.openNugetConfig",
         "title": "Open NuGet.Config",
-        "category": "GetLL"
+        "category": "NeuGetLL"
       },
       {
         "command": "getll.checkOutdated",
         "title": "Check Outdated Packages",
-        "category": "GetLL",
+        "category": "NeuGetLL",
         "icon": "$(versions)"
       },
       {
         "command": "getll.checkVulnerable",
         "title": "Check Vulnerable Packages",
-        "category": "GetLL",
+        "category": "NeuGetLL",
         "icon": "$(shield)"
       },
       {
         "command": "getll.checkDeprecated",
         "title": "Check Deprecated Packages",
-        "category": "GetLL"
+        "category": "NeuGetLL"
       },
       {
         "command": "getll.openOutputChannel",
         "title": "Open Output Channel",
-        "category": "GetLL"
+        "category": "NeuGetLL"
       },
       {
         "command": "getll.openSettings",
         "title": "Open Settings",
-        "category": "GetLL",
+        "category": "NeuGetLL",
         "icon": "$(gear)"
       }
     ],
@@ -197,7 +197,7 @@
       ]
     },
     "configuration": {
-      "title": "GetLL",
+      "title": "NeuGetLL",
       "properties": {
         "getll.defaultPackageSource": {
           "type": "string",

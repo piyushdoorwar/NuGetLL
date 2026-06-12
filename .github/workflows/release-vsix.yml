@@ -97,7 +97,7 @@ jobs:
             fi
             gh release create "$TAG" "$VSIX" \
               --title "$TAG" \
-              --notes "GetLL $TAG" \
+              --notes "NeuGetLL $TAG" \
               "${RELEASE_ARGS[@]}"
           fi
 

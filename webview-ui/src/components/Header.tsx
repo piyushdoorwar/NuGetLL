@@ -13,7 +13,7 @@ export function Header(props: {
         <IconLogo size={24} stroke="#0c1f12" />
       </div>
       <div>
-        <h1>GetLL</h1>
+        <h1>NeuGetLL</h1>
         <p className="subtitle">Visual NuGet package management for VS Code workspaces.</p>
       </div>
       <div className="spacer" />

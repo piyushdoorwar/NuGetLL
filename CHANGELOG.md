@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the GetLL extension are documented in this file.
+All notable changes to the NeuGetLL extension are documented in this file.
 
 ## [0.1.0] - 2026-06-11
 

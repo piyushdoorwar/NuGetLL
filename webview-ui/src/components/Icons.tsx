@@ -129,7 +129,7 @@ export const IconDownload = (p: { size?: number }) => (
   </StrokeIcon>
 );
 
-/** The GetLL brand mark: package box with a check (media/getll.svg). */
+/** The NeuGetLL brand mark: package box with a check (media/getll.svg). */
 export const IconLogo = (p: { size?: number; stroke?: string }) => (
   <svg
     width={p.size ?? 24}

@@ -16,7 +16,7 @@ export function registerDashboardCommands(services: GetllServices): vscode.Dispo
     }
     if (result.issues.length > 0) {
       vscode.window.showWarningMessage(
-        `GetLL: ${result.issues.length} file(s) could not be parsed. See output for details.`
+        `NeuGetLL: ${result.issues.length} file(s) could not be parsed. See output for details.`
       );
     }
   });
@@ -25,7 +25,7 @@ export function registerDashboardCommands(services: GetllServices): vscode.Dispo
     const query = await vscode.window.showInputBox({
       title: "Search NuGet Packages",
       placeHolder: "e.g. Newtonsoft.Json",
-      prompt: "Opens the GetLL dashboard with results"
+      prompt: "Opens the NeuGetLL dashboard with results"
     });
     if (query === undefined) {
       return;

@@ -17,24 +17,24 @@ function reportErrors(errors: string[]): void {
     logger.warn(`dotnet list package: ${error}`);
   }
   if (errors.length > 0) {
-    vscode.window.showWarningMessage("GetLL: some projects could not be analyzed. See output for details.");
+    vscode.window.showWarningMessage("NeuGetLL: some projects could not be analyzed. See output for details.");
   }
 }
 
 export async function runOutdatedCheck(services: GetllServices): Promise<OutdatedPackage[] | undefined> {
   if (!services.dotnet.available) {
-    vscode.window.showErrorMessage("GetLL: dotnet SDK not found.");
+    vscode.window.showErrorMessage("NeuGetLL: dotnet SDK not found.");
     return undefined;
   }
   const targets = listTargets(services);
   if (targets.length === 0) {
-    vscode.window.showInformationMessage("GetLL: no .NET projects found.");
+    vscode.window.showInformationMessage("NeuGetLL: no .NET projects found.");
     return undefined;
   }
   const config = getConfig();
   let results: OutdatedPackage[] | undefined;
   await vscode.window.withProgress(
-    { location: vscode.ProgressLocation.Notification, title: "GetLL: Checking outdated packages", cancellable: true },
+    { location: vscode.ProgressLocation.Notification, title: "NeuGetLL: Checking outdated packages", cancellable: true },
     async (_progress, token) => {
       const abort = new AbortController();
       token.onCancellationRequested(() => abort.abort());
@@ -59,23 +59,23 @@ export function registerCheckCommands(services: GetllServices): vscode.Disposabl
     const results = await runOutdatedCheck(services);
     if (results) {
       vscode.window.showInformationMessage(
-        results.length === 0 ? "GetLL: all packages are up to date." : `GetLL: ${results.length} outdated package(s) found.`
+        results.length === 0 ? "NeuGetLL: all packages are up to date." : `NeuGetLL: ${results.length} outdated package(s) found.`
       );
     }
   });
 
   const vulnerable = vscode.commands.registerCommand("getll.checkVulnerable", async () => {
     if (!services.dotnet.available) {
-      vscode.window.showErrorMessage("GetLL: dotnet SDK not found.");
+      vscode.window.showErrorMessage("NeuGetLL: dotnet SDK not found.");
       return;
     }
     const targets = listTargets(services);
     if (targets.length === 0) {
-      vscode.window.showInformationMessage("GetLL: no .NET projects found.");
+      vscode.window.showInformationMessage("NeuGetLL: no .NET projects found.");
       return;
     }
     await vscode.window.withProgress(
-      { location: vscode.ProgressLocation.Notification, title: "GetLL: Checking vulnerable packages", cancellable: true },
+      { location: vscode.ProgressLocation.Notification, title: "NeuGetLL: Checking vulnerable packages", cancellable: true },
       async (_progress, token) => {
         const abort = new AbortController();
         token.onCancellationRequested(() => abort.abort());
@@ -87,8 +87,8 @@ export function registerCheckCommands(services: GetllServices): vscode.Disposabl
         services.results.setVulnerable(outcome.results);
         vscode.window.showInformationMessage(
           outcome.results.length === 0
-            ? "GetLL: no known vulnerabilities found."
-            : `GetLL: ${outcome.results.length} vulnerable package reference(s) found.`
+            ? "NeuGetLL: no known vulnerabilities found."
+            : `NeuGetLL: ${outcome.results.length} vulnerable package reference(s) found.`
         );
       }
     );
@@ -96,16 +96,16 @@ export function registerCheckCommands(services: GetllServices): vscode.Disposabl
 
   const deprecated = vscode.commands.registerCommand("getll.checkDeprecated", async () => {
     if (!services.dotnet.available) {
-      vscode.window.showErrorMessage("GetLL: dotnet SDK not found.");
+      vscode.window.showErrorMessage("NeuGetLL: dotnet SDK not found.");
       return;
     }
     const targets = listTargets(services);
     if (targets.length === 0) {
-      vscode.window.showInformationMessage("GetLL: no .NET projects found.");
+      vscode.window.showInformationMessage("NeuGetLL: no .NET projects found.");
       return;
     }
     await vscode.window.withProgress(
-      { location: vscode.ProgressLocation.Notification, title: "GetLL: Checking deprecated packages", cancellable: true },
+      { location: vscode.ProgressLocation.Notification, title: "NeuGetLL: Checking deprecated packages", cancellable: true },
       async (_progress, token) => {
         const abort = new AbortController();
         token.onCancellationRequested(() => abort.abort());
@@ -116,7 +116,7 @@ export function registerCheckCommands(services: GetllServices): vscode.Disposabl
         reportErrors(outcome.errors);
         services.results.setDeprecated(outcome.results);
         if (outcome.results.length === 0) {
-          vscode.window.showInformationMessage("GetLL: no deprecated packages found.");
+          vscode.window.showInformationMessage("NeuGetLL: no deprecated packages found.");
         } else {
           const lines = outcome.results.map(
             (d) =>
@@ -124,7 +124,7 @@ export function registerCheckCommands(services: GetllServices): vscode.Disposabl
           );
           logger.info(`Deprecated packages:\n${lines.join("\n")}`);
           vscode.window
-            .showWarningMessage(`GetLL: ${outcome.results.length} deprecated package(s) found.`, "Show Details")
+            .showWarningMessage(`NeuGetLL: ${outcome.results.length} deprecated package(s) found.`, "Show Details")
             .then((choice) => {
               if (choice === "Show Details") {
                 logger.show();

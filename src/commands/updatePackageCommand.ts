@@ -29,7 +29,7 @@ export function registerUpdatePackageCommands(services: GetllServices): vscode.D
 
     const using = projectsUsing(services, packageId);
     if (using.length === 0) {
-      vscode.window.showInformationMessage(`GetLL: ${packageId} is not referenced by any project.`);
+      vscode.window.showInformationMessage(`NeuGetLL: ${packageId} is not referenced by any project.`);
       return;
     }
     const projects = await pickProjects(services, {
@@ -58,7 +58,7 @@ export function registerUpdatePackageCommands(services: GetllServices): vscode.D
       outdated = await runOutdatedCheck(services);
     }
     if (!outdated || outdated.length === 0) {
-      vscode.window.showInformationMessage("GetLL: all packages are up to date.");
+      vscode.window.showInformationMessage("NeuGetLL: all packages are up to date.");
       return;
     }
     const topLevel = outdated.filter((p) => !p.isTransitive);
@@ -77,7 +77,7 @@ export function registerUpdatePackageCommands(services: GetllServices): vscode.D
     const config = getConfig();
     let failures = 0;
     await vscode.window.withProgress(
-      { location: vscode.ProgressLocation.Notification, title: "GetLL: Updating packages", cancellable: true },
+      { location: vscode.ProgressLocation.Notification, title: "NeuGetLL: Updating packages", cancellable: true },
       async (progress, token) => {
         const abort = new AbortController();
         token.onCancellationRequested(() => abort.abort());
@@ -114,9 +114,9 @@ export function registerUpdatePackageCommands(services: GetllServices): vscode.D
     );
 
     if (failures === 0) {
-      vscode.window.showInformationMessage("GetLL: all updates applied.");
+      vscode.window.showInformationMessage("NeuGetLL: all updates applied.");
     } else {
-      vscode.window.showErrorMessage(`GetLL: ${failures} update(s) failed. See output for details.`);
+      vscode.window.showErrorMessage(`NeuGetLL: ${failures} update(s) failed. See output for details.`);
     }
     await services.scanner.scan();
     await runOutdatedCheck(services);
