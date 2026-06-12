@@ -30,7 +30,7 @@ const TABS: { id: TabId; label: string; icon: ReactNode; countKey?: keyof Counts
 
 export function Sidebar(props: { tab: TabId; counts: Counts; onSelect: (tab: TabId) => void }) {
   return (
-    <nav className="sidebar">
+    <nav className="tabbar">
       {TABS.map((t) => {
         const count = t.countKey !== undefined ? props.counts[t.countKey] : undefined;
         return (

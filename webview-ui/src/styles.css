@@ -163,71 +163,75 @@ a:hover {
 
 .body {
   display: flex;
+  flex-direction: column;
   flex: 1;
   min-height: 0;
 }
 
-.sidebar {
-  width: 196px;
-  flex-shrink: 0;
-  border-right: 1px solid var(--border-soft);
-  background: var(--bg-alt);
-  padding: 16px 12px;
+.tabbar {
   display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.sidebar button {
-  display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: 10px;
-  width: 100%;
-  text-align: left;
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  padding: 8px 12px;
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background var(--transition), color var(--transition);
+  gap: 4px;
+  padding: 8px 20px;
+  border-bottom: 1px solid var(--border-soft);
+  background: var(--bg-alt);
+  flex-shrink: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
-.sidebar .tab-icon {
+.tabbar::-webkit-scrollbar { display: none; }
+
+.tabbar button {
   display: inline-flex;
   align-items: center;
-  opacity: 0.85;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--text-secondary);
+  padding: 5px 13px;
+  font-size: 12.5px;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: color var(--transition), background var(--transition), border-color var(--transition);
 }
 
-.sidebar button:hover {
-  background: var(--card-alt);
+.tabbar .tab-icon {
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.75;
+}
+
+.tabbar button:hover {
   color: var(--text);
+  background: var(--card-alt);
 }
 
-.sidebar button.active {
-  background: var(--accent-soft);
+.tabbar button.active {
   color: var(--accent);
   font-weight: 600;
-  box-shadow: inset 0 0 0 1px rgba(53, 199, 90, 0.18);
+  background: var(--accent-soft);
+  border-color: rgba(53, 199, 90, 0.35);
 }
 
-.sidebar .count {
-  margin-left: auto;
-  font-size: 10.5px;
-  font-weight: 600;
+.tabbar .count {
+  font-size: 10px;
+  font-weight: 700;
   color: var(--text-muted);
   background: var(--card);
   border-radius: 999px;
-  padding: 1px 8px;
-  min-width: 22px;
+  padding: 1px 7px;
+  min-width: 18px;
   text-align: center;
+  line-height: 1.6;
 }
 
-.sidebar button.active .count {
+.tabbar button.active .count {
   color: var(--accent);
-  background: rgba(53, 199, 90, 0.16);
+  background: rgba(53, 199, 90, 0.18);
 }
 
 .content {
