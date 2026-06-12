@@ -1,9 +1,14 @@
 import * as vscode from "vscode";
 
+/** PAT credential: email identifies the user, token is the secret. */
 export interface StoredCredential {
-  type: "pat" | "basic";
-  username?: string;
-  password: string;
+  email: string;
+  token: string;
+}
+
+export function toAuthHeader(cred: StoredCredential): string {
+  // NuGet PAT auth: Basic base64(email:token)
+  return `Basic ${Buffer.from(`${cred.email}:${cred.token}`).toString("base64")}`;
 }
 
 export class CredentialStorageService {
@@ -33,11 +38,6 @@ export class CredentialStorageService {
 
   async has(sourceName: string): Promise<boolean> {
     return (await this.secrets.get(this.key(sourceName))) !== undefined;
-  }
-
-  toAuthHeader(cred: StoredCredential): string {
-    const user = cred.username?.trim() || (cred.type === "pat" ? "pat" : "user");
-    return `Basic ${Buffer.from(`${user}:${cred.password}`).toString("base64")}`;
   }
 
   private key(sourceName: string): string {

@@ -133,8 +133,7 @@ export class NugetApiService {
     if (!cred) {
       return undefined;
     }
-    const user = cred.username?.trim() || (cred.type === "pat" ? "pat" : "user");
-    return `Basic ${Buffer.from(`${user}:${cred.password}`).toString("base64")}`;
+    return `Basic ${Buffer.from(`${cred.email}:${cred.token}`).toString("base64")}`;
   }
 
   async searchPackages(

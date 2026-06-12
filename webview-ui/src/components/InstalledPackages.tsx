@@ -23,6 +23,7 @@ interface Row {
   id: string;
   versions: string[];
   projects: { name: string; path: string; version?: string }[];
+  transitiveIn: { name: string; path: string }[];
 }
 
 export function InstalledPackages(props: {
@@ -36,22 +37,28 @@ export function InstalledPackages(props: {
     const byId = new Map<string, Row>();
     for (const project of props.model?.projects ?? []) {
       for (const pkg of project.packages) {
-        if (pkg.isTransitive) {
-          continue;
-        }
-        let row = byId.get(pkg.id.toLowerCase());
+        const key = pkg.id.toLowerCase();
+        let row = byId.get(key);
         if (!row) {
-          row = { id: pkg.id, versions: [], projects: [] };
-          byId.set(pkg.id.toLowerCase(), row);
+          row = { id: pkg.id, versions: [], projects: [], transitiveIn: [] };
+          byId.set(key, row);
         }
         const version = pkg.version ?? pkg.resolvedVersion;
-        if (version && !row.versions.includes(version)) {
-          row.versions.push(version);
+        if (pkg.isTransitive) {
+          if (!row.transitiveIn.some((p) => p.path === project.path)) {
+            row.transitiveIn.push({ name: project.name, path: project.path });
+          }
+        } else {
+          if (version && !row.versions.includes(version)) {
+            row.versions.push(version);
+          }
+          row.projects.push({ name: project.name, path: project.path, version });
         }
-        row.projects.push({ name: project.name, path: project.path, version });
       }
     }
-    return [...byId.values()].sort((a, b) => a.id.localeCompare(b.id));
+    return [...byId.values()]
+      .filter((r) => r.projects.length > 0)
+      .sort((a, b) => a.id.localeCompare(b.id));
   }, [props.model]);
 
   const filtered = rows.filter((row) => row.id.toLowerCase().includes(filter.toLowerCase()));
@@ -106,9 +113,10 @@ export function InstalledPackages(props: {
             </div>
             <div className="pkg-meta">
               {row.projects.map((p) => (
-                <span key={p.path} className="tag">
-                  {p.name}
-                </span>
+                <span key={p.path} className="tag">{p.name}</span>
+              ))}
+              {row.transitiveIn.map((p) => (
+                <span key={p.path} className="tag transitive" title="Transitive dependency">{p.name}</span>
               ))}
             </div>
           </div>

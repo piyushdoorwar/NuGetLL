@@ -323,9 +323,8 @@ export class DashboardPanel {
         break;
       case "saveCredential":
         await services.sources.setCredential(message.sourceName, {
-          type: message.credType,
-          username: message.username,
-          password: message.password
+          email: message.email,
+          token: message.token
         });
         this.post({ type: "sourcesUpdated", sources: await services.sources.listSources() });
         break;

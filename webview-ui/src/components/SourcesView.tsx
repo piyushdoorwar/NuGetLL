@@ -3,14 +3,34 @@ import { post } from "../api/vscodeApi";
 import { PackageSource } from "../types";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { EmptyState } from "./EmptyState";
-import { IconGlobe, IconLock } from "./Icons";
+import { IconEdit, IconEye, IconEyeOff, IconGlobe, IconKey, IconLock, IconLockOff, IconTrash } from "./Icons";
 
 interface CredForm {
   sourceName: string;
-  credType: "pat" | "basic";
-  username: string;
-  password: string;
+  email: string;
+  token: string;
   error?: string;
+}
+
+function IconBtn(props: {
+  icon: React.ReactNode;
+  title: string;
+  onClick: () => void;
+  danger?: boolean;
+  accent?: boolean;
+  disabled?: boolean;
+}) {
+  return (
+    <button
+      className="btn-icon"
+      title={props.title}
+      onClick={props.onClick}
+      disabled={props.disabled}
+      style={{ color: props.danger ? "var(--danger)" : props.accent ? "var(--accent)" : undefined }}
+    >
+      {props.icon}
+    </button>
+  );
 }
 
 export function SourcesView(props: { sources?: PackageSource[]; busy: boolean }) {
@@ -45,25 +65,17 @@ export function SourcesView(props: { sources?: PackageSource[]; busy: boolean })
     setUrl("");
   };
 
-  const openCredForm = (source: PackageSource) => {
-    setCredForm({ sourceName: source.name, credType: "pat", username: "", password: "" });
-  };
-
   const saveCredential = () => {
-    if (!credForm) {
+    if (!credForm) return;
+    if (!credForm.email.trim()) {
+      setCredForm({ ...credForm, error: "Email is required." });
       return;
     }
-    if (!credForm.password.trim()) {
-      setCredForm({ ...credForm, error: "Password / token is required." });
+    if (!credForm.token.trim()) {
+      setCredForm({ ...credForm, error: "Personal Access Token is required." });
       return;
     }
-    post({
-      type: "saveCredential",
-      sourceName: credForm.sourceName,
-      credType: credForm.credType,
-      username: credForm.username.trim() || undefined,
-      password: credForm.password.trim()
-    });
+    post({ type: "saveCredential", sourceName: credForm.sourceName, email: credForm.email.trim(), token: credForm.token.trim() });
     setCredForm(undefined);
   };
 
@@ -110,10 +122,9 @@ export function SourcesView(props: { sources?: PackageSource[]; busy: boolean })
                       <IconLock size={13} />
                     </span>
                   )}
-                  {!source.enabled && (
-                    <span className="tag" style={{ marginLeft: 4 }}>disabled</span>
-                  )}
+                  {!source.enabled && <span className="tag" style={{ marginLeft: 4 }}>disabled</span>}
                 </div>
+
                 {editing === source.name ? (
                   <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
                     <input
@@ -130,6 +141,7 @@ export function SourcesView(props: { sources?: PackageSource[]; busy: boolean })
                 ) : (
                   <div className="url">{source.url}</div>
                 )}
+
                 {source.configPath && (
                   <div className="url">
                     config:{" "}
@@ -141,77 +153,51 @@ export function SourcesView(props: { sources?: PackageSource[]; busy: boolean })
 
                 {credForm?.sourceName === source.name && (
                   <div className="cred-form">
-                    <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8 }}>
-                      <label style={{ fontSize: 12, color: "var(--text-secondary)", whiteSpace: "nowrap" }}>Auth type</label>
-                      <select
-                        value={credForm.credType}
-                        onChange={(e) => setCredForm({ ...credForm, credType: e.target.value as "pat" | "basic" })}
-                        style={{ fontSize: 12, padding: "3px 6px", background: "var(--input-bg)", border: "1px solid var(--border)", borderRadius: 4, color: "var(--text)" }}
-                      >
-                        <option value="pat">PAT (Personal Access Token)</option>
-                        <option value="basic">Basic (username + password)</option>
-                      </select>
-                    </div>
-                    {credForm.credType === "basic" && (
-                      <input
-                        type="text"
-                        placeholder="Username"
-                        value={credForm.username}
-                        onChange={(e) => setCredForm({ ...credForm, username: e.target.value })}
-                        style={{ marginBottom: 6, width: "100%" }}
-                      />
-                    )}
+                    <p style={{ margin: "0 0 10px", fontSize: 12, color: "var(--text-secondary)" }}>
+                      Enter your email and Personal Access Token for <strong>{source.name}</strong>.
+                    </p>
                     <input
-                      type="password"
-                      placeholder={credForm.credType === "pat" ? "Personal Access Token" : "Password"}
-                      value={credForm.password}
-                      onChange={(e) => setCredForm({ ...credForm, password: e.target.value })}
-                      onKeyDown={(e) => e.key === "Enter" && saveCredential()}
+                      type="email"
+                      placeholder="Email"
+                      value={credForm.email}
+                      onChange={(e) => setCredForm({ ...credForm, email: e.target.value })}
                       style={{ marginBottom: 6, width: "100%" }}
                       autoFocus
                     />
+                    <input
+                      type="password"
+                      placeholder="Personal Access Token"
+                      value={credForm.token}
+                      onChange={(e) => setCredForm({ ...credForm, token: e.target.value })}
+                      onKeyDown={(e) => e.key === "Enter" && saveCredential()}
+                      style={{ marginBottom: 6, width: "100%" }}
+                    />
                     {credForm.error && <div className="alert error" style={{ marginBottom: 6 }}>{credForm.error}</div>}
                     <div style={{ display: "flex", gap: 6 }}>
-                      <button className="btn btn-primary btn-sm" onClick={saveCredential}>Save credential</button>
+                      <button className="btn btn-primary btn-sm" onClick={saveCredential}>Save</button>
                       <button className="btn btn-ghost btn-sm" onClick={() => setCredForm(undefined)}>Cancel</button>
                     </div>
                   </div>
                 )}
               </div>
-              <div className="actions">
-                <button
-                  className="btn btn-ghost btn-sm"
-                  onClick={() => { setEditing(source.name); setEditUrl(source.url); }}
-                >
-                  Edit
-                </button>
-                <button
-                  className="btn btn-ghost btn-sm"
-                  onClick={() => credForm?.sourceName === source.name ? setCredForm(undefined) : openCredForm(source)}
-                >
-                  {source.hasCredentials ? "Update creds" : "Set credentials"}
-                </button>
+
+              <div className="actions" style={{ gap: 2 }}>
+                <IconBtn icon={<IconEdit size={15} />} title="Edit URL" onClick={() => { setEditing(source.name); setEditUrl(source.url); }} />
+                <IconBtn
+                  icon={<IconKey size={15} />}
+                  title={source.hasCredentials ? "Update credentials" : "Set credentials"}
+                  accent={source.hasCredentials}
+                  onClick={() => credForm?.sourceName === source.name ? setCredForm(undefined) : setCredForm({ sourceName: source.name, email: "", token: "" })}
+                />
                 {source.hasCredentials && (
-                  <button
-                    className="btn btn-ghost btn-sm"
-                    style={{ color: "var(--danger)" }}
-                    onClick={() => post({ type: "removeCredential", sourceName: source.name })}
-                  >
-                    Clear creds
-                  </button>
+                  <IconBtn icon={<IconLockOff size={15} />} title="Clear credentials" onClick={() => post({ type: "removeCredential", sourceName: source.name })} />
                 )}
                 {source.enabled ? (
-                  <button className="btn btn-ghost btn-sm" onClick={() => post({ type: "disableSource", name: source.name })}>
-                    Disable
-                  </button>
+                  <IconBtn icon={<IconEyeOff size={15} />} title="Disable source" onClick={() => post({ type: "disableSource", name: source.name })} />
                 ) : (
-                  <button className="btn btn-secondary btn-sm" onClick={() => post({ type: "enableSource", name: source.name })}>
-                    Enable
-                  </button>
+                  <IconBtn icon={<IconEye size={15} />} title="Enable source" accent onClick={() => post({ type: "enableSource", name: source.name })} />
                 )}
-                <button className="btn btn-danger btn-sm" onClick={() => setRemoveTarget(source)}>
-                  Remove
-                </button>
+                <IconBtn icon={<IconTrash size={15} />} title="Remove source" danger onClick={() => setRemoveTarget(source)} />
               </div>
             </div>
           </div>
@@ -225,9 +211,7 @@ export function SourcesView(props: { sources?: PackageSource[]; busy: boolean })
         danger
         confirmLabel="Remove"
         onConfirm={() => {
-          if (removeTarget) {
-            post({ type: "removeSource", name: removeTarget.name });
-          }
+          if (removeTarget) post({ type: "removeSource", name: removeTarget.name });
           setRemoveTarget(undefined);
         }}
         onCancel={() => setRemoveTarget(undefined)}
