@@ -5,4 +5,6 @@ export interface PackageSource {
   enabled: boolean;
   /** Path of the NuGet.Config defining this source, when known. */
   configPath?: string;
+  /** Whether credentials are stored in VS Code SecretStorage for this source. */
+  hasCredentials?: boolean;
 }

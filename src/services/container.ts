@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { DeprecatedPackage, OutdatedPackage, VulnerablePackage } from "../models/packageModel";
 import { CentralPackageService } from "./centralPackageService";
+import { CredentialStorageService } from "./credentialStorageService";
 import { NugetApiService } from "./nugetApiService";
 import { NugetCliService } from "./nugetCliService";
 import { PackageSourceService } from "./packageSourceService";
@@ -51,6 +52,7 @@ export interface GetllServices {
   cli: NugetCliService;
   api: NugetApiService;
   sources: PackageSourceService;
+  credentials: CredentialStorageService;
   central: CentralPackageService;
   vulnerabilities: VulnerabilityService;
   results: ResultsStore;

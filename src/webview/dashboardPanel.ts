@@ -321,6 +321,18 @@ export class DashboardPanel {
           return "source disabled";
         });
         break;
+      case "saveCredential":
+        await services.sources.setCredential(message.sourceName, {
+          type: message.credType,
+          username: message.username,
+          password: message.password
+        });
+        this.post({ type: "sourcesUpdated", sources: await services.sources.listSources() });
+        break;
+      case "removeCredential":
+        await services.sources.removeCredential(message.sourceName);
+        this.post({ type: "sourcesUpdated", sources: await services.sources.listSources() });
+        break;
       case "restoreProject":
         // An empty path means "restore the whole workspace".
         await restoreTarget(services, message.projectPath || undefined);

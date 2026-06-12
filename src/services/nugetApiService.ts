@@ -5,6 +5,8 @@ import {
   PackageVersionInfo
 } from "../models/packageModel";
 
+import { StoredCredential } from "./credentialStorageService";
+
 const FETCH_TIMEOUT_MS = 15000;
 
 interface ServiceIndexResource {
@@ -80,10 +82,14 @@ function isPrerelease(version: string): boolean {
   return version.includes("-");
 }
 
-async function fetchJson<T>(url: string): Promise<T> {
+async function fetchJson<T>(url: string, authHeader?: string): Promise<T> {
+  const headers: Record<string, string> = { Accept: "application/json" };
+  if (authHeader) {
+    headers.Authorization = authHeader;
+  }
   const response = await fetch(url, {
     signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-    headers: { Accept: "application/json" }
+    headers
   });
   if (!response.ok) {
     throw new Error(`Request to ${url} failed with HTTP ${response.status}`);
@@ -98,13 +104,16 @@ async function fetchJson<T>(url: string): Promise<T> {
 export class NugetApiService {
   private serviceIndexCache = new Map<string, ServiceIndex>();
 
-  constructor(private readonly getServiceIndexUrl: () => string) {}
+  constructor(
+    private readonly getServiceIndexUrl: () => string,
+    private readonly getCredential: (sourceName: string) => Promise<StoredCredential | null> = () => Promise.resolve(null)
+  ) {}
 
-  private async resolveResource(types: string[], serviceIndexUrl?: string): Promise<string> {
+  private async resolveResource(types: string[], serviceIndexUrl?: string, authHeader?: string): Promise<string> {
     const indexUrl = serviceIndexUrl ?? this.getServiceIndexUrl();
     let index = this.serviceIndexCache.get(indexUrl);
     if (!index) {
-      index = await fetchJson<ServiceIndex>(indexUrl);
+      index = await fetchJson<ServiceIndex>(indexUrl, authHeader);
       this.serviceIndexCache.set(indexUrl, index);
     }
     for (const type of types) {
@@ -116,13 +125,27 @@ export class NugetApiService {
     throw new Error(`NuGet feed does not provide any of: ${types.join(", ")}`);
   }
 
+  private async authHeaderFor(sourceName?: string): Promise<string | undefined> {
+    if (!sourceName) {
+      return undefined;
+    }
+    const cred = await this.getCredential(sourceName);
+    if (!cred) {
+      return undefined;
+    }
+    const user = cred.username?.trim() || (cred.type === "pat" ? "pat" : "user");
+    return `Basic ${Buffer.from(`${user}:${cred.password}`).toString("base64")}`;
+  }
+
   async searchPackages(
     query: string,
     options: { includePrerelease?: boolean; take?: number; skip?: number; serviceIndexUrl?: string; sourceName?: string } = {}
   ): Promise<PackageSearchResult[]> {
+    const auth = await this.authHeaderFor(options.sourceName);
     const base = await this.resolveResource(
       ["SearchQueryService/3.5.0", "SearchQueryService/3.0.0-rc", "SearchQueryService"],
-      options.serviceIndexUrl
+      options.serviceIndexUrl,
+      auth
     );
     const params = new URLSearchParams({
       q: query,
@@ -131,7 +154,7 @@ export class NugetApiService {
       skip: String(options.skip ?? 0),
       semVerLevel: "2.0.0"
     });
-    const data = await fetchJson<{ data: SearchResultItem[] }>(`${base}?${params}`);
+    const data = await fetchJson<{ data: SearchResultItem[] }>(`${base}?${params}`, auth);
     const sourceName = options.sourceName ?? "nuget.org";
     return (data.data ?? []).map((item) => ({
       id: item.id,
@@ -149,32 +172,37 @@ export class NugetApiService {
   }
 
   /** Lists all versions of a package via the flat-container resource. */
-  async getVersions(packageId: string, serviceIndexUrl?: string): Promise<string[]> {
-    const base = await this.resolveResource(["PackageBaseAddress/3.0.0"], serviceIndexUrl);
+  async getVersions(packageId: string, serviceIndexUrl?: string, sourceName?: string): Promise<string[]> {
+    const auth = await this.authHeaderFor(sourceName);
+    const base = await this.resolveResource(["PackageBaseAddress/3.0.0"], serviceIndexUrl, auth);
     const data = await fetchJson<{ versions: string[] }>(
-      `${base}/${packageId.toLowerCase()}/index.json`
+      `${base}/${packageId.toLowerCase()}/index.json`,
+      auth
     );
     return data.versions ?? [];
   }
 
   private async getRegistrationEntries(
     packageId: string,
-    serviceIndexUrl?: string
+    serviceIndexUrl?: string,
+    sourceName?: string
   ): Promise<RegistrationCatalogEntry[]> {
+    const auth = await this.authHeaderFor(sourceName);
     const base = await this.resolveResource(
       [
         "RegistrationsBaseUrl/3.6.0",
         "RegistrationsBaseUrl/3.4.0",
         "RegistrationsBaseUrl"
       ],
-      serviceIndexUrl
+      serviceIndexUrl,
+      auth
     );
-    const index = await fetchJson<RegistrationIndex>(`${base}/${packageId.toLowerCase()}/index.json`);
+    const index = await fetchJson<RegistrationIndex>(`${base}/${packageId.toLowerCase()}/index.json`, auth);
     const entries: RegistrationCatalogEntry[] = [];
     for (const page of index.items ?? []) {
       let items = page.items;
       if (!items) {
-        const fullPage = await fetchJson<RegistrationPage>(page["@id"]);
+        const fullPage = await fetchJson<RegistrationPage>(page["@id"], auth);
         items = fullPage.items ?? [];
       }
       for (const leaf of items) {
@@ -197,7 +225,7 @@ export class NugetApiService {
         serviceIndexUrl: options.serviceIndexUrl,
         sourceName: options.sourceName
       }).catch(() => [] as PackageSearchResult[]),
-      this.getRegistrationEntries(packageId, options.serviceIndexUrl)
+      this.getRegistrationEntries(packageId, options.serviceIndexUrl, options.sourceName)
     ]);
 
     if (entries.length === 0) {

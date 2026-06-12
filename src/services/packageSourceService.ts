@@ -1,4 +1,5 @@
 import { PackageSource } from "../models/sourceModel";
+import { CredentialStorageService, StoredCredential } from "./credentialStorageService";
 import { NugetCliService, parseSourceListOutput } from "./nugetCliService";
 import { WorkspaceScanner } from "./workspaceScanner";
 
@@ -10,22 +11,29 @@ import { WorkspaceScanner } from "./workspaceScanner";
 export class PackageSourceService {
   constructor(
     private readonly cli: NugetCliService,
-    private readonly scanner: WorkspaceScanner
+    private readonly scanner: WorkspaceScanner,
+    private readonly credentials: CredentialStorageService
   ) {}
 
   async listSources(): Promise<PackageSource[]> {
     const result = await this.cli.listSources({ timeoutMs: 20000 });
+    let sources: PackageSource[] = [];
     if (result.code === 0) {
       const cliSources = parseSourceListOutput(result.stdout);
       if (cliSources.length > 0) {
         const fromConfigs = this.scanner.getModel()?.sources ?? [];
-        return cliSources.map((source) => {
+        sources = cliSources.map((source) => {
           const match = fromConfigs.find((c) => c.name.toLowerCase() === source.name.toLowerCase());
           return match ? { ...source, configPath: match.configPath } : source;
         });
       }
     }
-    return this.scanner.getModel()?.sources ?? [];
+    if (sources.length === 0) {
+      sources = this.scanner.getModel()?.sources ?? [];
+    }
+    return Promise.all(
+      sources.map(async (s) => ({ ...s, hasCredentials: await this.credentials.has(s.name) }))
+    );
   }
 
   async addSource(name: string, url: string): Promise<void> {
@@ -35,11 +43,24 @@ export class PackageSourceService {
     }
   }
 
+  async setCredential(sourceName: string, cred: StoredCredential): Promise<void> {
+    await this.credentials.set(sourceName, cred);
+  }
+
+  async removeCredential(sourceName: string): Promise<void> {
+    await this.credentials.delete(sourceName);
+  }
+
+  getCredential(sourceName: string): Promise<StoredCredential | null> {
+    return this.credentials.get(sourceName);
+  }
+
   async removeSource(name: string): Promise<void> {
     const result = await this.cli.removeSource(name);
     if (result.code !== 0) {
       throw new Error(result.stderr || result.stdout || "dotnet nuget remove source failed");
     }
+    await this.credentials.delete(name);
   }
 
   async enableSource(name: string): Promise<void> {

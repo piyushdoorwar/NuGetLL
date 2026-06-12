@@ -3,7 +3,15 @@ import { post } from "../api/vscodeApi";
 import { PackageSource } from "../types";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { EmptyState } from "./EmptyState";
-import { IconGlobe } from "./Icons";
+import { IconGlobe, IconLock } from "./Icons";
+
+interface CredForm {
+  sourceName: string;
+  credType: "pat" | "basic";
+  username: string;
+  password: string;
+  error?: string;
+}
 
 export function SourcesView(props: { sources?: PackageSource[]; busy: boolean }) {
   const [name, setName] = useState("");
@@ -12,6 +20,7 @@ export function SourcesView(props: { sources?: PackageSource[]; busy: boolean })
   const [formError, setFormError] = useState<string>();
   const [editing, setEditing] = useState<string>();
   const [editUrl, setEditUrl] = useState("");
+  const [credForm, setCredForm] = useState<CredForm>();
 
   const saveEdit = (source: PackageSource) => {
     const trimmed = editUrl.trim();
@@ -27,7 +36,7 @@ export function SourcesView(props: { sources?: PackageSource[]; busy: boolean })
       return;
     }
     if (/:\/\/[^/]*:[^/@]*@/.test(url)) {
-      setFormError("Do not embed credentials in the URL. Use a NuGet credential provider for authenticated feeds.");
+      setFormError("Do not embed credentials in the URL — use the credential fields on the source row instead.");
       return;
     }
     setFormError(undefined);
@@ -36,12 +45,34 @@ export function SourcesView(props: { sources?: PackageSource[]; busy: boolean })
     setUrl("");
   };
 
+  const openCredForm = (source: PackageSource) => {
+    setCredForm({ sourceName: source.name, credType: "pat", username: "", password: "" });
+  };
+
+  const saveCredential = () => {
+    if (!credForm) {
+      return;
+    }
+    if (!credForm.password.trim()) {
+      setCredForm({ ...credForm, error: "Password / token is required." });
+      return;
+    }
+    post({
+      type: "saveCredential",
+      sourceName: credForm.sourceName,
+      credType: credForm.credType,
+      username: credForm.username.trim() || undefined,
+      password: credForm.password.trim()
+    });
+    setCredForm(undefined);
+  };
+
   return (
     <div>
       <h2>Package sources</h2>
       <p className="section-hint">
-        Sources are managed through dotnet nuget and your NuGet.Config files. Credentials are never stored or logged
-        by NuGet LL — use a credential provider for private feeds.
+        Sources are managed through dotnet nuget and your NuGet.Config files. Credentials are
+        stored in VS Code&apos;s encrypted secret storage — never written to disk or logs.
       </p>
 
       <div className="card">
@@ -68,16 +99,19 @@ export function SourcesView(props: { sources?: PackageSource[]; busy: boolean })
           <EmptyState icon={<IconGlobe size={30} />} title="No package sources found" hint="Add a source above or check your NuGet.Config." />
         )}
         {props.sources?.map((source) => (
-          <div key={source.name} className="card">
+          <div key={source.name} className="card" style={{ marginBottom: 8 }}>
             <div className="source-row">
               <span className={`dot ${source.enabled ? "" : "off"}`} />
               <div className="info">
-                <div className="name">
+                <div className="name" style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   {source.name}
-                  {!source.enabled && (
-                    <span className="tag" style={{ marginLeft: 8 }}>
-                      disabled
+                  {source.hasCredentials && (
+                    <span title="Credentials stored" style={{ display: "inline-flex", color: "var(--accent)" }}>
+                      <IconLock size={13} />
                     </span>
+                  )}
+                  {!source.enabled && (
+                    <span className="tag" style={{ marginLeft: 4 }}>disabled</span>
                   )}
                 </div>
                 {editing === source.name ? (
@@ -90,12 +124,8 @@ export function SourcesView(props: { sources?: PackageSource[]; busy: boolean })
                       style={{ flex: 1 }}
                       autoFocus
                     />
-                    <button className="btn btn-primary btn-sm" onClick={() => saveEdit(source)}>
-                      Save
-                    </button>
-                    <button className="btn btn-ghost btn-sm" onClick={() => setEditing(undefined)}>
-                      Cancel
-                    </button>
+                    <button className="btn btn-primary btn-sm" onClick={() => saveEdit(source)}>Save</button>
+                    <button className="btn btn-ghost btn-sm" onClick={() => setEditing(undefined)}>Cancel</button>
                   </div>
                 ) : (
                   <div className="url">{source.url}</div>
@@ -108,17 +138,68 @@ export function SourcesView(props: { sources?: PackageSource[]; busy: boolean })
                     </a>
                   </div>
                 )}
+
+                {credForm?.sourceName === source.name && (
+                  <div className="cred-form">
+                    <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8 }}>
+                      <label style={{ fontSize: 12, color: "var(--text-secondary)", whiteSpace: "nowrap" }}>Auth type</label>
+                      <select
+                        value={credForm.credType}
+                        onChange={(e) => setCredForm({ ...credForm, credType: e.target.value as "pat" | "basic" })}
+                        style={{ fontSize: 12, padding: "3px 6px", background: "var(--input-bg)", border: "1px solid var(--border)", borderRadius: 4, color: "var(--text)" }}
+                      >
+                        <option value="pat">PAT (Personal Access Token)</option>
+                        <option value="basic">Basic (username + password)</option>
+                      </select>
+                    </div>
+                    {credForm.credType === "basic" && (
+                      <input
+                        type="text"
+                        placeholder="Username"
+                        value={credForm.username}
+                        onChange={(e) => setCredForm({ ...credForm, username: e.target.value })}
+                        style={{ marginBottom: 6, width: "100%" }}
+                      />
+                    )}
+                    <input
+                      type="password"
+                      placeholder={credForm.credType === "pat" ? "Personal Access Token" : "Password"}
+                      value={credForm.password}
+                      onChange={(e) => setCredForm({ ...credForm, password: e.target.value })}
+                      onKeyDown={(e) => e.key === "Enter" && saveCredential()}
+                      style={{ marginBottom: 6, width: "100%" }}
+                      autoFocus
+                    />
+                    {credForm.error && <div className="alert error" style={{ marginBottom: 6 }}>{credForm.error}</div>}
+                    <div style={{ display: "flex", gap: 6 }}>
+                      <button className="btn btn-primary btn-sm" onClick={saveCredential}>Save credential</button>
+                      <button className="btn btn-ghost btn-sm" onClick={() => setCredForm(undefined)}>Cancel</button>
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="actions">
                 <button
                   className="btn btn-ghost btn-sm"
-                  onClick={() => {
-                    setEditing(source.name);
-                    setEditUrl(source.url);
-                  }}
+                  onClick={() => { setEditing(source.name); setEditUrl(source.url); }}
                 >
                   Edit
                 </button>
+                <button
+                  className="btn btn-ghost btn-sm"
+                  onClick={() => credForm?.sourceName === source.name ? setCredForm(undefined) : openCredForm(source)}
+                >
+                  {source.hasCredentials ? "Update creds" : "Set credentials"}
+                </button>
+                {source.hasCredentials && (
+                  <button
+                    className="btn btn-ghost btn-sm"
+                    style={{ color: "var(--danger)" }}
+                    onClick={() => post({ type: "removeCredential", sourceName: source.name })}
+                  >
+                    Clear creds
+                  </button>
+                )}
                 {source.enabled ? (
                   <button className="btn btn-ghost btn-sm" onClick={() => post({ type: "disableSource", name: source.name })}>
                     Disable
@@ -140,7 +221,7 @@ export function SourcesView(props: { sources?: PackageSource[]; busy: boolean })
       <ConfirmDialog
         open={removeTarget !== undefined}
         title={`Remove source "${removeTarget?.name}"?`}
-        body={`${removeTarget?.url ?? ""}\n\nThis edits your NuGet configuration.`}
+        body={`${removeTarget?.url ?? ""}\n\nThis edits your NuGet configuration.${removeTarget?.hasCredentials ? "\n\nStored credentials for this source will also be deleted." : ""}`}
         danger
         confirmLabel="Remove"
         onConfirm={() => {

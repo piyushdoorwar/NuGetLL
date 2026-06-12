@@ -51,6 +51,8 @@ export type WebviewToExtensionMessage =
   | { type: "removeSource"; name: string }
   | { type: "enableSource"; name: string }
   | { type: "disableSource"; name: string }
+  | { type: "saveCredential"; sourceName: string; credType: "pat" | "basic"; username?: string; password: string }
+  | { type: "removeCredential"; sourceName: string }
   | { type: "restoreProject"; projectPath: string }
   | { type: "openExternal"; url: string }
   | { type: "openFile"; path: string }

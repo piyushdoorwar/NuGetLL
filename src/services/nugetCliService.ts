@@ -362,8 +362,12 @@ export class NugetCliService {
     return this.run(["nuget", "list", "source"], runOptions);
   }
 
-  addSource(url: string, name: string, runOptions: RunOptions = {}): Promise<CommandResult> {
-    return this.run(["nuget", "add", "source", url, "--name", name], runOptions);
+  addSource(url: string, name: string, credentials?: { username: string; password: string }, runOptions: RunOptions = {}): Promise<CommandResult> {
+    const args = ["nuget", "add", "source", url, "--name", name];
+    if (credentials) {
+      args.push("--username", credentials.username, "--password", credentials.password, "--store-password-in-clear-text");
+    }
+    return this.run(args, runOptions);
   }
 
   removeSource(name: string, runOptions: RunOptions = {}): Promise<CommandResult> {
@@ -378,7 +382,11 @@ export class NugetCliService {
     return this.run(["nuget", "disable", "source", name], runOptions);
   }
 
-  updateSource(name: string, url: string, runOptions: RunOptions = {}): Promise<CommandResult> {
-    return this.run(["nuget", "update", "source", name, "--source", url], runOptions);
+  updateSource(name: string, url: string, credentials?: { username: string; password: string }, runOptions: RunOptions = {}): Promise<CommandResult> {
+    const args = ["nuget", "update", "source", name, "--source", url];
+    if (credentials) {
+      args.push("--username", credentials.username, "--password", credentials.password, "--store-password-in-clear-text");
+    }
+    return this.run(args, runOptions);
   }
 }

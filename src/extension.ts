@@ -9,6 +9,7 @@ import { registerUpdatePackageCommands } from "./commands/updatePackageCommand";
 import { getConfig } from "./config";
 import { CentralPackageService } from "./services/centralPackageService";
 import { GetllServices, ResultsStore } from "./services/container";
+import { CredentialStorageService } from "./services/credentialStorageService";
 import { NugetApiService } from "./services/nugetApiService";
 import { NugetCliService } from "./services/nugetCliService";
 import { PackageSourceService } from "./services/packageSourceService";
@@ -35,14 +36,19 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     () => getConfig().excludedFolders
   );
   const cli = new NugetCliService((line) => logger.output(line));
-  const api = new NugetApiService(() => getConfig().nugetOrgApiUrl);
-  const sources = new PackageSourceService(cli, scanner);
+  const credentialStorage = new CredentialStorageService(context.secrets);
+  const sources = new PackageSourceService(cli, scanner, credentialStorage);
+  const api = new NugetApiService(
+    () => getConfig().nugetOrgApiUrl,
+    (sourceName) => sources.getCredential(sourceName)
+  );
   const services: GetllServices = {
     context,
     scanner,
     cli,
     api,
     sources,
+    credentials: credentialStorage,
     central: new CentralPackageService(),
     vulnerabilities: new VulnerabilityService(cli),
     results: new ResultsStore(),

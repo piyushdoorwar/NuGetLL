@@ -1220,6 +1220,25 @@ table.data td.pkg {
   min-width: 160px;
 }
 
+.cred-form {
+  margin-top: 10px;
+  padding: 12px;
+  background: var(--card-alt);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+}
+
+.cred-form input {
+  display: block;
+  background: var(--input-bg, var(--card));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  padding: 5px 10px;
+  font-size: 12.5px;
+  font-family: inherit;
+}
+
 /* ---------- Misc ---------- */
 
 .toolbar {
