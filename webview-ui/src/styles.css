@@ -6,7 +6,8 @@
   --border: #2a2a2a;
   --border-soft: #232323;
   --accent: #1f9cf0;
-  --accent-dark: #1177c4;
+  --accent-dark: #007acc;
+  --accent-deep: #0065a9;
   --accent-soft: rgba(31, 156, 240, 0.12);
   --accent-glow: rgba(31, 156, 240, 0.22);
   --text: #f4f4f4;
@@ -61,7 +62,7 @@ a:hover {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--accent-dark) transparent;
+  scrollbar-color: var(--accent-deep) transparent;
 }
 
 ::-webkit-scrollbar {
@@ -74,7 +75,7 @@ a:hover {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--accent-dark);
+  background: var(--accent-deep);
   border-radius: 99px;
   border: 3px solid var(--bg);
 }
@@ -287,7 +288,7 @@ select:focus-visible {
 }
 
 .btn-primary {
-  background: linear-gradient(180deg, var(--accent), #1a8fe0);
+  background: linear-gradient(180deg, var(--accent), var(--accent-dark));
   color: #06243a;
   box-shadow: 0 2px 12px var(--accent-glow);
 }
@@ -423,7 +424,7 @@ input[type="checkbox"]:checked {
   background:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath fill='none' stroke='%230b1a0f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M1.5 5l2.5 2.5 4.5-4.5'/%3E%3C/svg%3E")
     center / 65% no-repeat,
-    linear-gradient(180deg, var(--accent), #1a8fe0);
+    linear-gradient(180deg, var(--accent), var(--accent-dark));
   border-color: var(--accent);
   box-shadow: 0 1px 8px var(--accent-glow);
 }

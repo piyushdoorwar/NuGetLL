@@ -127,7 +127,7 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
 <style>
   * { box-sizing: border-box; }
   ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-thumb { background: #1177c4; border-radius: 99px; }
+  ::-webkit-scrollbar-thumb { background: #0065a9; border-radius: 99px; }
   ::-webkit-scrollbar-thumb:hover { background: #1f9cf0; }
   body {
     font-family: var(--vscode-font-family);
@@ -146,7 +146,7 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
   button.primary {
     display: flex; align-items: center; justify-content: center;
     gap: 9px; width: 100%;
-    background: linear-gradient(180deg, #1f9cf0, #1a8fe0); color: #06243a;
+    background: linear-gradient(180deg, #1f9cf0, #007acc); color: #06243a;
     font-weight: 700; border: none; border-radius: 9px;
     padding: 9px 13px; margin-bottom: 18px;
     font-size: 12.5px; cursor: pointer; font-family: inherit;
@@ -161,7 +161,7 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
     border-radius: 10px; padding: 12px 13px;
     cursor: pointer; transition: border-color 0.15s ease, transform 0.15s ease;
   }
-  .card:hover { border-color: #1177c4; transform: translateY(-1px); }
+  .card:hover { border-color: #007acc; transform: translateY(-1px); }
   .card .value { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; color: #1f9cf0; line-height: 1.1; }
   .card .value.neutral { color: #f4f4f4; }
   .card .value.bad { color: #e5534b; }
@@ -177,8 +177,8 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
     font-size: 12px; cursor: pointer; font-family: inherit;
     transition: border-color 0.15s, color 0.15s, background 0.15s;
   }
-  .action:hover { border-color: #1177c4; color: #f4f4f4; background: #1e1e1e; }
-  .action svg { color: #1177c4; flex-shrink: 0; }
+  .action:hover { border-color: #007acc; color: #f4f4f4; background: #1e1e1e; }
+  .action svg { color: #007acc; flex-shrink: 0; }
   /* workspace info */
   .info-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
   .info-key { font-size: 11.5px; color: #7a7a7a; }
