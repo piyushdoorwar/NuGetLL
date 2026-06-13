@@ -5,10 +5,10 @@
   --card-alt: #1c1c1c;
   --border: #2a2a2a;
   --border-soft: #232323;
-  --accent: #35c75a;
-  --accent-dark: #1f9f45;
-  --accent-soft: rgba(53, 199, 90, 0.12);
-  --accent-glow: rgba(53, 199, 90, 0.22);
+  --accent: #1f9cf0;
+  --accent-dark: #1177c4;
+  --accent-soft: rgba(31, 156, 240, 0.12);
+  --accent-glow: rgba(31, 156, 240, 0.22);
   --text: #f4f4f4;
   --text-secondary: #b8b8b8;
   --text-muted: #7a7a7a;
@@ -57,7 +57,7 @@ a:hover {
   text-decoration: underline;
 }
 
-/* ---------- Scrollbars (green) ---------- */
+/* ---------- Scrollbars (blue) ---------- */
 
 * {
   scrollbar-width: thin;
@@ -148,7 +148,7 @@ a:hover {
 }
 
 .badge.ok {
-  border-color: rgba(53, 199, 90, 0.35);
+  border-color: rgba(31, 156, 240, 0.35);
   color: var(--accent);
   background: var(--accent-soft);
 }
@@ -214,7 +214,7 @@ a:hover {
   color: var(--accent);
   font-weight: 600;
   background: var(--accent-soft);
-  border-color: rgba(53, 199, 90, 0.35);
+  border-color: rgba(31, 156, 240, 0.35);
 }
 
 .tabbar .count {
@@ -231,7 +231,7 @@ a:hover {
 
 .tabbar button.active .count {
   color: var(--accent);
-  background: rgba(53, 199, 90, 0.18);
+  background: rgba(31, 156, 240, 0.18);
 }
 
 .content {
@@ -289,8 +289,8 @@ select:focus-visible {
 }
 
 .btn-primary {
-  background: linear-gradient(180deg, var(--accent), #2bb84f);
-  color: #0b1a0f;
+  background: linear-gradient(180deg, var(--accent), #1a8fe0);
+  color: #06243a;
   box-shadow: 0 2px 12px var(--accent-glow);
 }
 
@@ -425,7 +425,7 @@ input[type="checkbox"]:checked {
   background:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath fill='none' stroke='%230b1a0f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M1.5 5l2.5 2.5 4.5-4.5'/%3E%3C/svg%3E")
     center / 65% no-repeat,
-    linear-gradient(180deg, var(--accent), #2bb84f);
+    linear-gradient(180deg, var(--accent), #1a8fe0);
   border-color: var(--accent);
   box-shadow: 0 1px 8px var(--accent-glow);
 }
@@ -643,7 +643,7 @@ table.data td.pkg {
 .pkg-card.selected {
   border-color: var(--accent);
   background: var(--card-alt);
-  box-shadow: 0 0 0 1px rgba(53, 199, 90, 0.25), 0 6px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 0 1px rgba(31, 156, 240, 0.25), 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .pkg-icon {
@@ -856,7 +856,7 @@ table.data td.pkg {
 
 .alert.info {
   background: var(--accent-soft);
-  border: 1px solid rgba(53, 199, 90, 0.25);
+  border: 1px solid rgba(31, 156, 240, 0.25);
   color: var(--accent);
 }
 
@@ -951,7 +951,7 @@ table.data td.pkg {
 
 .picker-actions button:hover {
   background: var(--accent-soft);
-  border-color: rgba(53, 199, 90, 0.35);
+  border-color: rgba(31, 156, 240, 0.35);
 }
 
 /* ---------- Dialog ---------- */
@@ -1084,7 +1084,7 @@ table.data td.pkg {
 }
 
 .status-item.completed {
-  border-color: rgba(53, 199, 90, 0.35);
+  border-color: rgba(31, 156, 240, 0.35);
 }
 
 .status-item.failed {

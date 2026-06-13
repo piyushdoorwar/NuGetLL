@@ -2,7 +2,7 @@
 
 NuGet package management and Library Lens for VS Code workspaces.
 
-NeuGetLL brings a Visual Studio-style NuGet experience to VS Code: scan your workspace, browse and search packages, install into one or many projects, keep dependencies updated, and stay on top of vulnerable or deprecated packages — all from a fast, dark, green-accented dashboard and a dedicated sidebar.
+NeuGetLL brings a Visual Studio-style NuGet experience to VS Code: scan your workspace, browse and search packages, install into one or many projects, keep dependencies updated, and stay on top of vulnerable or deprecated packages — all from a fast, dark, blue-accented dashboard and a dedicated sidebar.
 
 > **Screenshots coming soon.**
 

@@ -127,8 +127,8 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
 <style>
   * { box-sizing: border-box; }
   ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-thumb { background: #1f9f45; border-radius: 99px; }
-  ::-webkit-scrollbar-thumb:hover { background: #35c75a; }
+  ::-webkit-scrollbar-thumb { background: #1177c4; border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: #1f9cf0; }
   body {
     font-family: var(--vscode-font-family);
     color: #f4f4f4;
@@ -138,21 +138,21 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
   }
   .logo {
     width: 46px; height: 46px; border-radius: 13px;
-    background: linear-gradient(135deg, #35c75a, #1f9f45);
+    background: linear-gradient(135deg, #1f9cf0, #1177c4);
     display: flex; align-items: center; justify-content: center;
     margin-bottom: 12px; color: #0c1f12;
-    box-shadow: 0 4px 16px rgba(53, 199, 90, 0.25);
+    box-shadow: 0 4px 16px rgba(31, 156, 240, 0.25);
   }
   h2 { margin: 0 0 2px; font-size: 15px; letter-spacing: -0.2px; }
   p { margin: 0 0 16px; color: #b8b8b8; font-size: 12px; }
   button.primary {
     display: flex; align-items: center; justify-content: center;
     gap: 9px; width: 100%;
-    background: linear-gradient(180deg, #35c75a, #2bb84f); color: #0b1a0f;
+    background: linear-gradient(180deg, #1f9cf0, #1a8fe0); color: #06243a;
     font-weight: 700; border: none; border-radius: 9px;
     padding: 9px 13px; margin-bottom: 18px;
     font-size: 12.5px; cursor: pointer; font-family: inherit;
-    box-shadow: 0 2px 12px rgba(53, 199, 90, 0.25);
+    box-shadow: 0 2px 12px rgba(31, 156, 240, 0.25);
     transition: filter 0.15s ease;
   }
   button.primary:hover { filter: brightness(1.07); }
@@ -163,8 +163,8 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
     border-radius: 10px; padding: 12px 13px;
     cursor: pointer; transition: border-color 0.15s ease, transform 0.15s ease;
   }
-  .card:hover { border-color: #1f9f45; transform: translateY(-1px); }
-  .card .value { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; color: #35c75a; line-height: 1.1; }
+  .card:hover { border-color: #1177c4; transform: translateY(-1px); }
+  .card .value { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; color: #1f9cf0; line-height: 1.1; }
   .card .value.neutral { color: #f4f4f4; }
   .card .value.bad { color: #e5534b; }
   .card .label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; color: #7a7a7a; margin-top: 3px; }
@@ -179,15 +179,15 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
     font-size: 12px; cursor: pointer; font-family: inherit;
     transition: border-color 0.15s, color 0.15s, background 0.15s;
   }
-  .action:hover { border-color: #1f9f45; color: #f4f4f4; background: #1e1e1e; }
-  .action svg { color: #1f9f45; flex-shrink: 0; }
+  .action:hover { border-color: #1177c4; color: #f4f4f4; background: #1e1e1e; }
+  .action svg { color: #1177c4; flex-shrink: 0; }
   /* workspace info */
   .info-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
   .info-key { font-size: 11.5px; color: #7a7a7a; }
   .sdk-badge {
     font-family: "SF Mono", Consolas, monospace; font-size: 11px;
-    background: rgba(53,199,90,0.1); color: #35c75a;
-    border: 1px solid rgba(53,199,90,0.25); border-radius: 99px;
+    background: rgba(31,156,240,0.1); color: #1f9cf0;
+    border: 1px solid rgba(31,156,240,0.25); border-radius: 99px;
     padding: 2px 9px;
   }
   .chips { display: flex; flex-wrap: wrap; gap: 5px; }
