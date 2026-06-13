@@ -140,6 +140,49 @@ export class DashboardPanel {
     return parseSearchJson(result.stdout) ?? [];
   }
 
+  /**
+   * Resolves package details by trying configured feeds in turn. Installed
+   * packages carry no source hint, so a package from a private feed would 404
+   * against the default nuget.org registration endpoint. We query each enabled
+   * source (with its own credentials) until one resolves the package, mirroring
+   * how `dotnet restore` searches all sources.
+   */
+  private async resolvePackageDetails(
+    services: GetllServices,
+    packageId: string,
+    sourceHint?: string
+  ) {
+    const sources = await services.sources.listSources().catch(() => []);
+    const candidates = sources.filter((s) => s.enabled && /^https?:\/\//i.test(s.url));
+
+    // Try the hinted source first when the webview knows where it came from.
+    if (sourceHint) {
+      candidates.sort((a, b) => {
+        const aMatch = a.name.toLowerCase() === sourceHint.toLowerCase() ? -1 : 0;
+        const bMatch = b.name.toLowerCase() === sourceHint.toLowerCase() ? -1 : 0;
+        return aMatch - bMatch;
+      });
+    }
+
+    if (candidates.length === 0) {
+      return services.api.getPackageDetails(packageId);
+    }
+
+    let lastError: unknown;
+    for (const source of candidates) {
+      try {
+        return await services.api.getPackageDetails(packageId, {
+          serviceIndexUrl: source.url,
+          sourceName: source.name
+        });
+      } catch (err) {
+        lastError = err;
+        logger.warn(`Package details for ${packageId} not found on '${source.name}': ${String(err)}`);
+      }
+    }
+    throw lastError ?? new Error(`Package '${packageId}' was not found on any configured source.`);
+  }
+
   private async handleMessage(message: WebviewToExtensionMessage): Promise<void> {
     const services = this.services;
     switch (message.type) {
@@ -193,7 +236,7 @@ export class DashboardPanel {
       }
       case "getPackageDetails":
         await this.runOperation(`Load details for ${message.packageId}`, async () => {
-          const details = await services.api.getPackageDetails(message.packageId);
+          const details = await this.resolvePackageDetails(services, message.packageId, message.source);
           const model = services.scanner.getModel();
           details.usedInProjects = (model?.projects ?? [])
             .filter((p) => p.packages.some((pkg) => pkg.id.toLowerCase() === message.packageId.toLowerCase()))
