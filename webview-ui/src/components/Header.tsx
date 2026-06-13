@@ -10,7 +10,7 @@ export function Header(props: {
   return (
     <header className="header">
       <div className="logo">
-        <IconLogo size={24} stroke="#0c1f12" />
+        <IconLogo size={24} stroke="#1f9cf0" />
       </div>
       <div>
         <h1>NuGet LL</h1>

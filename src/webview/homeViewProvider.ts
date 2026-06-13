@@ -138,10 +138,8 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
   }
   .logo {
     width: 46px; height: 46px; border-radius: 13px;
-    background: linear-gradient(135deg, #1f9cf0, #1177c4);
     display: flex; align-items: center; justify-content: center;
-    margin-bottom: 12px; color: #0c1f12;
-    box-shadow: 0 4px 16px rgba(31, 156, 240, 0.25);
+    margin-bottom: 12px; color: #1f9cf0;
   }
   h2 { margin: 0 0 2px; font-size: 15px; letter-spacing: -0.2px; }
   p { margin: 0 0 16px; color: #b8b8b8; font-size: 12px; }
