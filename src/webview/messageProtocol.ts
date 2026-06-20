@@ -71,6 +71,7 @@ export type ExtensionToWebviewMessage =
   | { type: "operationProgress"; operationId: string; message: string }
   | { type: "operationCompleted"; operationId: string; message: string }
   | { type: "operationFailed"; operationId: string; error: string }
+  | { type: "packageUpdated"; packageId: string; projectPaths: string[]; success: boolean }
   | { type: "sourcesUpdated"; sources: PackageSource[] }
   | { type: "settingsUpdated"; settings: GetllSettingsSnapshot }
   | { type: "navigate"; tab: string; query?: string }

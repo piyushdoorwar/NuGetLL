@@ -269,14 +269,27 @@ export class DashboardPanel {
         break;
       case "updatePackage":
         await this.runOperation(`Update ${message.packageId}`, async () => {
-          const outcome = await installPackage(services, message.packageId, message.projectPaths, message.version, {
-            isUpdate: true,
-            skipConfirm: true
-          });
-          if (outcome.failed.length > 0) {
-            throw new Error(outcome.failed.map((f) => `${f.project}: ${f.error}`).join("; "));
+          let success = false;
+          try {
+            const outcome = await installPackage(services, message.packageId, message.projectPaths, message.version, {
+              isUpdate: true,
+              skipConfirm: true
+            });
+            success = outcome.failed.length === 0 && outcome.succeeded.length > 0;
+            if (outcome.failed.length > 0) {
+              throw new Error(outcome.failed.map((f) => `${f.project}: ${f.error}`).join("; "));
+            }
+            return `updated in ${outcome.succeeded.length} project(s)`;
+          } finally {
+            // Let the Updates list prune the now-current rows (on success) or
+            // clear their pending state (on failure) without a full re-check.
+            this.post({
+              type: "packageUpdated",
+              packageId: message.packageId,
+              projectPaths: message.projectPaths,
+              success
+            });
           }
-          return `updated in ${outcome.succeeded.length} project(s)`;
         });
         break;
       case "removePackage":

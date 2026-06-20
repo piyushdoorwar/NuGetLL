@@ -11,6 +11,7 @@ import { Sidebar } from "./components/Sidebar";
 import { SourcesView } from "./components/SourcesView";
 import { UpdatesView } from "./components/UpdatesView";
 import { VulnerabilitiesView } from "./components/VulnerabilitiesView";
+import { outdatedKey } from "./keys";
 import {
   CheckProgressInfo,
   DeprecatedPackage,
@@ -46,6 +47,9 @@ export function App() {
   const [outdatedProgress, setOutdatedProgress] = useState<CheckProgressInfo>();
   const [vulnerableProgress, setVulnerableProgress] = useState<CheckProgressInfo>();
   const [deprecatedProgress, setDeprecatedProgress] = useState<CheckProgressInfo>();
+  // Outdated rows with an update in flight (keyed by outdatedKey), so the UI can
+  // show per-row progress and drop rows the moment their update succeeds.
+  const [updatingKeys, setUpdatingKeys] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const dispose = onMessage((message) => {
@@ -77,6 +81,22 @@ export function App() {
           setDeprecated(message.results);
           setDeprecatedProgress(message.done ? undefined : message.progress);
           break;
+        case "packageUpdated": {
+          const keys = new Set(message.projectPaths.map((p) => outdatedKey(message.packageId, p)));
+          setUpdatingKeys((prev) => {
+            const next = new Set(prev);
+            for (const k of keys) {
+              next.delete(k);
+            }
+            return next;
+          });
+          // On success the package is now at its latest version in those
+          // projects, so drop the rows immediately — no full re-check needed.
+          if (message.success) {
+            setOutdated((prev) => prev?.filter((e) => !keys.has(outdatedKey(e.id, e.projectPath))));
+          }
+          break;
+        }
         case "navigate":
           if (message.tab === "details" && message.query) {
             setTab("browse");
@@ -166,6 +186,20 @@ export function App() {
     post({ type: "getPackageDetails", packageId });
   }, []);
 
+  // Marks rows as in-flight, then fires one update per (package, project) row.
+  const applyUpdates = useCallback((entries: OutdatedPackage[]) => {
+    setUpdatingKeys((prev) => {
+      const next = new Set(prev);
+      for (const e of entries) {
+        next.add(outdatedKey(e.id, e.projectPath));
+      }
+      return next;
+    });
+    for (const e of entries) {
+      post({ type: "updatePackage", packageId: e.id, version: e.latestVersion, projectPaths: [e.projectPath] });
+    }
+  }, []);
+
   const counts = useMemo(
     () => ({
       projects: model?.projects.length ?? 0,
@@ -247,6 +281,8 @@ export function App() {
               outdated={outdated}
               checking={isRunning("Check outdated")}
               progress={outdatedProgress}
+              updatingKeys={updatingKeys}
+              onUpdate={applyUpdates}
               onCheck={() => post({ type: "checkOutdated" })}
               onDetails={(id) => { setTab("browse"); showDetails(id); }}
             />

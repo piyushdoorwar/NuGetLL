@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { post } from "../api/vscodeApi";
+import { outdatedKey } from "../keys";
 import { CheckProgressInfo, OutdatedPackage } from "../types";
 import { CheckProgress } from "./CheckProgress";
 import { ConfirmDialog } from "./ConfirmDialog";
@@ -27,6 +27,8 @@ export function UpdatesView(props: {
   outdated?: OutdatedPackage[];
   checking: boolean;
   progress?: CheckProgressInfo;
+  updatingKeys: Set<string>;
+  onUpdate: (entries: OutdatedPackage[]) => void;
   onCheck: () => void;
   onDetails: (packageId: string) => void;
 }) {
@@ -50,23 +52,17 @@ export function UpdatesView(props: {
     });
   };
 
-  const updateOne = (entry: OutdatedPackage) =>
-    post({
-      type: "updatePackage",
-      packageId: entry.id,
-      version: entry.latestVersion,
-      projectPaths: [entry.projectPath]
-    });
-
   const runBatch = (entries: OutdatedPackage[]) => {
-    for (const entry of entries) {
-      updateOne(entry);
-    }
+    props.onUpdate(entries);
     setConfirmBatch(undefined);
   };
 
   const batch = (label: string, level?: DiffLevel) => {
-    const entries = visible.filter((e) => !level || diffLevel(e.resolvedVersion, e.latestVersion) === level);
+    const entries = visible.filter(
+      (e) =>
+        (!level || diffLevel(e.resolvedVersion, e.latestVersion) === level) &&
+        !props.updatingKeys.has(outdatedKey(e.id, e.projectPath))
+    );
     if (entries.length > 0) {
       setConfirmBatch({ label, entries });
     }
@@ -130,6 +126,7 @@ export function UpdatesView(props: {
           <tbody>
             {visible.map((entry) => {
               const level = diffLevel(entry.resolvedVersion, entry.latestVersion);
+              const updating = props.updatingKeys.has(outdatedKey(entry.id, entry.projectPath));
               return (
                 <tr key={`${entry.id}:${entry.projectPath}`}>
                   <td className="pkg">
@@ -148,11 +145,20 @@ export function UpdatesView(props: {
                     </span>
                   </td>
                   <td>
-                    <div style={{ display: "flex", gap: 6 }}>
-                      <button className="btn btn-primary btn-sm" onClick={() => updateOne(entry)}>
-                        Update
+                    <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                      <button
+                        className="btn btn-primary btn-sm"
+                        onClick={() => props.onUpdate([entry])}
+                        disabled={updating}
+                      >
+                        {updating && <span className="spinner" style={{ marginRight: 6 }} />}
+                        {updating ? "Updating…" : "Update"}
                       </button>
-                      <button className="btn btn-ghost btn-sm" onClick={() => toggleIgnore(entry.id)}>
+                      <button
+                        className="btn btn-ghost btn-sm"
+                        onClick={() => toggleIgnore(entry.id)}
+                        disabled={updating}
+                      >
                         Ignore
                       </button>
                     </div>
