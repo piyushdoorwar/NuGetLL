@@ -175,9 +175,15 @@ export type ExtensionToWebviewMessage =
   | { type: "sourcesUpdated"; sources: PackageSource[] }
   | { type: "settingsUpdated"; settings: GetllSettingsSnapshot }
   | { type: "navigate"; tab: string; query?: string }
-  | { type: "outdatedResults"; results: OutdatedPackage[]; errors: string[] }
-  | { type: "vulnerableResults"; results: VulnerablePackage[]; errors: string[] }
-  | { type: "deprecatedResults"; results: DeprecatedPackage[]; errors: string[] };
+  | { type: "outdatedResults"; results: OutdatedPackage[]; errors: string[]; done: boolean; progress?: CheckProgressInfo }
+  | { type: "vulnerableResults"; results: VulnerablePackage[]; errors: string[]; done: boolean; progress?: CheckProgressInfo }
+  | { type: "deprecatedResults"; results: DeprecatedPackage[]; errors: string[]; done: boolean; progress?: CheckProgressInfo };
+
+/** Progress of a streaming check, in units of analyzed targets (projects). */
+export interface CheckProgressInfo {
+  completed: number;
+  total: number;
+}
 
 export type TabId =
   | "overview"

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { post } from "../api/vscodeApi";
-import { DeprecatedPackage, VulnerablePackage } from "../types";
+import { CheckProgressInfo, DeprecatedPackage, VulnerablePackage } from "../types";
+import { CheckProgress } from "./CheckProgress";
 import { EmptyState } from "./EmptyState";
 import { IconCheck, IconShield } from "./Icons";
 
@@ -9,6 +10,8 @@ export function VulnerabilitiesView(props: {
   deprecated?: DeprecatedPackage[];
   checkingVulnerable: boolean;
   checkingDeprecated: boolean;
+  vulnerableProgress?: CheckProgressInfo;
+  deprecatedProgress?: CheckProgressInfo;
   onCheckVulnerable: () => void;
   onCheckDeprecated: () => void;
 }) {
@@ -42,6 +45,8 @@ export function VulnerabilitiesView(props: {
           </button>
         )}
       </div>
+
+      {props.checkingVulnerable && <CheckProgress progress={props.vulnerableProgress} noun="project" />}
 
       {props.vulnerable === undefined && !props.checkingVulnerable && (
         <EmptyState
@@ -116,6 +121,7 @@ export function VulnerabilitiesView(props: {
           {props.checkingDeprecated ? "Checking..." : "Check deprecated"}
         </button>
       </div>
+      {props.checkingDeprecated && <CheckProgress progress={props.deprecatedProgress} noun="project" />}
       {props.deprecated !== undefined && props.deprecated.length === 0 && !props.checkingDeprecated && (
         <p className="section-hint">No deprecated packages found.</p>
       )}

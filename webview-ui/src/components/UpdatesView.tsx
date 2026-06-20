@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { post } from "../api/vscodeApi";
-import { OutdatedPackage } from "../types";
+import { CheckProgressInfo, OutdatedPackage } from "../types";
+import { CheckProgress } from "./CheckProgress";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { EmptyState } from "./EmptyState";
 import { IconCheck, IconUpdate } from "./Icons";
@@ -25,6 +26,7 @@ function diffLevel(current: string, latest: string): DiffLevel {
 export function UpdatesView(props: {
   outdated?: OutdatedPackage[];
   checking: boolean;
+  progress?: CheckProgressInfo;
   onCheck: () => void;
   onDetails: (packageId: string) => void;
 }) {
@@ -93,6 +95,8 @@ export function UpdatesView(props: {
           </>
         )}
       </div>
+
+      {props.checking && <CheckProgress progress={props.progress} noun="project" />}
 
       {props.outdated === undefined && !props.checking && (
         <EmptyState

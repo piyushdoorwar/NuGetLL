@@ -12,6 +12,7 @@ import { SourcesView } from "./components/SourcesView";
 import { UpdatesView } from "./components/UpdatesView";
 import { VulnerabilitiesView } from "./components/VulnerabilitiesView";
 import {
+  CheckProgressInfo,
   DeprecatedPackage,
   GetllSettingsSnapshot,
   OutdatedPackage,
@@ -41,6 +42,10 @@ export function App() {
   const [deprecated, setDeprecated] = useState<DeprecatedPackage[]>();
   const [sources, setSources] = useState<PackageSource[]>();
   const [operations, setOperations] = useState<Record<string, OperationState>>({});
+  // Live progress for the streaming checks, cleared once each check is done.
+  const [outdatedProgress, setOutdatedProgress] = useState<CheckProgressInfo>();
+  const [vulnerableProgress, setVulnerableProgress] = useState<CheckProgressInfo>();
+  const [deprecatedProgress, setDeprecatedProgress] = useState<CheckProgressInfo>();
 
   useEffect(() => {
     const dispose = onMessage((message) => {
@@ -62,12 +67,15 @@ export function App() {
           break;
         case "outdatedResults":
           setOutdated(message.results);
+          setOutdatedProgress(message.done ? undefined : message.progress);
           break;
         case "vulnerableResults":
           setVulnerable(message.results);
+          setVulnerableProgress(message.done ? undefined : message.progress);
           break;
         case "deprecatedResults":
           setDeprecated(message.results);
+          setDeprecatedProgress(message.done ? undefined : message.progress);
           break;
         case "navigate":
           if (message.tab === "details" && message.query) {
@@ -238,6 +246,7 @@ export function App() {
             <UpdatesView
               outdated={outdated}
               checking={isRunning("Check outdated")}
+              progress={outdatedProgress}
               onCheck={() => post({ type: "checkOutdated" })}
               onDetails={(id) => { setTab("browse"); showDetails(id); }}
             />
@@ -248,6 +257,8 @@ export function App() {
               deprecated={deprecated}
               checkingVulnerable={isRunning("Check vulnerable")}
               checkingDeprecated={isRunning("Check deprecated")}
+              vulnerableProgress={vulnerableProgress}
+              deprecatedProgress={deprecatedProgress}
               onCheckVulnerable={() => post({ type: "checkVulnerable" })}
               onCheckDeprecated={() => post({ type: "checkDeprecated" })}
             />

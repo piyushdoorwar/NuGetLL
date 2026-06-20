@@ -108,14 +108,21 @@ export class DashboardPanel {
     if (!model) {
       return [];
     }
-    return model.solutions.length > 0 ? model.solutions : model.projects.map((p) => p.path);
+    // Prefer per-project targets so checks can stream results one project at a
+    // time (and report "N/M projects" progress). Fall back to solutions only
+    // when no individual projects were discovered.
+    return model.projects.length > 0 ? model.projects.map((p) => p.path) : model.solutions;
   }
 
-  private async runOperation(label: string, work: () => Promise<string>): Promise<void> {
+  private async runOperation(
+    label: string,
+    work: (report: (message: string) => void) => Promise<string>
+  ): Promise<void> {
     const operationId = `op-${++operationCounter}`;
     this.post({ type: "operationStarted", operationId, label });
+    const report = (message: string) => this.post({ type: "operationProgress", operationId, message });
     try {
-      const message = await work();
+      const message = await work(report);
       this.post({ type: "operationCompleted", operationId, message });
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
@@ -284,32 +291,75 @@ export class DashboardPanel {
         });
         break;
       case "checkOutdated":
-        await this.runOperation("Check outdated packages", async () => {
+        await this.runOperation("Check outdated packages", async (report) => {
           const config = getConfig();
-          const { results, errors } = await services.vulnerabilities.checkOutdated(this.listTargets(), {
-            includePrerelease: config.includePrerelease,
-            includeTransitive: config.showTransitivePackages
-          });
+          const { results, errors } = await services.vulnerabilities.checkOutdated(
+            this.listTargets(),
+            {
+              includePrerelease: config.includePrerelease,
+              includeTransitive: config.showTransitivePackages
+            },
+            {},
+            (partial) => {
+              services.results.setOutdated(partial.results);
+              report(`Reviewed ${partial.completed}/${partial.total} project(s)`);
+              this.post({
+                type: "outdatedResults",
+                results: partial.results,
+                errors: partial.errors,
+                done: false,
+                progress: { completed: partial.completed, total: partial.total }
+              });
+            }
+          );
           services.results.setOutdated(results);
-          this.post({ type: "outdatedResults", results, errors });
+          this.post({ type: "outdatedResults", results, errors, done: true });
           return `${results.length} outdated package(s)`;
         });
         break;
       case "checkVulnerable":
-        await this.runOperation("Check vulnerable packages", async () => {
-          const { results, errors } = await services.vulnerabilities.checkVulnerable(this.listTargets(), {
-            includeTransitive: true
-          });
+        await this.runOperation("Check vulnerable packages", async (report) => {
+          const { results, errors } = await services.vulnerabilities.checkVulnerable(
+            this.listTargets(),
+            { includeTransitive: true },
+            {},
+            (partial) => {
+              services.results.setVulnerable(partial.results);
+              report(`Reviewed ${partial.completed}/${partial.total} project(s)`);
+              this.post({
+                type: "vulnerableResults",
+                results: partial.results,
+                errors: partial.errors,
+                done: false,
+                progress: { completed: partial.completed, total: partial.total }
+              });
+            }
+          );
           services.results.setVulnerable(results);
-          this.post({ type: "vulnerableResults", results, errors });
+          this.post({ type: "vulnerableResults", results, errors, done: true });
           return `${results.length} vulnerable package(s)`;
         });
         break;
       case "checkDeprecated":
-        await this.runOperation("Check deprecated packages", async () => {
-          const { results, errors } = await services.vulnerabilities.checkDeprecated(this.listTargets(), {});
+        await this.runOperation("Check deprecated packages", async (report) => {
+          const { results, errors } = await services.vulnerabilities.checkDeprecated(
+            this.listTargets(),
+            {},
+            {},
+            (partial) => {
+              services.results.setDeprecated(partial.results);
+              report(`Reviewed ${partial.completed}/${partial.total} project(s)`);
+              this.post({
+                type: "deprecatedResults",
+                results: partial.results,
+                errors: partial.errors,
+                done: false,
+                progress: { completed: partial.completed, total: partial.total }
+              });
+            }
+          );
           services.results.setDeprecated(results);
-          this.post({ type: "deprecatedResults", results, errors });
+          this.post({ type: "deprecatedResults", results, errors, done: true });
           return `${results.length} deprecated package(s)`;
         });
         break;
