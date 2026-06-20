@@ -2,6 +2,15 @@ import * as vscode from "vscode";
 import { GetllServices } from "../services/container";
 import { DashboardPanel } from "./dashboardPanel";
 
+function nonce(): string {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let value = "";
+  for (let i = 0; i < 32; i++) {
+    value += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return value;
+}
+
 /**
  * The single activity-bar view: a small webview launcher that opens the full
  * dashboard. No native tree UI — everything lives in webviews.
@@ -50,7 +59,7 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
   resolveWebviewView(view: vscode.WebviewView): void {
     this.view = view;
     view.webview.options = { enableScripts: true };
-    view.webview.html = this.html();
+    view.webview.html = this.html(view.webview);
 
     view.webview.onDidReceiveMessage((message: { command: string; tab?: string }) => {
       if (message.command === "open") {
@@ -92,9 +101,10 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
     return { projects, packages, outdated, vulnerable, sources, sdk, frameworks, projectList };
   }
 
-  private html(): string {
+  private html(webview: vscode.Webview): string {
     const { projects, packages, outdated, vulnerable, sources, sdk, frameworks, projectList } =
       this.stats();
+    const scriptNonce = nonce();
 
     // Brand mark: 3D package cube inside a magnifying-glass lens (media/getll.svg).
     const logoSvg = `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -122,7 +132,7 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
         ? list
             .map(
               (p) =>
-                `<div class="proj-row" onclick="open_('installed')">
+                `<div class="proj-row" data-open="installed">
                   <span class="proj-name">${p.name}</span>
                   <span class="proj-meta">${p.pkgCount} pkg${p.pkgCount !== 1 ? "s" : ""}</span>
                 </div>`
@@ -134,6 +144,8 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} https: data:; style-src 'unsafe-inline'; script-src 'nonce-${scriptNonce}';" />
 <style>
   * { box-sizing: border-box; }
   ::-webkit-scrollbar { width: 8px; }
@@ -221,26 +233,26 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
   <div class="logo">${logoSvg}</div>
   <h2>NuGet LL</h2>
   <p>NuGet package management and Library Lens.</p>
-  <button class="primary" onclick="open_('overview')">Open Dashboard</button>
+  <button class="primary" data-open="overview">Open Dashboard</button>
 
   <div class="cards">
-    <div class="card" onclick="open_('overview')">
+    <div class="card" data-open="overview">
       <div class="value neutral" id="val-projects">${projects}</div>
       <div class="label">Projects</div>
     </div>
-    <div class="card" onclick="open_('installed')">
+    <div class="card" data-open="installed">
       <div class="value" id="val-packages">${packages}</div>
       <div class="label">Packages</div>
     </div>
-    <div class="card" onclick="open_('updates')">
+    <div class="card" data-open="updates">
       <div class="value${typeof outdated === "number" && outdated > 0 ? " bad" : ""}" id="val-outdated">${outdated}</div>
       <div class="label">Outdated</div>
     </div>
-    <div class="card" onclick="open_('vulnerabilities')">
+    <div class="card" data-open="vulnerabilities">
       <div class="value${typeof vulnerable === "number" && vulnerable > 0 ? " bad" : ""}" id="val-vulnerable">${vulnerable}</div>
       <div class="label">Vulnerable</div>
     </div>
-    <div class="card" onclick="open_('sources')">
+    <div class="card" data-open="sources">
       <div class="value neutral" id="val-sources">${sources}</div>
       <div class="label">Sources</div>
     </div>
@@ -256,9 +268,15 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
   <div class="sec">Projects</div>
   <div id="val-project-list">${projectListHtml(projectList)}</div>
 
-  <script>
+  <script nonce="${scriptNonce}">
     const vscode = acquireVsCodeApi();
     function open_(tab) { vscode.postMessage({ command: "open", tab }); }
+    // Event delegation: inline onclick handlers are blocked by the webview CSP,
+    // so route every [data-open] element through a single listener instead.
+    document.addEventListener("click", (e) => {
+      const el = e.target.closest("[data-open]");
+      if (el) open_(el.getAttribute("data-open"));
+    });
     vscode.postMessage({ command: "ready" });
     window.addEventListener("message", (e) => {
       const m = e.data;
@@ -276,7 +294,7 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
         : '<span class="chip muted">—</span>';
       const plEl = document.getElementById("val-project-list");
       if (plEl) plEl.innerHTML = m.projectList.length
-        ? m.projectList.map(p => '<div class="proj-row" onclick="open_(\'installed\')">' +
+        ? m.projectList.map(p => '<div class="proj-row" data-open="installed">' +
             '<span class="proj-name">' + p.name + '</span>' +
             '<span class="proj-meta">' + p.pkgCount + ' pkg' + (p.pkgCount !== 1 ? 's' : '') + '</span></div>').join("")
         : '<div style="color:#7a7a7a;font-size:11px;padding:6px 0">No projects found.</div>';

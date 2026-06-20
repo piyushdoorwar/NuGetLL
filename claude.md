@@ -29,10 +29,27 @@ The two communicate over a typed message protocol in
   `container.ts` (DI/wiring).
 - `models/` — `workspaceModel`, `projectModel`, `packageModel`, `sourceModel`.
 - `commands/` — one file per command group; `pickers.ts` for shared quick-pick UI.
-- `webview/` — `dashboardPanel.ts` (panel lifecycle), `webviewHtml.ts` (HTML shell +
-  CSP/nonce), `homeViewProvider.ts`, `messageProtocol.ts`.
+- `webview/` — `dashboardPanel.ts` (panel lifecycle + message handling),
+  `webviewHtml.ts` (React dashboard HTML shell + CSP/nonce), `homeViewProvider.ts`
+  (sidebar launcher; also builds its own CSP/nonce HTML), `messageProtocol.ts`.
 - `utils/` — `security.ts` (credential masking), `xmlUtils.ts`, `logger.ts`,
   `debounce.ts`, `pathUtils.ts`.
+
+### Dependency-health checks stream per project
+
+The Updates / Vulnerabilities / Deprecated checks run `dotnet list … package` **one
+project at a time** (`dashboardPanel.listTargets()` prefers individual projects over
+the solution so there are chunks to stream). `vulnerabilityService` takes an
+`onPartial` callback and the panel posts incremental `*Results` messages carrying
+`done` + `progress {completed,total}`; the webview renders rows as they arrive and
+shows a "Reviewing N/M projects" banner (`CheckProgress`). When adding a similar
+long-running check, follow this shape rather than awaiting all targets.
+
+The Updates tab prunes a row optimistically when its update succeeds (the host posts
+`packageUpdated`; the webview drops the row — no full re-check). Because a streaming
+check keeps re-sending its full pre-update result set (including the final message),
+`App.tsx` tracks already-updated rows in `resolvedKeysRef` and filters incoming
+results against it so an updated row can't reappear; the set resets on each new check.
 
 ## Commands / scripts
 
@@ -62,6 +79,11 @@ sets up both halves.
 - **`packages.config` is read-only** in the current version — list, don't mutate.
 - **Keep the message protocol typed and symmetric** across host and webview when
   adding dashboard features.
+- **No inline event handlers in webview HTML.** Inline `onclick="…"` attributes are
+  blocked by the webview CSP and silently do nothing. Every hand-written webview
+  (`webviewHtml.ts`, `homeViewProvider.ts`) must set a CSP with a per-render nonce,
+  give its `<script>` that nonce, and wire clicks via a delegated `addEventListener`
+  on `data-*` attributes — never inline `onclick`.
 - **Webview output filenames are fixed** — don't add hashing or change the
   `dist/webview` layout without updating `webviewHtml.ts`.
 - Run `npm run lint` and `npm run test` before considering a change done.
