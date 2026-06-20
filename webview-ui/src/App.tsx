@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { onMessage, post } from "./api/vscodeApi";
 import { Header } from "./components/Header";
 import { IconCheck, IconClose } from "./components/Icons";
@@ -50,6 +50,11 @@ export function App() {
   // Outdated rows with an update in flight (keyed by outdatedKey), so the UI can
   // show per-row progress and drop rows the moment their update succeeds.
   const [updatingKeys, setUpdatingKeys] = useState<Set<string>>(new Set());
+  // Rows the user already updated during the current check. A streaming check
+  // keeps re-sending its full (pre-update) result set — including its final
+  // message — so without this an updated row would reappear. Read via a ref
+  // because the message handler closes over state once. Reset on each new check.
+  const resolvedKeysRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     const dispose = onMessage((message) => {
@@ -70,7 +75,9 @@ export function App() {
           setSources(message.sources);
           break;
         case "outdatedResults":
-          setOutdated(message.results);
+          // Drop rows the user already updated this session so a later (or final)
+          // streaming snapshot built from pre-update data can't resurrect them.
+          setOutdated(message.results.filter((e) => !resolvedKeysRef.current.has(outdatedKey(e.id, e.projectPath))));
           setOutdatedProgress(message.done ? undefined : message.progress);
           break;
         case "vulnerableResults":
@@ -93,6 +100,9 @@ export function App() {
           // On success the package is now at its latest version in those
           // projects, so drop the rows immediately — no full re-check needed.
           if (message.success) {
+            for (const k of keys) {
+              resolvedKeysRef.current.add(k);
+            }
             setOutdated((prev) => prev?.filter((e) => !keys.has(outdatedKey(e.id, e.projectPath))));
           }
           break;
@@ -200,6 +210,12 @@ export function App() {
     }
   }, []);
 
+  // A fresh check re-evaluates reality, so forget what was resolved last time.
+  const checkOutdated = useCallback(() => {
+    resolvedKeysRef.current = new Set();
+    post({ type: "checkOutdated" });
+  }, []);
+
   const counts = useMemo(
     () => ({
       projects: model?.projects.length ?? 0,
@@ -283,7 +299,7 @@ export function App() {
               progress={outdatedProgress}
               updatingKeys={updatingKeys}
               onUpdate={applyUpdates}
-              onCheck={() => post({ type: "checkOutdated" })}
+              onCheck={checkOutdated}
               onDetails={(id) => { setTab("browse"); showDetails(id); }}
             />
           )}
