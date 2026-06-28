@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="NuGet LL privacy policy. NuGet LL has no backend, runs the .NET CLI locally, and only contacts the NuGet feeds you configure."
+    />
+    <title>NuGet LL Privacy Policy</title>
+    <link rel="icon" href="../assets/icons/icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="NuGet LL home">
+        <img src="../assets/icons/icon.svg" alt="" />
+        <span>NuGet LL</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="../#features">Features</a>
+        <a href="../#workflow">Workflow</a>
+        <a href="../#privacy">Privacy</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="policy-page">
+        <div class="policy-hero" data-reveal>
+          <p class="eyebrow">Privacy policy</p>
+          <h1>NuGet LL Privacy Policy</h1>
+          <p class="lede">NuGet LL is a local-first VS Code extension for managing NuGet packages across your .NET workspace.</p>
+        </div>
+
+        <div class="policy-content" data-reveal>
+          <article>
+            <h2>Data NuGet LL reads</h2>
+            <p>NuGet LL reads project and configuration files in your workspace — such as <code>.sln</code>, <code>.csproj</code>, <code>Directory.Packages.props</code>, <code>NuGet.Config</code>, and <code>packages.config</code> — so it can show your projects, packages, and feeds.</p>
+          </article>
+
+          <article>
+            <h2>Feed requests</h2>
+            <p>When you search or view package details, NuGet LL sends queries directly from VS Code to nuget.org or the NuGet feeds you have configured. It uses the public NuGet v3 API and your existing feed settings.</p>
+          </article>
+
+          <article>
+            <h2>Local .NET CLI</h2>
+            <p>Installing, updating, removing, restoring, and running outdated, vulnerable, and deprecated checks invoke the <code>dotnet</code> CLI on your machine against your own projects. Nothing is sent to a server owned by this extension.</p>
+          </article>
+
+          <article>
+            <h2>No backend and no telemetry</h2>
+            <p>NuGet LL does not operate a backend service for extension data. It does not collect analytics, crash reports, project contents, package names, or usage history.</p>
+          </article>
+
+          <article>
+            <h2>Edits to your files</h2>
+            <p>NuGet LL only modifies project and configuration files in response to actions you take, and always asks before touching shared files such as <code>Directory.Packages.props</code> or <code>Directory.Build.props</code>.</p>
+          </article>
+
+          <article>
+            <h2>Third-party feeds</h2>
+            <p>NuGet feeds (nuget.org and any private feeds you configure) operate under their own privacy policies and terms. The developer is not responsible for how those feeds handle requests sent to them.</p>
+          </article>
+
+          <article>
+            <h2>No warranty</h2>
+            <p>NuGet LL is provided on an "as is" and "as available" basis, without warranties of any kind, express or implied. Use of the extension is at your own risk.</p>
+          </article>
+
+          <article>
+            <h2>Limitation of liability</h2>
+            <p>To the maximum extent permitted by law, the developer is not liable for any damages arising from use of NuGet LL, including but not limited to data loss, build breakage, loss of profits, or business interruption.</p>
+          </article>
+
+          <article>
+            <h2>User responsibility</h2>
+            <p>You are solely responsible for the packages you install, the feeds you trust, and any changes made to your projects through NuGet LL. Review dependency and version changes before committing them.</p>
+          </article>
+
+          <article>
+            <h2>Contact</h2>
+            <p>For privacy questions, email <a href="mailto:piyushdoorwar+getll@gmail.com">piyushdoorwar+getll@gmail.com</a>.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>NuGet LL</span>
+      <div class="footer-links">
+        <a href="../">Home</a>
+        <a href="https://github.com/piyushdoorwar/getll" rel="noreferrer">GitHub</a>
+      </div>
+    </footer>
+
+    <script src="../app.js"></script>
+  </body>
+</html>

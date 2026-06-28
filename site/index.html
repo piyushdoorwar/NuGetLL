@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="NuGet LL brings a Visual Studio-style NuGet experience to VS Code. Scan your workspace, browse and search packages, install into one or many projects, and stay on top of outdated, vulnerable, and deprecated dependencies."
+    />
+    <title>NuGet LL - NuGet package manager &amp; Library Lens for VS Code</title>
+    <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="NuGet LL home">
+        <img src="assets/icons/icon.svg" alt="" />
+        <span>NuGet LL</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#features">Features</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#privacy">Privacy</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">VS Code extension</p>
+          <h1>NuGet LL</h1>
+          <p class="lede">
+            A Visual Studio-style NuGet experience for VS Code. Scan your workspace, browse packages, and
+            install into one or many projects — all from a fast, dark, blue-accented dashboard.
+          </p>
+          <div class="hero-modes" aria-label="Core workflows">
+            <div class="hero-mode">
+              <span class="hero-mode-icon" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
+              <div class="hero-mode-text">
+                <strong>Manage packages</strong>
+                <span>Install, update, and remove across multiple projects at once</span>
+              </div>
+            </div>
+            <div class="hero-mode">
+              <span class="hero-mode-icon" aria-hidden="true"><img src="assets/icons/lens.svg" alt="" /></span>
+              <div class="hero-mode-text">
+                <strong>Library Lens</strong>
+                <span>See versions, downloads, dependencies, and who uses what</span>
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <a class="button primary" href="vscode:extension/piyushdoorwar.getll">
+              <img src="assets/icons/vscode.svg" alt="" />
+              <span>Open in VS Code</span>
+            </a>
+            <a class="button secondary icon-link" href="https://github.com/piyushdoorwar/getll" rel="noreferrer">
+              <img src="assets/icons/github.svg" alt="" />
+              <span>View source</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="vscode-mockup" aria-label="NuGet LL VS Code dashboard preview">
+          <div class="vs-titlebar">
+            <div class="vs-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span>NuGet LL - Visual Studio Code</span>
+            <img src="assets/icons/vscode.svg" alt="" />
+          </div>
+          <div class="vs-body">
+            <aside class="activity" aria-hidden="true">
+              <img src="assets/icons/icon.svg" alt="" class="active" />
+              <img src="assets/icons/projects.svg" alt="" />
+              <img src="assets/icons/search.svg" alt="" />
+              <img src="assets/icons/updates.svg" alt="" />
+            </aside>
+            <section class="panel">
+              <div class="repo-row">
+                <span class="repo-name"><img src="assets/icons/icon.svg" alt="" />NuGet LL</span>
+                <span class="gear">...</span>
+              </div>
+              <div class="tabs">
+                <button type="button" class="active">Browse</button>
+                <button type="button">Installed <b>18</b></button>
+                <button type="button">Updates <b>3</b></button>
+              </div>
+              <div class="summary-wrap search-wrap">
+                <input value="serilog" aria-label="Search packages" />
+                <button type="button" aria-label="Search"><img src="assets/icons/search.svg" alt="" /></button>
+              </div>
+              <ul class="pkg-list">
+                <li>
+                  <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
+                  <span class="pkg-meta">
+                    <b>Serilog</b>
+                    <i>Simple .NET logging with fully-structured events</i>
+                  </span>
+                  <span class="pkg-ver">v4.2.0</span>
+                </li>
+                <li>
+                  <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
+                  <span class="pkg-meta">
+                    <b>Serilog.Sinks.Console</b>
+                    <i>A Serilog sink that writes to the console</i>
+                  </span>
+                  <span class="pkg-ver">v6.0.0</span>
+                </li>
+                <li class="selected">
+                  <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
+                  <span class="pkg-meta">
+                    <b>Serilog.AspNetCore</b>
+                    <i>Serilog integration for ASP.NET Core</i>
+                  </span>
+                  <span class="pkg-ver">v8.0.3</span>
+                </li>
+              </ul>
+              <div class="commit-card">
+                <div class="install-row">
+                  <label>
+                    <span>Version</span>
+                    <div class="select-fake">8.0.3 (latest) <em>▾</em></div>
+                  </label>
+                  <label>
+                    <span>Projects</span>
+                    <div class="select-fake">Api, Worker <em>▾</em></div>
+                  </label>
+                </div>
+                <button class="commit-btn" type="button">Install into 2 projects</button>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <div class="marquee-wrap" aria-hidden="true">
+          <div class="marquee-track">
+            <ul class="marquee-row">
+              <li>Workspace scanner</li>
+              <li>nuget.org search</li>
+              <li>Multi-project install</li>
+              <li>Outdated report</li>
+              <li>Vulnerability scan</li>
+              <li>Deprecation alerts</li>
+              <li>Central Package Management</li>
+              <li>Package sources</li>
+              <li>dotnet restore</li>
+              <li>Live refresh</li>
+              <li>Version pickers</li>
+              <li>Library Lens</li>
+            </ul>
+            <ul class="marquee-row" aria-hidden="true">
+              <li>Workspace scanner</li>
+              <li>nuget.org search</li>
+              <li>Multi-project install</li>
+              <li>Outdated report</li>
+              <li>Vulnerability scan</li>
+              <li>Deprecation alerts</li>
+              <li>Central Package Management</li>
+              <li>Package sources</li>
+              <li>dotnet restore</li>
+              <li>Live refresh</li>
+              <li>Version pickers</li>
+              <li>Library Lens</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="band" id="features">
+        <div class="section-heading" data-reveal>
+          <p class="eyebrow">What it does</p>
+          <h2>Your whole NuGet workflow, in one panel.</h2>
+          <p class="section-sub">
+            NuGet LL detects every project in your workspace and gives you a Visual Studio-grade view of
+            what's installed, what's outdated, and what needs attention.
+          </p>
+        </div>
+        <div class="feature-grid">
+          <article data-reveal>
+            <div class="feat-icon"><img src="assets/icons/lens.svg" alt="" /></div>
+            <h3>Workspace scanner</h3>
+            <p>Detects <code>.sln</code>, <code>.csproj</code>, <code>.fsproj</code>, <code>.vbproj</code>, props files, and <code>packages.config</code> across all folders.</p>
+          </article>
+          <article data-reveal style="--reveal-delay: 0.08s">
+            <div class="feat-icon"><img src="assets/icons/search.svg" alt="" /></div>
+            <h3>Search nuget.org</h3>
+            <p>NuGet v3 search against nuget.org or your configured feed, with prerelease and exact-id filters.</p>
+          </article>
+          <article data-reveal style="--reveal-delay: 0.16s">
+            <div class="feat-icon"><img src="assets/icons/package.svg" alt="" /></div>
+            <h3>Install across projects</h3>
+            <p>Add, update, or remove a package in one or many projects at once, with stable, prerelease, or pinned versions.</p>
+          </article>
+          <article data-reveal style="--reveal-delay: 0.24s">
+            <div class="feat-icon"><img src="assets/icons/updates.svg" alt="" /></div>
+            <h3>Outdated reports</h3>
+            <p>Patch, minor, and major classification powered by <code>dotnet list package --outdated</code>, with batch updates.</p>
+          </article>
+          <article data-reveal style="--reveal-delay: 0.32s">
+            <div class="feat-icon"><img src="assets/icons/shield.svg" alt="" /></div>
+            <h3>Vulnerable &amp; deprecated</h3>
+            <p>Surface vulnerable and deprecated dependencies with advisory links and a copyable report.</p>
+          </article>
+          <article data-reveal style="--reveal-delay: 0.4s">
+            <div class="feat-icon"><img src="assets/icons/layers.svg" alt="" /></div>
+            <h3>Central Package Management</h3>
+            <p>Detects <code>Directory.Packages.props</code> and edits <code>PackageVersion</code> entries — always asking before touching shared files.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="band band--alt" id="workflow">
+        <div class="section-heading" data-reveal>
+          <p class="eyebrow">Workflow</p>
+          <h2>From a fresh clone to a healthy dependency graph.</h2>
+        </div>
+        <div class="workflow">
+          <article data-reveal>
+            <span class="step-n">1</span>
+            <h3>Scan the workspace</h3>
+            <p>Open a folder with .NET projects and NuGet LL maps every project, package, and feed.</p>
+          </article>
+          <article data-reveal style="--reveal-delay: 0.08s">
+            <span class="step-n">2</span>
+            <h3>Browse &amp; search</h3>
+            <p>Find packages on nuget.org, inspect versions, downloads, licenses, and dependencies in Library Lens.</p>
+          </article>
+          <article data-reveal style="--reveal-delay: 0.16s">
+            <span class="step-n">3</span>
+            <h3>Install or update</h3>
+            <p>Pick a version and target projects, then install or update in a single confirmed action.</p>
+          </article>
+          <article data-reveal style="--reveal-delay: 0.24s">
+            <span class="step-n">4</span>
+            <h3>Stay healthy</h3>
+            <p>Watch the Outdated and Vulnerable views, batch-update, and run restore when you're done.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="privacy-band" id="privacy">
+        <div class="privacy-inner">
+          <div class="section-heading" data-reveal>
+            <p class="eyebrow">Privacy first</p>
+            <h2>Your code and feeds stay yours.</h2>
+            <p class="section-sub">
+              NuGet LL has no backend. It talks to the NuGet feeds you configure and runs the .NET CLI locally.
+            </p>
+          </div>
+          <div class="privacy-grid">
+            <article data-reveal>
+              <h3>No extension server</h3>
+              <p>Search and metadata requests go straight from VS Code to nuget.org or your configured feed. NuGet LL does not proxy or store them.</p>
+            </article>
+            <article data-reveal style="--reveal-delay: 0.08s">
+              <h3>Local dotnet CLI</h3>
+              <p>Install, update, restore, and health checks run <code>dotnet</code> commands on your machine against your projects.</p>
+            </article>
+            <article data-reveal style="--reveal-delay: 0.16s">
+              <h3>Asks before shared edits</h3>
+              <p>Central Package Management and shared props files are only modified after you confirm the change.</p>
+            </article>
+            <article data-reveal style="--reveal-delay: 0.24s">
+              <h3>No telemetry</h3>
+              <p>There is no analytics pipeline. NuGet LL does not collect your project contents, package names, or usage history.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="install-section" id="install">
+        <div data-reveal>
+          <p class="eyebrow">Install</p>
+          <h2>Add NuGet LL to VS Code.</h2>
+          <p>Install the extension, open a workspace with .NET projects, and click the NuGet LL icon in the activity bar to see your projects, packages, and the full dashboard.</p>
+          <p class="compat-note">Also works in Cursor and Windsurf.</p>
+        </div>
+        <div class="install-actions" data-reveal style="--reveal-delay: 0.12s">
+          <a class="button primary large" href="vscode:extension/piyushdoorwar.getll">
+            <img src="assets/icons/vscode.svg" alt="" />
+            <span>Open in VS Code</span>
+          </a>
+          <a class="button secondary large icon-link" href="https://marketplace.visualstudio.com/items?itemName=piyushdoorwar.getll" rel="noreferrer">
+            <img src="assets/icons/vscode.svg" alt="" />
+            <span>Marketplace</span>
+          </a>
+          <a class="button secondary large icon-link" href="https://github.com/piyushdoorwar/getll" rel="noreferrer">
+            <img src="assets/icons/github.svg" alt="" />
+            <span>GitHub</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>NuGet LL</span>
+      <div class="footer-links">
+        <a href="https://github.com/piyushdoorwar/getll" rel="noreferrer">GitHub</a>
+        <a href="policy/">Privacy policy</a>
+        <a href="mailto:piyushdoorwar+getll@gmail.com">Support</a>
+      </div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
