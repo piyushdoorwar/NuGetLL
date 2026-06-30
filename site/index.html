@@ -10,6 +10,14 @@
     <title>NuGet LL - NuGet package manager &amp; Library Lens for VS Code</title>
     <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="styles.css" />
+    <script>
+      // Enable motion before first paint so entrance states don't flash.
+      try {
+        if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          document.documentElement.classList.add("motion-enabled");
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <header class="topbar">
@@ -74,58 +82,127 @@
               <img src="assets/icons/search.svg" alt="" />
               <img src="assets/icons/updates.svg" alt="" />
             </aside>
-            <section class="panel">
+            <section class="panel" data-demo>
               <div class="repo-row">
                 <span class="repo-name"><img src="assets/icons/icon.svg" alt="" />NuGet LL</span>
                 <span class="gear">...</span>
               </div>
-              <div class="tabs">
-                <button type="button" class="active">Browse</button>
-                <button type="button">Installed <b>18</b></button>
-                <button type="button">Updates <b>3</b></button>
+              <div class="tabs" role="tablist" aria-label="NuGet LL views">
+                <button type="button" class="active" role="tab" aria-selected="true" data-tab="browse">Browse</button>
+                <button type="button" role="tab" aria-selected="false" data-tab="installed">Installed <b data-count="installed">18</b></button>
+                <button type="button" role="tab" aria-selected="false" data-tab="updates">Updates <b data-count="updates">3</b></button>
               </div>
-              <div class="summary-wrap search-wrap">
-                <input value="serilog" aria-label="Search packages" />
-                <button type="button" aria-label="Search"><img src="assets/icons/search.svg" alt="" /></button>
-              </div>
-              <ul class="pkg-list">
-                <li>
-                  <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
-                  <span class="pkg-meta">
-                    <b>Serilog</b>
-                    <i>Simple .NET logging with fully-structured events</i>
-                  </span>
-                  <span class="pkg-ver">v4.2.0</span>
-                </li>
-                <li>
-                  <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
-                  <span class="pkg-meta">
-                    <b>Serilog.Sinks.Console</b>
-                    <i>A Serilog sink that writes to the console</i>
-                  </span>
-                  <span class="pkg-ver">v6.0.0</span>
-                </li>
-                <li class="selected">
-                  <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
-                  <span class="pkg-meta">
-                    <b>Serilog.AspNetCore</b>
-                    <i>Serilog integration for ASP.NET Core</i>
-                  </span>
-                  <span class="pkg-ver">v8.0.3</span>
-                </li>
-              </ul>
-              <div class="commit-card">
-                <div class="install-row">
-                  <label>
-                    <span>Version</span>
-                    <div class="select-fake">8.0.3 (latest) <em>▾</em></div>
-                  </label>
-                  <label>
-                    <span>Projects</span>
-                    <div class="select-fake">Api, Worker <em>▾</em></div>
-                  </label>
+
+              <!-- Browse -->
+              <div class="pane active" data-pane="browse">
+                <div class="summary-wrap search-wrap">
+                  <input value="serilog" aria-label="Search packages" data-search />
+                  <button type="button" aria-label="Search"><img src="assets/icons/search.svg" alt="" /></button>
                 </div>
-                <button class="commit-btn" type="button">Install into 2 projects</button>
+                <ul class="pkg-list" data-browse>
+                  <li data-pkg="Serilog" data-desc="Simple .NET logging with fully-structured events" data-versions="4.2.0,4.1.0,3.1.1">
+                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
+                    <span class="pkg-meta"><b>Serilog</b><i>Simple .NET logging with fully-structured events</i></span>
+                    <span class="pkg-ver">v4.2.0</span>
+                  </li>
+                  <li data-pkg="Serilog.Sinks.Console" data-desc="A Serilog sink that writes to the console" data-versions="6.0.0,5.0.1,4.1.0">
+                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
+                    <span class="pkg-meta"><b>Serilog.Sinks.Console</b><i>A Serilog sink that writes to the console</i></span>
+                    <span class="pkg-ver">v6.0.0</span>
+                  </li>
+                  <li class="selected" data-pkg="Serilog.AspNetCore" data-desc="Serilog integration for ASP.NET Core" data-versions="8.0.3,8.0.2,7.0.0">
+                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
+                    <span class="pkg-meta"><b>Serilog.AspNetCore</b><i>Serilog integration for ASP.NET Core</i></span>
+                    <span class="pkg-ver">v8.0.3</span>
+                  </li>
+                  <li data-pkg="Newtonsoft.Json" data-desc="Popular high-performance JSON framework for .NET" data-versions="13.0.3,13.0.2,12.0.3">
+                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
+                    <span class="pkg-meta"><b>Newtonsoft.Json</b><i>Popular high-performance JSON framework for .NET</i></span>
+                    <span class="pkg-ver">v13.0.3</span>
+                  </li>
+                  <li class="pkg-empty" hidden>No packages match your search.</li>
+                </ul>
+                <div class="commit-card">
+                  <div class="install-row">
+                    <div class="field">
+                      <span>Version</span>
+                      <div class="select" data-select="version">
+                        <button type="button" class="select-fake" aria-haspopup="listbox" aria-expanded="false">
+                          <span data-value>8.0.3 (latest)</span><em>▾</em>
+                        </button>
+                        <ul class="select-menu" role="listbox" aria-label="Version"></ul>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <span>Projects</span>
+                      <div class="select" data-select="projects">
+                        <button type="button" class="select-fake" aria-haspopup="listbox" aria-expanded="false">
+                          <span data-value>Api, Worker</span><em>▾</em>
+                        </button>
+                        <ul class="select-menu select-menu--check" role="listbox" aria-label="Target projects" aria-multiselectable="true">
+                          <li><label><input type="checkbox" value="Api" checked /> Api</label></li>
+                          <li><label><input type="checkbox" value="Worker" checked /> Worker</label></li>
+                          <li><label><input type="checkbox" value="Domain" /> Domain</label></li>
+                          <li><label><input type="checkbox" value="Tests" /> Tests</label></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <button class="commit-btn" type="button" data-install>Install into 2 projects</button>
+                </div>
+              </div>
+
+              <!-- Installed -->
+              <div class="pane" data-pane="installed" hidden>
+                <div class="section-head"><span>Installed packages</span></div>
+                <ul class="pkg-list" data-installed>
+                  <li>
+                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
+                    <span class="pkg-meta"><b>Serilog</b><i>Api · Worker · Domain</i></span>
+                    <span class="pkg-ver">v4.2.0</span>
+                    <button type="button" class="row-btn ghost" data-remove aria-label="Remove Serilog">Remove</button>
+                  </li>
+                  <li>
+                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
+                    <span class="pkg-meta"><b>Newtonsoft.Json</b><i>Api · Worker</i></span>
+                    <span class="pkg-ver">v13.0.3</span>
+                    <button type="button" class="row-btn ghost" data-remove aria-label="Remove Newtonsoft.Json">Remove</button>
+                  </li>
+                  <li>
+                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
+                    <span class="pkg-meta"><b>Microsoft.EntityFrameworkCore</b><i>Api · Domain</i></span>
+                    <span class="pkg-ver">v8.0.6</span>
+                    <button type="button" class="row-btn ghost" data-remove aria-label="Remove Microsoft.EntityFrameworkCore">Remove</button>
+                  </li>
+                  <li>
+                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
+                    <span class="pkg-meta"><b>xunit</b><i>Tests</i></span>
+                    <span class="pkg-ver">v2.9.0</span>
+                    <button type="button" class="row-btn ghost" data-remove aria-label="Remove xunit">Remove</button>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Updates -->
+              <div class="pane" data-pane="updates" hidden>
+                <div class="section-head"><span>Updates available</span><button type="button" class="row-btn" data-update-all>Update all</button></div>
+                <ul class="pkg-list" data-updates>
+                  <li>
+                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
+                    <span class="pkg-meta"><b>Serilog.Sinks.Console</b><i>6.0.0 → <strong>6.1.2</strong> <span class="badge minor">Minor</span></i></span>
+                    <button type="button" class="row-btn" data-do-update>Update</button>
+                  </li>
+                  <li>
+                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
+                    <span class="pkg-meta"><b>Polly</b><i>8.4.0 → <strong>8.4.2</strong> <span class="badge patch">Patch</span></i></span>
+                    <button type="button" class="row-btn" data-do-update>Update</button>
+                  </li>
+                  <li>
+                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
+                    <span class="pkg-meta"><b>AutoMapper</b><i>12.0.1 → <strong>13.0.1</strong> <span class="badge major">Major</span></i></span>
+                    <button type="button" class="row-btn" data-do-update>Update</button>
+                  </li>
+                </ul>
               </div>
             </section>
           </div>
