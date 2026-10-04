@@ -12,6 +12,7 @@ function nonce(): string {
 /** Builds the dashboard HTML shell that loads the Vite-built React bundle. */
 export function getWebviewHtml(webview: vscode.Webview, extensionUri: vscode.Uri): string {
   const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, "dist", "webview", "index.js"));
+  const fontUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, "dist", "webview", "fonts", "fonts.css"));
   const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, "dist", "webview", "index.css"));
   const scriptNonce = nonce();
 
@@ -21,6 +22,7 @@ export function getWebviewHtml(webview: vscode.Webview, extensionUri: vscode.Uri
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} https: data:; style-src ${webview.cspSource} 'unsafe-inline'; font-src ${webview.cspSource}; script-src 'nonce-${scriptNonce}';" />
+  <link rel="stylesheet" href="${fontUri}" />
   <link rel="stylesheet" href="${styleUri}" />
   <title>NuGet LL</title>
 </head>

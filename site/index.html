@@ -8,8 +8,13 @@
       content="Manage NuGet packages across your VS Code workspace with NuGet LL. Search, install, update, and audit outdated, vulnerable, or deprecated dependencies."
     />
     <meta name="author" content="Piyush Doorwar" />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-    <meta name="theme-color" content="#090c12" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <meta name="theme-color" content="#fafbfd" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
     <title>NuGet LL - NuGet Package Manager for VS Code</title>
     <link rel="canonical" href="https://piyushdoorwar.github.io/NuGetLL/" />
     <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml" />
@@ -17,25 +22,40 @@
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="NuGet LL" />
-    <meta property="og:title" content="NuGet LL - NuGet Package Manager for VS Code" />
+    <meta
+      property="og:title"
+      content="NuGet LL - NuGet Package Manager for VS Code"
+    />
     <meta
       property="og:description"
       content="Manage NuGet packages across your entire VS Code workspace. Search, install, update, and audit dependencies from one fast dashboard."
     />
-    <meta property="og:url" content="https://piyushdoorwar.github.io/NuGetLL/" />
-    <meta property="og:image" content="https://piyushdoorwar.github.io/NuGetLL/assets/getll.png" />
+    <meta
+      property="og:url"
+      content="https://piyushdoorwar.github.io/NuGetLL/"
+    />
+    <meta
+      property="og:image"
+      content="https://piyushdoorwar.github.io/NuGetLL/assets/getll.png"
+    />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="256" />
     <meta property="og:image:height" content="256" />
     <meta property="og:image:alt" content="NuGet LL logo" />
 
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="NuGet LL - NuGet package manager for VS Code" />
+    <meta
+      name="twitter:title"
+      content="NuGet LL - NuGet package manager for VS Code"
+    />
     <meta
       name="twitter:description"
       content="Search, install, update, and audit NuGet packages across your entire VS Code workspace."
     />
-    <meta name="twitter:image" content="https://piyushdoorwar.github.io/NuGetLL/assets/getll.png" />
+    <meta
+      name="twitter:image"
+      content="https://piyushdoorwar.github.io/NuGetLL/assets/getll.png"
+    />
     <meta name="twitter:image:alt" content="NuGet LL logo" />
 
     <script type="application/ld+json">
@@ -66,374 +86,407 @@
         "privacyPolicy": "https://piyushdoorwar.github.io/NuGetLL/policy/"
       }
     </script>
+    <link rel="preload" href="assets/fonts/dm-sans-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="assets/fonts/fonts.css" />
     <link rel="stylesheet" href="styles.css" />
-    <script>
-      // Enable motion before first paint so entrance states don't flash.
-      try {
-        if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
-          document.documentElement.classList.add("motion-enabled");
-        }
-      } catch (e) {}
-    </script>
+    <script>document.documentElement.classList.add("js");</script>
   </head>
   <body>
+    <!-- Icon sprite, inline so <use> works on file:// as well as when hosted. -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="sprite" aria-hidden="true">
+      <symbol id="i-github" viewBox="0 0 24 24"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></symbol>
+      <symbol id="i-vscode" viewBox="0 0 32 32"><path fill="currentColor" stroke="none" d="M28 25.6l-5.9 2.4-9.7-9.6-6.1 4.8L4 21.9V10.1l2.3-1.2 6.1 4.8L22.1 4 28 6.4v19.2zM15.7 16l6.3 5V11l-6.3 5zM6.3 19.7 10 16l-3.6-3.7-.1 7.4z"/></symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></symbol>
+      <symbol id="i-package" viewBox="0 0 24 24"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/></symbol>
+      <symbol id="i-installed" viewBox="0 0 24 24"><path d="M12 3v12m-4.5-4.5L12 15l4.5-4.5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></symbol>
+      <symbol id="i-updates" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 4v4h-4"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2 4 5.5V11c0 5.25 3.6 9.74 8 11.5 4.4-1.76 8-6.25 8-11.5V5.5L12 2z"/><path d="M12 8v4M12 16h.01"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+      <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 13 9 5 9-5"/></symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+      <symbol id="i-lens" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.7-4.7M10.5 7.5v6M7.5 10.5h6"/></symbol>
+      <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.6.8L12 7.5h7a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+      <symbol id="i-terminal" viewBox="0 0 24 24"><path d="m5 8 4 4-4 4M12 17h7"/><rect x="2" y="3" width="20" height="18" rx="2"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+      <symbol id="i-cloud-off" viewBox="0 0 24 24"><path d="M2 2l20 20"/><path d="M5.8 8.2A6 6 0 0 0 7 20h10.5M21 16.5A4.5 4.5 0 0 0 17.5 9h-1.3A7 7 0 0 0 9.4 4.5"/></symbol>
+      <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><polyline points="14 3 14 8 19 8"/></symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11m-4-4 4 4 4-4M5 20h14"/></symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></symbol>
+    </svg>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <header class="topbar">
-      <a class="brand" href="#top" aria-label="NuGet LL home">
-        <img src="assets/icons/icon.svg" alt="" />
-        <span>NuGet LL</span>
-      </a>
-      <nav aria-label="Primary navigation">
-        <a href="#features">Features</a>
-        <a href="#workflow">Workflow</a>
-        <a href="#privacy">Privacy</a>
-      </nav>
-    </header>
-
-    <main id="top">
-      <section class="hero">
-        <div class="hero-copy">
-          <p class="eyebrow">VS Code extension</p>
-          <h1>NuGet LL</h1>
-          <p class="lede">
-            A Visual Studio-style NuGet experience for VS Code. Scan your workspace, browse packages, and
-            install into one or many projects — all from a fast, dark, blue-accented dashboard.
-          </p>
-          <div class="hero-modes" aria-label="Core workflows">
-            <div class="hero-mode">
-              <span class="hero-mode-icon" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
-              <div class="hero-mode-text">
-                <strong>Manage packages</strong>
-                <span>Install, update, and remove across multiple projects at once</span>
-              </div>
-            </div>
-            <div class="hero-mode">
-              <span class="hero-mode-icon" aria-hidden="true"><img src="assets/icons/lens.svg" alt="" /></span>
-              <div class="hero-mode-text">
-                <strong>Library Lens</strong>
-                <span>See versions, downloads, dependencies, and who uses what</span>
-              </div>
-            </div>
-          </div>
-          <div class="actions">
-            <a class="button primary" href="vscode:extension/piyushdoorwar.getll">
-              <img src="assets/icons/vscode.svg" alt="" />
-              <span>Open in VS Code</span>
-            </a>
-            <a class="button secondary icon-link" href="https://github.com/piyushdoorwar/getll" rel="noreferrer">
-              <img src="assets/icons/github.svg" alt="" />
-              <span>View source</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="vscode-mockup" aria-label="NuGet LL VS Code dashboard preview">
-          <div class="vs-titlebar">
-            <div class="vs-dots" aria-hidden="true"><i></i><i></i><i></i></div>
-            <span>NuGet LL - Visual Studio Code</span>
-            <img src="assets/icons/vscode.svg" alt="" />
-          </div>
-          <div class="vs-body">
-            <aside class="activity" aria-hidden="true">
-              <img src="assets/icons/icon.svg" alt="" class="active" />
-              <img src="assets/icons/projects.svg" alt="" />
-              <img src="assets/icons/search.svg" alt="" />
-              <img src="assets/icons/updates.svg" alt="" />
-            </aside>
-            <section class="panel" data-demo>
-              <div class="repo-row">
-                <span class="repo-name"><img src="assets/icons/icon.svg" alt="" />NuGet LL</span>
-                <span class="gear">...</span>
-              </div>
-              <div class="tabs" role="tablist" aria-label="NuGet LL views">
-                <button type="button" class="active" role="tab" aria-selected="true" data-tab="browse">Browse</button>
-                <button type="button" role="tab" aria-selected="false" data-tab="installed">Installed <b data-count="installed">18</b></button>
-                <button type="button" role="tab" aria-selected="false" data-tab="updates">Updates <b data-count="updates">3</b></button>
-              </div>
-
-              <!-- Browse -->
-              <div class="pane active" data-pane="browse">
-                <div class="summary-wrap search-wrap">
-                  <input value="serilog" aria-label="Search packages" data-search />
-                  <button type="button" aria-label="Search"><img src="assets/icons/search.svg" alt="" /></button>
-                </div>
-                <ul class="pkg-list" data-browse>
-                  <li data-pkg="Serilog" data-desc="Simple .NET logging with fully-structured events" data-versions="4.2.0,4.1.0,3.1.1">
-                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
-                    <span class="pkg-meta"><b>Serilog</b><i>Simple .NET logging with fully-structured events</i></span>
-                    <span class="pkg-ver">v4.2.0</span>
-                  </li>
-                  <li data-pkg="Serilog.Sinks.Console" data-desc="A Serilog sink that writes to the console" data-versions="6.0.0,5.0.1,4.1.0">
-                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
-                    <span class="pkg-meta"><b>Serilog.Sinks.Console</b><i>A Serilog sink that writes to the console</i></span>
-                    <span class="pkg-ver">v6.0.0</span>
-                  </li>
-                  <li class="selected" data-pkg="Serilog.AspNetCore" data-desc="Serilog integration for ASP.NET Core" data-versions="8.0.3,8.0.2,7.0.0">
-                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
-                    <span class="pkg-meta"><b>Serilog.AspNetCore</b><i>Serilog integration for ASP.NET Core</i></span>
-                    <span class="pkg-ver">v8.0.3</span>
-                  </li>
-                  <li data-pkg="Newtonsoft.Json" data-desc="Popular high-performance JSON framework for .NET" data-versions="13.0.3,13.0.2,12.0.3">
-                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
-                    <span class="pkg-meta"><b>Newtonsoft.Json</b><i>Popular high-performance JSON framework for .NET</i></span>
-                    <span class="pkg-ver">v13.0.3</span>
-                  </li>
-                  <li class="pkg-empty" hidden>No packages match your search.</li>
-                </ul>
-                <div class="commit-card">
-                  <div class="install-row">
-                    <div class="field">
-                      <span>Version</span>
-                      <div class="select" data-select="version">
-                        <button type="button" class="select-fake" aria-haspopup="listbox" aria-expanded="false">
-                          <span data-value>8.0.3 (latest)</span><em>▾</em>
-                        </button>
-                        <ul class="select-menu" role="listbox" aria-label="Version"></ul>
-                      </div>
-                    </div>
-                    <div class="field">
-                      <span>Projects</span>
-                      <div class="select" data-select="projects">
-                        <button type="button" class="select-fake" aria-haspopup="listbox" aria-expanded="false">
-                          <span data-value>Api, Worker</span><em>▾</em>
-                        </button>
-                        <ul class="select-menu select-menu--check" role="listbox" aria-label="Target projects" aria-multiselectable="true">
-                          <li><label><input type="checkbox" value="Api" checked /> Api</label></li>
-                          <li><label><input type="checkbox" value="Worker" checked /> Worker</label></li>
-                          <li><label><input type="checkbox" value="Domain" /> Domain</label></li>
-                          <li><label><input type="checkbox" value="Tests" /> Tests</label></li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <button class="commit-btn" type="button" data-install>Install into 2 projects</button>
-                </div>
-              </div>
-
-              <!-- Installed -->
-              <div class="pane" data-pane="installed" hidden>
-                <div class="section-head"><span>Installed packages</span></div>
-                <ul class="pkg-list" data-installed>
-                  <li>
-                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
-                    <span class="pkg-meta"><b>Serilog</b><i>Api · Worker · Domain</i></span>
-                    <span class="pkg-ver">v4.2.0</span>
-                    <button type="button" class="row-btn ghost" data-remove aria-label="Remove Serilog">Remove</button>
-                  </li>
-                  <li>
-                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
-                    <span class="pkg-meta"><b>Newtonsoft.Json</b><i>Api · Worker</i></span>
-                    <span class="pkg-ver">v13.0.3</span>
-                    <button type="button" class="row-btn ghost" data-remove aria-label="Remove Newtonsoft.Json">Remove</button>
-                  </li>
-                  <li>
-                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
-                    <span class="pkg-meta"><b>Microsoft.EntityFrameworkCore</b><i>Api · Domain</i></span>
-                    <span class="pkg-ver">v8.0.6</span>
-                    <button type="button" class="row-btn ghost" data-remove aria-label="Remove Microsoft.EntityFrameworkCore">Remove</button>
-                  </li>
-                  <li>
-                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
-                    <span class="pkg-meta"><b>xunit</b><i>Tests</i></span>
-                    <span class="pkg-ver">v2.9.0</span>
-                    <button type="button" class="row-btn ghost" data-remove aria-label="Remove xunit">Remove</button>
-                  </li>
-                </ul>
-              </div>
-
-              <!-- Updates -->
-              <div class="pane" data-pane="updates" hidden>
-                <div class="section-head"><span>Updates available</span><button type="button" class="row-btn" data-update-all>Update all</button></div>
-                <ul class="pkg-list" data-updates>
-                  <li>
-                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
-                    <span class="pkg-meta"><b>Serilog.Sinks.Console</b><i>6.0.0 → <strong>6.1.2</strong> <span class="badge minor">Minor</span></i></span>
-                    <button type="button" class="row-btn" data-do-update>Update</button>
-                  </li>
-                  <li>
-                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
-                    <span class="pkg-meta"><b>Polly</b><i>8.4.0 → <strong>8.4.2</strong> <span class="badge patch">Patch</span></i></span>
-                    <button type="button" class="row-btn" data-do-update>Update</button>
-                  </li>
-                  <li>
-                    <span class="pkg-cube" aria-hidden="true"><img src="assets/icons/package.svg" alt="" /></span>
-                    <span class="pkg-meta"><b>AutoMapper</b><i>12.0.1 → <strong>13.0.1</strong> <span class="badge major">Major</span></i></span>
-                    <button type="button" class="row-btn" data-do-update>Update</button>
-                  </li>
-                </ul>
-              </div>
-            </section>
-          </div>
-        </div>
-
-        <div class="marquee-wrap" aria-hidden="true">
-          <div class="marquee-track">
-            <ul class="marquee-row">
-              <li>Workspace scanner</li>
-              <li>nuget.org search</li>
-              <li>Multi-project install</li>
-              <li>Outdated report</li>
-              <li>Vulnerability scan</li>
-              <li>Deprecation alerts</li>
-              <li>Central Package Management</li>
-              <li>Package sources</li>
-              <li>dotnet restore</li>
-              <li>Live refresh</li>
-              <li>Version pickers</li>
-              <li>Library Lens</li>
-            </ul>
-            <ul class="marquee-row" aria-hidden="true">
-              <li>Workspace scanner</li>
-              <li>nuget.org search</li>
-              <li>Multi-project install</li>
-              <li>Outdated report</li>
-              <li>Vulnerability scan</li>
-              <li>Deprecation alerts</li>
-              <li>Central Package Management</li>
-              <li>Package sources</li>
-              <li>dotnet restore</li>
-              <li>Live refresh</li>
-              <li>Version pickers</li>
-              <li>Library Lens</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section class="band" id="features">
-        <div class="section-heading" data-reveal>
-          <p class="eyebrow">What it does</p>
-          <h2>Your whole NuGet workflow, in one panel.</h2>
-          <p class="section-sub">
-            NuGet LL detects every project in your workspace and gives you a Visual Studio-grade view of
-            what's installed, what's outdated, and what needs attention.
-          </p>
-        </div>
-        <div class="feature-grid">
-          <article data-reveal>
-            <div class="feat-icon"><img src="assets/icons/lens.svg" alt="" /></div>
-            <h3>Workspace scanner</h3>
-            <p>Detects <code>.sln</code>, <code>.csproj</code>, <code>.fsproj</code>, <code>.vbproj</code>, props files, and <code>packages.config</code> across all folders.</p>
-          </article>
-          <article data-reveal style="--reveal-delay: 0.08s">
-            <div class="feat-icon"><img src="assets/icons/search.svg" alt="" /></div>
-            <h3>Search nuget.org</h3>
-            <p>NuGet v3 search against nuget.org or your configured feed, with prerelease and exact-id filters.</p>
-          </article>
-          <article data-reveal style="--reveal-delay: 0.16s">
-            <div class="feat-icon"><img src="assets/icons/package.svg" alt="" /></div>
-            <h3>Install across projects</h3>
-            <p>Add, update, or remove a package in one or many projects at once, with stable, prerelease, or pinned versions.</p>
-          </article>
-          <article data-reveal style="--reveal-delay: 0.24s">
-            <div class="feat-icon"><img src="assets/icons/updates.svg" alt="" /></div>
-            <h3>Outdated reports</h3>
-            <p>Patch, minor, and major classification powered by <code>dotnet list package --outdated</code>, with batch updates.</p>
-          </article>
-          <article data-reveal style="--reveal-delay: 0.32s">
-            <div class="feat-icon"><img src="assets/icons/shield.svg" alt="" /></div>
-            <h3>Vulnerable &amp; deprecated</h3>
-            <p>Surface vulnerable and deprecated dependencies with advisory links and a copyable report.</p>
-          </article>
-          <article data-reveal style="--reveal-delay: 0.4s">
-            <div class="feat-icon"><img src="assets/icons/layers.svg" alt="" /></div>
-            <h3>Central Package Management</h3>
-            <p>Detects <code>Directory.Packages.props</code> and edits <code>PackageVersion</code> entries — always asking before touching shared files.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="band band--alt" id="workflow">
-        <div class="section-heading" data-reveal>
-          <p class="eyebrow">Workflow</p>
-          <h2>From a fresh clone to a healthy dependency graph.</h2>
-        </div>
-        <div class="workflow">
-          <article data-reveal>
-            <span class="step-n">1</span>
-            <h3>Scan the workspace</h3>
-            <p>Open a folder with .NET projects and NuGet LL maps every project, package, and feed.</p>
-          </article>
-          <article data-reveal style="--reveal-delay: 0.08s">
-            <span class="step-n">2</span>
-            <h3>Browse &amp; search</h3>
-            <p>Find packages on nuget.org, inspect versions, downloads, licenses, and dependencies in Library Lens.</p>
-          </article>
-          <article data-reveal style="--reveal-delay: 0.16s">
-            <span class="step-n">3</span>
-            <h3>Install or update</h3>
-            <p>Pick a version and target projects, then install or update in a single confirmed action.</p>
-          </article>
-          <article data-reveal style="--reveal-delay: 0.24s">
-            <span class="step-n">4</span>
-            <h3>Stay healthy</h3>
-            <p>Watch the Outdated and Vulnerable views, batch-update, and run restore when you're done.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="privacy-band" id="privacy">
-        <div class="privacy-inner">
-          <div class="section-heading" data-reveal>
-            <p class="eyebrow">Privacy first</p>
-            <h2>Your code and feeds stay yours.</h2>
-            <p class="section-sub">
-              NuGet LL has no backend. It talks to the NuGet feeds you configure and runs the .NET CLI locally.
-            </p>
-          </div>
-          <div class="privacy-grid">
-            <article data-reveal>
-              <h3>No extension server</h3>
-              <p>Search and metadata requests go straight from VS Code to nuget.org or your configured feed. NuGet LL does not proxy or store them.</p>
-            </article>
-            <article data-reveal style="--reveal-delay: 0.08s">
-              <h3>Local dotnet CLI</h3>
-              <p>Install, update, restore, and health checks run <code>dotnet</code> commands on your machine against your projects.</p>
-            </article>
-            <article data-reveal style="--reveal-delay: 0.16s">
-              <h3>Asks before shared edits</h3>
-              <p>Central Package Management and shared props files are only modified after you confirm the change.</p>
-            </article>
-            <article data-reveal style="--reveal-delay: 0.24s">
-              <h3>No telemetry</h3>
-              <p>There is no analytics pipeline. NuGet LL does not collect your project contents, package names, or usage history.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="install-section" id="install">
-        <div data-reveal>
-          <p class="eyebrow">Install</p>
-          <h2>Add NuGet LL to VS Code.</h2>
-          <p>Install the extension, open a workspace with .NET projects, and click the NuGet LL icon in the activity bar to see your projects, packages, and the full dashboard.</p>
-          <p class="compat-note">Also works in Cursor and Windsurf.</p>
-        </div>
-        <div class="install-actions" data-reveal style="--reveal-delay: 0.12s">
-          <a class="button primary large" href="vscode:extension/piyushdoorwar.getll">
-            <img src="assets/icons/vscode.svg" alt="" />
-            <span>Open in VS Code</span>
-          </a>
-          <a class="button secondary large icon-link" href="https://marketplace.visualstudio.com/items?itemName=piyushdoorwar.getll" rel="noreferrer">
-            <img src="assets/icons/vscode.svg" alt="" />
-            <span class="store-button-label">
-              Marketplace
-              <small><span id="marketplaceInstalls">12</span> installs</small>
-            </span>
-          </a>
-          <a class="button secondary large icon-link" href="https://github.com/piyushdoorwar/getll" rel="noreferrer">
-            <img src="assets/icons/github.svg" alt="" />
+      <div class="wrap">
+        <a class="brand" href="./" aria-label="NuGet LL home">
+          <img src="assets/icons/icon.svg" alt="" width="30" height="30" />
+          <span>NuGet LL</span>
+        </a>
+        <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+          <svg class="ic i-menu" aria-hidden="true"><use href="#i-menu" /></svg>
+          <svg class="ic i-close" aria-hidden="true"><use href="#i-close" /></svg>
+        </button>
+        <nav class="nav" id="site-nav" aria-label="Primary">
+          <a href="#get-started">Get started</a>
+          <a href="#features">Features</a>
+          <a href="#lens">Library Lens</a>
+          <a href="#privacy">Privacy</a>
+          <a class="nav-gh" href="https://github.com/piyushdoorwar/NuGetLL" rel="noreferrer">
+            <svg class="ic" aria-hidden="true"><use href="#i-github" /></svg>
             <span>GitHub</span>
           </a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- Hero -->
+      <section class="hero">
+        <div class="wrap hero-grid">
+          <div class="hero-copy">
+            <span class="pill"><b>Free</b> Works in VS Code, Cursor and Windsurf</span>
+            <h1>Your packages. <em>The whole picture.</em></h1>
+            <p class="lede">
+              NuGet LL is a package manager for .NET workspaces in VS Code. Search a feed, install into
+              every project that needs it, and keep updates and vulnerabilities in view, all through the
+              <code>dotnet</code> CLI already on your machine.
+            </p>
+            <div class="actions">
+              <a class="btn btn-primary" href="vscode:extension/piyushdoorwar.getll">
+                <svg class="ic" aria-hidden="true"><use href="#i-vscode" /></svg>
+                <span>Open in VS Code</span>
+              </a>
+              <a class="btn btn-secondary" href="https://github.com/piyushdoorwar/NuGetLL" rel="noreferrer">
+                <svg class="ic" aria-hidden="true"><use href="#i-github" /></svg>
+                <span>View on GitHub</span>
+              </a>
+            </div>
+            <ul class="checks">
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check" /></svg>No backend</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check" /></svg>No telemetry</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check" /></svg>Runs locally</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check" /></svg>Open source</li>
+            </ul>
+          </div>
+
+          <!-- Interactive product mock (HTML/CSS, not a screenshot) -->
+          <div class="mock" id="mock" role="group" aria-label="Try the NuGet LL dashboard: browse, installed and updates views">
+            <div class="mock-chrome" aria-hidden="true">
+              <div class="mock-dots"><i></i><i></i><i></i></div>
+              <div class="mock-address">
+                <svg class="ic"><use href="#i-vscode" /></svg>
+                NuGet LL - MyApp.sln
+              </div>
+            </div>
+            <div class="mock-body">
+              <aside class="mock-side">
+                <div class="mock-brand"><img src="assets/icons/icon.svg" alt="" />NuGet LL</div>
+                <p class="mock-label">Workspace</p>
+                <div class="side-nav" role="tablist" aria-label="Dashboard views">
+                  <button type="button" role="tab" aria-selected="true" data-tab="browse">
+                    <svg class="ic" aria-hidden="true"><use href="#i-search" /></svg>Browse
+                  </button>
+                  <button type="button" role="tab" aria-selected="false" data-tab="installed">
+                    <svg class="ic" aria-hidden="true"><use href="#i-installed" /></svg>Installed<span class="count" data-count="installed">5</span>
+                  </button>
+                </div>
+                <p class="mock-label">Health</p>
+                <div class="side-nav" role="tablist" aria-label="Health views">
+                  <button type="button" role="tab" aria-selected="false" data-tab="updates">
+                    <svg class="ic" aria-hidden="true"><use href="#i-updates" /></svg>Updates<span class="count" data-count="updates">3</span>
+                  </button>
+                </div>
+                <div class="mock-foot"><span class="dot on"></span><b>.NET 8.0.401</b></div>
+              </aside>
+
+              <section class="mock-main">
+                <!-- Browse -->
+                <div class="pane" data-pane="browse" role="tabpanel">
+                  <label class="mock-search">
+                    <svg class="ic" aria-hidden="true"><use href="#i-search" /></svg>
+                    <input value="serilog" aria-label="Search packages" data-search spellcheck="false" autocomplete="off" />
+                  </label>
+                  <ul class="pkg-list" data-browse>
+                    <li><button type="button" data-pkg="Serilog" data-versions="4.2.0,4.1.0,3.1.1"><span class="pkg-ic"><svg class="ic"><use href="#i-package" /></svg></span><span class="pkg-meta"><b>Serilog</b><i>Simple .NET logging with fully-structured events</i></span><span class="pkg-ver">4.2.0</span></button></li>
+                    <li><button type="button" class="sel" data-pkg="Serilog.AspNetCore" data-versions="8.0.3,8.0.2,7.0.0"><span class="pkg-ic"><svg class="ic"><use href="#i-package" /></svg></span><span class="pkg-meta"><b>Serilog.AspNetCore</b><i>Serilog support for ASP.NET Core logging</i></span><span class="pkg-ver">8.0.3</span></button></li>
+                    <li><button type="button" data-pkg="Serilog.Sinks.Console" data-versions="6.0.0,5.0.1,4.1.0"><span class="pkg-ic"><svg class="ic"><use href="#i-package" /></svg></span><span class="pkg-meta"><b>Serilog.Sinks.Console</b><i>A Serilog sink that writes to the console</i></span><span class="pkg-ver">6.0.0</span></button></li>
+                    <li><button type="button" data-pkg="Newtonsoft.Json" data-versions="13.0.3,13.0.2,12.0.3"><span class="pkg-ic"><svg class="ic"><use href="#i-package" /></svg></span><span class="pkg-meta"><b>Newtonsoft.Json</b><i>Popular high-performance JSON framework for .NET</i></span><span class="pkg-ver">13.0.3</span></button></li>
+                    <li><button type="button" data-pkg="Polly" data-versions="8.4.2,8.4.0,7.2.4"><span class="pkg-ic"><svg class="ic"><use href="#i-package" /></svg></span><span class="pkg-meta"><b>Polly</b><i>Resilience and transient-fault handling</i></span><span class="pkg-ver">8.4.2</span></button></li>
+                    <li class="pkg-empty" hidden>No packages match your search.</li>
+                  </ul>
+                  <div class="install-card">
+                    <div class="install-head">
+                      <b data-selected>Serilog.AspNetCore</b>
+                      <label class="mock-select">
+                        <span class="sr-only">Version</span>
+                        <select data-version aria-label="Version"></select>
+                        <svg class="ic" aria-hidden="true"><use href="#i-chevron" /></svg>
+                      </label>
+                    </div>
+                    <div class="proj-chips" role="group" aria-label="Target projects">
+                      <button type="button" aria-pressed="true" data-proj>Api</button>
+                      <button type="button" aria-pressed="true" data-proj>Worker</button>
+                      <button type="button" aria-pressed="false" data-proj>Domain</button>
+                      <button type="button" aria-pressed="false" data-proj>Tests</button>
+                    </div>
+                    <button type="button" class="mock-primary" data-install>Install into 2 projects</button>
+                  </div>
+                </div>
+
+                <!-- Installed -->
+                <div class="pane" data-pane="installed" role="tabpanel" hidden>
+                  <div class="pane-head"><b>Installed packages</b><span>4 projects</span></div>
+                  <ul class="pkg-list static" data-installed>
+                    <li><span class="pkg-ic"><svg class="ic"><use href="#i-package" /></svg></span><span class="pkg-meta"><b>Serilog</b><i>Api · Worker · Domain</i></span><span class="pkg-ver">4.2.0</span><button type="button" class="row-btn" data-remove>Remove</button></li>
+                    <li><span class="pkg-ic"><svg class="ic"><use href="#i-package" /></svg></span><span class="pkg-meta"><b>Newtonsoft.Json</b><i>Api · Worker</i></span><span class="pkg-ver">13.0.3</span><button type="button" class="row-btn" data-remove>Remove</button></li>
+                    <li><span class="pkg-ic"><svg class="ic"><use href="#i-package" /></svg></span><span class="pkg-meta"><b>Microsoft.EntityFrameworkCore</b><i>Api · Domain</i></span><span class="pkg-ver">8.0.6</span><button type="button" class="row-btn" data-remove>Remove</button></li>
+                    <li><span class="pkg-ic"><svg class="ic"><use href="#i-package" /></svg></span><span class="pkg-meta"><b>Polly</b><i>Worker</i></span><span class="pkg-ver">8.4.0</span><button type="button" class="row-btn" data-remove>Remove</button></li>
+                    <li><span class="pkg-ic"><svg class="ic"><use href="#i-package" /></svg></span><span class="pkg-meta"><b>xunit</b><i>Tests</i></span><span class="pkg-ver">2.9.0</span><button type="button" class="row-btn" data-remove>Remove</button></li>
+                  </ul>
+                </div>
+
+                <!-- Updates -->
+                <div class="pane" data-pane="updates" role="tabpanel" hidden>
+                  <div class="pane-head"><b>Updates available</b><button type="button" class="row-btn primary" data-update-all>Update all</button></div>
+                  <ul class="pkg-list static" data-updates>
+                    <li><span class="pkg-ic"><svg class="ic"><use href="#i-package" /></svg></span><span class="pkg-meta"><b>Polly</b><i>8.4.0 → <strong>8.4.2</strong> <span class="badge patch">Patch</span></i></span><button type="button" class="row-btn" data-update>Update</button></li>
+                    <li><span class="pkg-ic"><svg class="ic"><use href="#i-package" /></svg></span><span class="pkg-meta"><b>Serilog.Sinks.Console</b><i>6.0.0 → <strong>6.1.2</strong> <span class="badge minor">Minor</span></i></span><button type="button" class="row-btn" data-update>Update</button></li>
+                    <li><span class="pkg-ic"><svg class="ic"><use href="#i-package" /></svg></span><span class="pkg-meta"><b>AutoMapper</b><i>12.0.1 → <strong>13.0.1</strong> <span class="badge major">Major</span></i></span><button type="button" class="row-btn" data-update>Update</button></li>
+                    <li class="pkg-empty" hidden>Everything is up to date.</li>
+                  </ul>
+                </div>
+              </section>
+            </div>
+            <div class="toast" aria-live="polite" data-toast></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Get started -->
+      <section class="section tint" id="get-started">
+        <div class="wrap">
+          <div class="section-head" data-reveal>
+            <span class="eyebrow">Get started</span>
+            <h2>Install, open a solution, add a package.</h2>
+            <p>
+              NuGet LL lives in the activity bar. There is nothing to sign in to: it reads the projects in
+              your workspace and talks to the feeds you already use.
+            </p>
+          </div>
+          <div class="steps">
+            <div class="step" data-reveal>
+              <h3>Install the extension</h3>
+              <p>From the Marketplace, or straight from your terminal.</p>
+              <div class="cmd">
+                <pre><code><span class="prompt">$ </span>code --install-extension piyushdoorwar.getll</code></pre>
+                <button class="copy-btn" type="button" data-copy="code --install-extension piyushdoorwar.getll" aria-label="Copy install command">
+                  <svg class="ic i-copy" aria-hidden="true"><use href="#i-copy" /></svg>
+                  <svg class="ic i-check" aria-hidden="true"><use href="#i-check" /></svg>
+                  <span>Copy</span>
+                </button>
+              </div>
+            </div>
+            <div class="step" data-reveal style="--d: 0.06s">
+              <h3>Open a .NET workspace</h3>
+              <p>Open a folder with <code>.sln</code>, <code>.csproj</code>, <code>.fsproj</code> or <code>.vbproj</code> files and select the NuGet LL icon. Projects, packages, shared props files and feeds are detected automatically.</p>
+            </div>
+            <div class="step" data-reveal style="--d: 0.12s">
+              <h3>Browse, pick projects, install</h3>
+              <p>Open the dashboard, search nuget.org or your own feed, choose a version and the projects that need it, and press <b>Install</b>. Updates and vulnerability checks are one click away.</p>
+            </div>
+          </div>
+          <div class="notes">
+            <div class="note" data-reveal>
+              <h3><svg class="ic" aria-hidden="true"><use href="#i-terminal" /></svg>Requires the .NET SDK</h3>
+              <p>NuGet LL drives the <code>dotnet</code> CLI, so the SDK needs to be on your <code>PATH</code>. SDK 7.0.200 or newer is recommended for the JSON reports.</p>
+            </div>
+            <div class="note" data-reveal style="--d: 0.06s">
+              <h3><svg class="ic" aria-hidden="true"><use href="#i-vscode" /></svg>Other editors</h3>
+              <p>NuGet LL runs anywhere VS Code extensions do, including Cursor and Windsurf. Install it from your editor's extension view.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features -->
+      <section class="section" id="features">
+        <div class="wrap">
+          <div class="section-head" data-reveal>
+            <span class="eyebrow">Features</span>
+            <h2>Every dependency, in one dashboard.</h2>
+            <p>The NuGet workflow you know from Visual Studio, built for VS Code and every project in the workspace.</p>
+          </div>
+          <div class="features">
+            <article class="card" data-reveal>
+              <div class="icon"><svg class="ic" aria-hidden="true"><use href="#i-folder" /></svg></div>
+              <h3>Workspace scanner</h3>
+              <p>Finds solutions, project files, <code>Directory.Packages.props</code>, <code>NuGet.Config</code> and <code>packages.config</code> across every workspace folder.</p>
+            </article>
+            <article class="card" data-reveal style="--d: 0.04s">
+              <div class="icon"><svg class="ic" aria-hidden="true"><use href="#i-search" /></svg></div>
+              <h3>Browse and search</h3>
+              <p>Search nuget.org or your configured feed, with prerelease and exact-id filters and a <code>dotnet package search</code> fallback.</p>
+            </article>
+            <article class="card" data-reveal style="--d: 0.08s">
+              <div class="icon"><svg class="ic" aria-hidden="true"><use href="#i-package" /></svg></div>
+              <h3>Install across projects</h3>
+              <p>Pick a version and the projects that need it, then install, update or remove in one step, with a confirmation before multi-project changes.</p>
+            </article>
+            <article class="card" data-reveal>
+              <div class="icon"><svg class="ic" aria-hidden="true"><use href="#i-updates" /></svg></div>
+              <h3>Updates with context</h3>
+              <p>Outdated packages are split into patch, minor and major, so you can take the safe bumps in a batch and review the rest.</p>
+            </article>
+            <article class="card" data-reveal style="--d: 0.04s">
+              <div class="icon"><svg class="ic" aria-hidden="true"><use href="#i-shield" /></svg></div>
+              <h3>Vulnerable and deprecated</h3>
+              <p>Run the SDK's vulnerability and deprecation checks, see severity per project, open the advisory and copy a report.</p>
+            </article>
+            <article class="card" data-reveal style="--d: 0.08s">
+              <div class="icon"><svg class="ic" aria-hidden="true"><use href="#i-layers" /></svg></div>
+              <h3>Central Package Management</h3>
+              <p>Projects governed by <code>Directory.Packages.props</code> are edited the right way, and shared props files are only touched after you confirm.</p>
+            </article>
+            <article class="card" data-reveal>
+              <div class="icon"><svg class="ic" aria-hidden="true"><use href="#i-globe" /></svg></div>
+              <h3>Package sources</h3>
+              <p>List, add, remove, enable and disable feeds through <code>dotnet nuget</code>, and jump to the <code>NuGet.Config</code> that defines each one.</p>
+            </article>
+            <article class="card" data-reveal style="--d: 0.04s">
+              <div class="icon"><svg class="ic" aria-hidden="true"><use href="#i-download" /></svg></div>
+              <h3>Restore anywhere</h3>
+              <p>Restore the workspace, a solution or a single project, with progress in the panel and the full output in the log.</p>
+            </article>
+            <article class="card" data-reveal style="--d: 0.08s">
+              <div class="icon"><svg class="ic" aria-hidden="true"><use href="#i-grid" /></svg></div>
+              <h3>Sidebar at a glance</h3>
+              <p>The activity bar view counts projects, packages, outdated and vulnerable dependencies, and opens the right dashboard tab in one click.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Library Lens -->
+      <section class="section tint" id="lens">
+        <div class="wrap split">
+          <div class="section-head" data-reveal>
+            <span class="eyebrow">Library Lens</span>
+            <h2>Know what you're adding before you add it.</h2>
+            <p>
+              Select any search result or installed package and the details sit right beside the list,
+              including which of your projects already depend on it.
+            </p>
+            <ul class="bullets">
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check" /></svg><span>Every published version, with downloads, license, authors and tags.</span></li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check" /></svg><span>Dependencies grouped by target framework.</span></li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check" /></svg><span>Deprecation and vulnerability notes, with links to the advisory.</span></li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check" /></svg><span>The projects in your workspace that already use the package, and at which version.</span></li>
+            </ul>
+          </div>
+          <div class="lens" data-reveal style="--d: 0.08s">
+            <div class="lens-head">
+              <span class="pkg-ic lg"><svg class="ic" aria-hidden="true"><use href="#i-package" /></svg></span>
+              <div>
+                <b>Serilog</b>
+                <small>Simple .NET logging with fully-structured events</small>
+              </div>
+              <span class="lens-ver">4.2.0</span>
+            </div>
+            <dl class="lens-stats">
+              <div><dt>Downloads</dt><dd>1.2B</dd></div>
+              <div><dt>License</dt><dd>Apache-2.0</dd></div>
+              <div><dt>Versions</dt><dd>214</dd></div>
+            </dl>
+            <div class="lens-block">
+              <h4>Used in this workspace</h4>
+              <ul class="lens-rows">
+                <li><span>Api</span><code>4.2.0</code></li>
+                <li><span>Worker</span><code>4.2.0</code></li>
+                <li><span>Domain</span><code>4.1.0</code><em>older</em></li>
+              </ul>
+            </div>
+            <div class="lens-block">
+              <h4>Dependencies</h4>
+              <div class="lens-tags"><span>net8.0</span><span>net6.0</span><span>netstandard2.0</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Privacy -->
+      <section class="section" id="privacy">
+        <div class="wrap">
+          <div class="section-head" data-reveal>
+            <span class="eyebrow">Privacy first</span>
+            <h2>Your workspace stays on your machine.</h2>
+            <p>NuGet LL has no backend. It reads your project files locally and only talks to the NuGet feeds you configure.</p>
+          </div>
+          <div class="privacy-grid">
+            <div class="note" data-reveal>
+              <h3><svg class="ic" aria-hidden="true"><use href="#i-cloud-off" /></svg>No extension server</h3>
+              <p>Search and metadata requests go straight from VS Code to nuget.org or your own feed. Nothing passes through a NuGet LL service.</p>
+            </div>
+            <div class="note" data-reveal style="--d: 0.04s">
+              <h3><svg class="ic" aria-hidden="true"><use href="#i-terminal" /></svg>Your local .NET CLI</h3>
+              <p>Installs, updates, restores and health checks run through <code>dotnet</code> on your machine, spawned with argument arrays, never a shell.</p>
+            </div>
+            <div class="note" data-reveal style="--d: 0.08s">
+              <h3><svg class="ic" aria-hidden="true"><use href="#i-lock" /></svg>Credentials stay put</h3>
+              <p>NuGet LL never stores feed passwords. Tokens and URL-embedded credentials are masked in the log and the UI.</p>
+            </div>
+            <div class="note" data-reveal style="--d: 0.12s">
+              <h3><svg class="ic" aria-hidden="true"><use href="#i-file" /></svg>You approve shared edits</h3>
+              <p>Edits stay inside your workspace, and shared files such as <code>Directory.Packages.props</code> change only after you confirm.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="section section-cta" id="install">
+        <div class="wrap">
+          <div class="cta" data-reveal>
+            <div>
+              <h2>Add NuGet LL to VS Code.</h2>
+              <p>Install it, open a .NET workspace, and manage every package from the activity bar.</p>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary" href="vscode:extension/piyushdoorwar.getll">
+                <svg class="ic" aria-hidden="true"><use href="#i-vscode" /></svg>
+                <span>Open in VS Code</span>
+              </a>
+              <a class="btn btn-secondary" href="https://marketplace.visualstudio.com/items?itemName=piyushdoorwar.getll" rel="noreferrer">
+                <span class="btn-stack">
+                  Marketplace
+                  <small><span id="marketplaceInstalls">12</span> installs</small>
+                </span>
+              </a>
+            </div>
+          </div>
         </div>
       </section>
     </main>
 
-    <footer>
-      <span>NuGet LL</span>
-      <div class="footer-links">
-        <a href="https://github.com/piyushdoorwar/getll" rel="noreferrer">GitHub</a>
-        <a href="policy/">Privacy policy</a>
-        <a href="mailto:piyushdoorwar+getll@gmail.com">Support</a>
+    <footer class="footer">
+      <div class="wrap">
+        <div>
+          <a class="brand" href="./" aria-label="NuGet LL home">
+            <img src="assets/icons/icon.svg" alt="" width="26" height="26" />
+            <span>NuGet LL</span>
+          </a>
+          <p>NuGet package manager and Library Lens for VS Code. This site uses Cloudflare Web Analytics to understand site usage.</p>
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com/piyushdoorwar/NuGetLL" rel="noreferrer"><svg class="ic" aria-hidden="true"><use href="#i-github" /></svg>GitHub</a>
+          <a href="https://marketplace.visualstudio.com/items?itemName=piyushdoorwar.getll" rel="noreferrer"><svg class="ic" aria-hidden="true"><use href="#i-vscode" /></svg>Marketplace</a>
+          <a href="policy/"><svg class="ic" aria-hidden="true"><use href="#i-lock" /></svg>Privacy policy</a>
+          <a href="mailto:piyushdoorwar+getll@gmail.com"><svg class="ic" aria-hidden="true"><use href="#i-mail" /></svg>Support</a>
+        </div>
       </div>
     </footer>
 

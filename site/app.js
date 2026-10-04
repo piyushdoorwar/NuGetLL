@@ -1,359 +1,221 @@
-/*
- * Motion for the NuGet LL site — Framer Motion-style effects, vanilla JS.
- *   - top scroll-progress bar (spring-smoothed)
- *   - hero entrance cascade (staggered fade-up, title scale-in)
- *   - scroll-reveal fade-ups with a soft ease
- * All effects are skipped under prefers-reduced-motion.
- */
+/* NuGet LL site — shared behaviour (nav, copy buttons, reveal, hero mock). */
 (function () {
   "use strict";
 
-  var reduce =
-    window.matchMedia &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  var raf = window.requestAnimationFrame
-    ? window.requestAnimationFrame.bind(window)
-    : function (cb) {
-        return setTimeout(function () {
-          cb(Date.now());
-        }, 16);
-      };
-
-  // ---------------------------------------------------------------- progress
-  var bar = document.createElement("div");
-  bar.className = "scroll-progress";
-  bar.setAttribute("aria-hidden", "true");
-  document.body.appendChild(bar);
-
-  var prog = { cur: 0, tgt: 0 };
-
-  function computeProgress() {
-    var h = document.documentElement;
-    var max = h.scrollHeight - h.clientHeight;
-    prog.tgt =
-      max > 0 ? Math.min(1, Math.max(0, (window.scrollY || h.scrollTop) / max)) : 0;
+  // Mobile navigation toggle
+  const topbar = document.querySelector(".topbar");
+  const toggle = document.querySelector(".nav-toggle");
+  if (topbar && toggle) {
+    const setOpen = (open) => {
+      topbar.classList.toggle("open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    };
+    toggle.addEventListener("click", () => setOpen(!topbar.classList.contains("open")));
+    topbar.querySelectorAll(".nav a").forEach((a) => a.addEventListener("click", () => setOpen(false)));
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(false); });
   }
 
-  var hero = document.querySelector(".hero");
-  var mockup = document.querySelector(".vscode-mockup");
-
-  // --------------------------------------------------------- animation loop
-  var running = false;
-
-  function frame() {
-    // progress spring
-    prog.cur += (prog.tgt - prog.cur) * 0.18;
-    var alive = Math.abs(prog.tgt - prog.cur) > 0.0006;
-    if (!alive) prog.cur = prog.tgt;
-    bar.style.transform = "scaleX(" + prog.cur.toFixed(4) + ")";
-
-    if (alive) {
-      raf(frame);
-    } else {
-      running = false;
+  // Copy-to-clipboard buttons
+  async function copyText(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      let ok = false;
+      try { ok = document.execCommand("copy"); } catch { ok = false; }
+      ta.remove();
+      return ok;
     }
   }
 
-  function ensureLoop() {
-    if (!running) {
-      running = true;
-      raf(frame);
-    }
-  }
-
-  // progress: seed without animation, then track scroll
-  computeProgress();
-  prog.cur = prog.tgt;
-  bar.style.transform = "scaleX(" + prog.cur + ")";
-  window.addEventListener(
-    "scroll",
-    function () {
-      computeProgress();
-      ensureLoop();
-    },
-    { passive: true }
-  );
-  window.addEventListener("resize", function () {
-    computeProgress();
-    ensureLoop();
+  document.addEventListener("click", async (event) => {
+    const btn = event.target.closest(".copy-btn");
+    if (!btn) return;
+    const text = btn.dataset.copy ?? btn.closest(".cmd")?.querySelector("code")?.innerText ?? "";
+    const ok = await copyText(text);
+    const label = btn.querySelector("span");
+    btn.classList.toggle("done", ok);
+    if (label) label.textContent = ok ? "Copied" : "Press Ctrl+C";
+    clearTimeout(btn._t);
+    btn._t = setTimeout(() => {
+      btn.classList.remove("done");
+      if (label) label.textContent = "Copy";
+    }, 1800);
   });
 
-  // --------------------------------------------------------- hero cascade
-  if (hero && !reduce) {
-    var seq = [];
-    var copy = hero.querySelector(".hero-copy");
-    if (copy) {
-      for (var i = 0; i < copy.children.length; i++) {
-        seq.push(copy.children[i]);
-      }
-    }
-    if (mockup) seq.push(mockup);
-
-    seq.forEach(function (el, idx) {
-      el.classList.add("hero-anim");
-      if (el.tagName === "H1") el.classList.add("hero-anim-title");
-      if (el === mockup) el.classList.add("hero-anim-mockup");
-      el.style.transitionDelay = (0.05 + idx * 0.12).toFixed(2) + "s";
-    });
-
-    raf(function () {
-      raf(function () {
-        seq.forEach(function (el) {
-          el.classList.add("is-in");
-        });
-      });
-    });
-
-    // once the entrance has played, drop the delay so hover stays snappy
-    setTimeout(function () {
-      seq.forEach(function (el) {
-        el.style.transitionDelay = "";
-      });
-    }, 1700);
-  }
-
-  // --------------------------------------------------------- scroll reveal
-  var items = document.querySelectorAll("[data-reveal]");
-  if (items.length) {
-    if (reduce || !("IntersectionObserver" in window)) {
-      for (var a = 0; a < items.length; a++) items[a].classList.add("revealed");
-    } else {
-      var observer = new IntersectionObserver(
-        function (entries) {
-          entries.forEach(function (entry) {
-            if (!entry.isIntersecting) return;
-            entry.target.classList.add("revealed");
-            observer.unobserve(entry.target);
-          });
-        },
-        { threshold: 0.12 }
-      );
-      for (var b = 0; b < items.length; b++) observer.observe(items[b]);
-    }
-  }
-
-  // ----------------------------------------------------- interactive demo
-  initDemo();
-
-  function initDemo() {
-    var demo = document.querySelector("[data-demo]");
-    if (!demo) return;
-
-    // --- tab switching ---
-    var tabs = demo.querySelectorAll("[data-tab]");
-    var panes = demo.querySelectorAll("[data-pane]");
-    tabs.forEach(function (tab) {
-      tab.addEventListener("click", function () {
-        var name = tab.getAttribute("data-tab");
-        closeMenus();
-        tabs.forEach(function (t) {
-          var on = t === tab;
-          t.classList.toggle("active", on);
-          t.setAttribute("aria-selected", on ? "true" : "false");
-        });
-        panes.forEach(function (p) {
-          var on = p.getAttribute("data-pane") === name;
-          p.classList.toggle("active", on);
-          if (on) p.removeAttribute("hidden");
-          else p.setAttribute("hidden", "");
-        });
-      });
-    });
-
-    // --- browse: package selection ---
-    var versionMenu = demo.querySelector('[data-select="version"] .select-menu');
-    var versionValue = demo.querySelector('[data-select="version"] [data-value]');
-    var rows = demo.querySelectorAll("[data-browse] [data-pkg]");
-
-    function selectPkg(li) {
-      rows.forEach(function (r) {
-        r.classList.toggle("selected", r === li);
-      });
-      var vers = (li.getAttribute("data-versions") || "").split(",");
-      if (vers.length && versionMenu) {
-        versionMenu.innerHTML = "";
-        vers.forEach(function (v, i) {
-          var label = i === 0 ? v + " (latest)" : v;
-          var opt = document.createElement("li");
-          opt.setAttribute("data-opt", label);
-          if (i === 0) opt.className = "sel";
-          opt.textContent = label;
-          versionMenu.appendChild(opt);
-        });
-        if (versionValue) versionValue.textContent = vers[0] + " (latest)";
-      }
-    }
-    rows.forEach(function (li) {
-      li.addEventListener("click", function () {
-        selectPkg(li);
-      });
-    });
-
-    // --- custom selects (dropdowns) ---
-    var selects = demo.querySelectorAll(".select");
-
-    function closeMenus() {
-      selects.forEach(function (s) {
-        s.classList.remove("open");
-        var btn = s.querySelector(".select-fake");
-        if (btn) btn.setAttribute("aria-expanded", "false");
-      });
-    }
-
-    selects.forEach(function (sel) {
-      var btn = sel.querySelector(".select-fake");
-      var menu = sel.querySelector(".select-menu");
-      if (!btn || !menu) return;
-
-      btn.addEventListener("click", function (e) {
-        e.stopPropagation();
-        var willOpen = !sel.classList.contains("open");
-        closeMenus();
-        if (willOpen) {
-          sel.classList.add("open");
-          btn.setAttribute("aria-expanded", "true");
-        }
-      });
-
-      // single-select (version): pick an option
-      if (!menu.classList.contains("select-menu--check")) {
-        menu.addEventListener("click", function (e) {
-          var opt = e.target.closest("[data-opt]");
-          if (!opt) return;
-          e.stopPropagation();
-          menu.querySelectorAll("[data-opt]").forEach(function (o) {
-            o.classList.toggle("sel", o === opt);
-          });
-          var val = sel.querySelector("[data-value]");
-          if (val) val.textContent = opt.getAttribute("data-opt");
-          sel.classList.remove("open");
-          btn.setAttribute("aria-expanded", "false");
-        });
-      } else {
-        // multi-select (projects): toggle checkboxes, keep menu open
-        menu.addEventListener("click", function (e) {
-          e.stopPropagation();
-        });
-        menu.addEventListener("change", function () {
-          var checked = [];
-          menu.querySelectorAll("input[type=checkbox]").forEach(function (cb) {
-            if (cb.checked) checked.push(cb.value);
-          });
-          var val = sel.querySelector("[data-value]");
-          if (val) {
-            val.textContent =
-              checked.length === 0
-                ? "Select projects"
-                : checked.length <= 2
-                ? checked.join(", ")
-                : checked.length + " projects";
+  // Scroll reveal
+  const revealEls = document.querySelectorAll("[data-reveal]");
+  if ("IntersectionObserver" in window) {
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // Also reveal anything already scrolled past (anchor jumps, reloads mid-page).
+          if (entry.isIntersecting || entry.boundingClientRect.top < 0) {
+            entry.target.classList.add("in");
+            obs.unobserve(entry.target);
           }
-          updateInstallLabel(checked.length);
         });
-      }
-    });
-
-    document.addEventListener("click", function (e) {
-      if (!e.target.closest(".select")) closeMenus();
-    });
-
-    // --- install button ---
-    var installBtn = demo.querySelector("[data-install]");
-    var projectCount = 2;
-
-    function updateInstallLabel(count) {
-      projectCount = count;
-      if (!installBtn || installBtn.classList.contains("busy")) return;
-      installBtn.textContent =
-        count === 0
-          ? "Select a project"
-          : "Install into " + count + (count === 1 ? " project" : " projects");
-      installBtn.disabled = count === 0;
-    }
-
-    if (installBtn) {
-      installBtn.addEventListener("click", function () {
-        if (installBtn.classList.contains("busy") || projectCount === 0) return;
-        installBtn.classList.add("busy");
-        installBtn.textContent = "Installing…";
-        setTimeout(function () {
-          installBtn.classList.remove("busy");
-          installBtn.classList.add("done");
-          installBtn.textContent = "✓ Installed";
-          setTimeout(function () {
-            installBtn.classList.remove("done");
-            updateInstallLabel(projectCount);
-          }, 1500);
-        }, 850);
-      });
-    }
-
-    // --- search filtering ---
-    var search = demo.querySelector("[data-search]");
-    var empty = demo.querySelector(".pkg-empty");
-    if (search) {
-      search.addEventListener("input", function () {
-        var q = search.value.trim().toLowerCase();
-        var any = false;
-        rows.forEach(function (li) {
-          var name = (li.getAttribute("data-pkg") || "").toLowerCase();
-          var desc = (li.getAttribute("data-desc") || "").toLowerCase();
-          var match = !q || name.indexOf(q) !== -1 || desc.indexOf(q) !== -1;
-          li.hidden = !match;
-          if (match) any = true;
-        });
-        if (empty) empty.hidden = any;
-      });
-    }
-
-    // --- installed: remove rows ---
-    demo.querySelectorAll("[data-installed] [data-remove]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var li = btn.closest("li");
-        if (!li || li.classList.contains("removing")) return;
-        li.classList.add("removing");
-        bumpCount("installed", -1);
-        setTimeout(function () {
-          li.parentNode && li.parentNode.removeChild(li);
-        }, 320);
-      });
-    });
-
-    // --- updates: update one / all ---
-    function applyUpdate(btn) {
-      var li = btn.closest("li");
-      if (!li || li.classList.contains("updated")) return;
-      li.classList.add("updated");
-      btn.remove();
-      var done = document.createElement("span");
-      done.className = "row-done";
-      done.textContent = "✓ Updated";
-      li.appendChild(done);
-      bumpCount("updates", -1);
-    }
-    demo.querySelectorAll("[data-do-update]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        applyUpdate(btn);
-      });
-    });
-    var updateAll = demo.querySelector("[data-update-all]");
-    if (updateAll) {
-      updateAll.addEventListener("click", function () {
-        demo.querySelectorAll("[data-do-update]").forEach(applyUpdate);
-      });
-    }
-
-    function bumpCount(name, delta) {
-      var el = demo.querySelector('[data-count="' + name + '"]');
-      if (!el) return;
-      var n = Math.max(0, (parseInt(el.textContent, 10) || 0) + delta);
-      el.textContent = n;
-      if (n === 0) el.style.display = "none";
-    }
-
-    // seed the version menu from the initially-selected package
-    var initial = demo.querySelector("[data-browse] .selected");
-    if (initial) selectPkg(initial);
+      },
+      { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
+    );
+    revealEls.forEach((el) => obs.observe(el));
+  } else {
+    revealEls.forEach((el) => el.classList.add("in"));
   }
+
+  // Hero mock: a small working copy of the dashboard.
+  const mock = document.getElementById("mock");
+  if (!mock) return;
+
+  const $ = (sel) => mock.querySelector(sel);
+  const $$ = (sel) => Array.from(mock.querySelectorAll(sel));
+  const toast = $("[data-toast]");
+  const showToast = (text) => {
+    toast.textContent = text;
+    toast.classList.add("show");
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toast.classList.remove("show"), 2200);
+  };
+  const setCount = (name, n) => {
+    const el = $(`[data-count="${name}"]`);
+    if (el) el.textContent = String(n);
+  };
+
+  // Side nav switches panes.
+  const tabs = $$("[data-tab]");
+  const selectTab = (name) => {
+    tabs.forEach((t) => t.setAttribute("aria-selected", String(t.dataset.tab === name)));
+    $$("[data-pane]").forEach((p) => { p.hidden = p.dataset.pane !== name; });
+  };
+  tabs.forEach((t) => t.addEventListener("click", () => selectTab(t.dataset.tab)));
+
+  // Browse: filter, select, version, projects, install.
+  const search = $("[data-search]");
+  const rows = $$("[data-browse] button[data-pkg]");
+  const empty = $("[data-browse] .pkg-empty");
+  const selectedName = $("[data-selected]");
+  const version = $("[data-version]");
+  const projects = $$("[data-proj]");
+  const install = $("[data-install]");
+  const installed = $("[data-installed]");
+
+  const installLabel = () => {
+    const n = projects.filter((p) => p.getAttribute("aria-pressed") === "true").length;
+    install.disabled = n === 0;
+    install.classList.remove("done");
+    install.textContent = n === 0 ? "Select a project" : `Install into ${n} project${n === 1 ? "" : "s"}`;
+  };
+
+  const choose = (row) => {
+    rows.forEach((r) => r.classList.toggle("sel", r === row));
+    selectedName.textContent = row.dataset.pkg;
+    version.innerHTML = "";
+    row.dataset.versions.split(",").forEach((v, i) => {
+      const opt = document.createElement("option");
+      opt.value = v;
+      opt.textContent = i === 0 ? `${v} (latest)` : v;
+      version.appendChild(opt);
+    });
+    installLabel();
+  };
+
+  rows.forEach((row) => row.addEventListener("click", () => choose(row)));
+
+  search.addEventListener("input", () => {
+    const q = search.value.trim().toLowerCase();
+    let visible = 0;
+    rows.forEach((row) => {
+      const hit = !q || row.textContent.toLowerCase().includes(q);
+      row.parentElement.hidden = !hit;
+      if (hit) visible++;
+    });
+    empty.hidden = visible > 0;
+    const current = rows.find((r) => r.classList.contains("sel"));
+    if (current?.parentElement.hidden) {
+      const first = rows.find((r) => !r.parentElement.hidden);
+      if (first) choose(first);
+    }
+  });
+
+  projects.forEach((p) =>
+    p.addEventListener("click", () => {
+      p.setAttribute("aria-pressed", String(p.getAttribute("aria-pressed") !== "true"));
+      installLabel();
+    })
+  );
+
+  install.addEventListener("click", () => {
+    const id = selectedName.textContent;
+    const ver = version.value;
+    const targets = projects.filter((p) => p.getAttribute("aria-pressed") === "true").map((p) => p.textContent.trim());
+    if (!targets.length) return;
+
+    // Add or refresh the row in Installed.
+    let row = Array.from(installed.children).find((li) => li.querySelector("b")?.textContent === id);
+    if (!row) {
+      row = document.createElement("li");
+      row.innerHTML =
+        '<span class="pkg-ic"><svg class="ic"><use href="#i-package" /></svg></span>' +
+        '<span class="pkg-meta"><b></b><i></i></span><span class="pkg-ver"></span>' +
+        '<button type="button" class="row-btn" data-remove>Remove</button>';
+      row.querySelector("b").textContent = id;
+      installed.prepend(row);
+    }
+    row.querySelector("i").textContent = targets.join(" · ");
+    row.querySelector(".pkg-ver").textContent = ver;
+    setCount("installed", installed.children.length);
+
+    install.textContent = `Installed ${id} ${ver}`;
+    install.classList.add("done");
+    showToast(`dotnet add package ${id} → ${targets.length} project${targets.length === 1 ? "" : "s"}`);
+    clearTimeout(install._t);
+    install._t = setTimeout(installLabel, 2000);
+  });
+
+  // Installed: remove.
+  installed.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-remove]");
+    if (!btn) return;
+    const li = btn.closest("li");
+    const id = li.querySelector("b").textContent;
+    li.remove();
+    setCount("installed", installed.children.length);
+    showToast(`Removed ${id}`);
+  });
+
+  // Updates: one at a time or all.
+  const updates = $("[data-updates]");
+  const updatesEmpty = updates.querySelector(".pkg-empty");
+  const updateAll = $("[data-update-all]");
+  const pending = () => Array.from(updates.children).filter((li) => !li.classList.contains("pkg-empty"));
+  const syncUpdates = () => {
+    const n = pending().length;
+    setCount("updates", n);
+    updatesEmpty.hidden = n > 0;
+    updateAll.disabled = n === 0;
+  };
+  updates.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-update]");
+    if (!btn) return;
+    const li = btn.closest("li");
+    showToast(`Updated ${li.querySelector("b").textContent} to ${li.querySelector("strong").textContent}`);
+    li.remove();
+    syncUpdates();
+  });
+  updateAll.addEventListener("click", () => {
+    const n = pending().length;
+    pending().forEach((li) => li.remove());
+    syncUpdates();
+    showToast(`Updated ${n} package${n === 1 ? "" : "s"}`);
+  });
+
+  choose(rows.find((r) => r.classList.contains("sel")) || rows[0]);
 })();

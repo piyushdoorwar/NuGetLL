@@ -1,7 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { PackageSearchResult } from "../types";
 import { EmptyState } from "./EmptyState";
-import { IconClose, IconDownload, IconPackage, IconSearch, IconVerified } from "./Icons";
+import {
+  IconClose,
+  IconDownload,
+  IconPackage,
+  IconSearch,
+  IconVerified,
+} from "./Icons";
 
 function formatDownloads(count?: number): string | undefined {
   if (count === undefined) {
@@ -25,7 +31,11 @@ export function SearchPackages(props: {
   searching: boolean;
   defaultPrerelease: boolean;
   selectedId?: string;
-  onSearch: (query: string, includePrerelease: boolean, exactMatch: boolean) => void;
+  onSearch: (
+    query: string,
+    includePrerelease: boolean,
+    exactMatch: boolean,
+  ) => void;
   onSelect: (packageId: string) => void;
 }) {
   const [text, setText] = useState(props.query);
@@ -53,10 +63,14 @@ export function SearchPackages(props: {
   return (
     <div>
       <h2>Browse packages</h2>
-      <p className="section-hint">Search nuget.org and configured feeds. Press Enter to search.</p>
+      <p className="section-hint">
+        Search nuget.org and configured feeds. Press Enter to search.
+      </p>
       <div className="search-bar">
         <div className="search-input-wrap">
-          <span className="search-icon"><IconSearch size={14} /></span>
+          <span className="search-icon">
+            <IconSearch size={14} />
+          </span>
           <input
             type="text"
             value={text}
@@ -68,22 +82,38 @@ export function SearchPackages(props: {
             }}
           />
           {text && (
-            <button className="search-clear" onClick={() => setText("")} title="Clear">
+            <button
+              className="search-clear"
+              onClick={() => setText("")}
+              title="Clear"
+            >
               <IconClose size={11} />
             </button>
           )}
         </div>
-        <button className="btn btn-primary" onClick={submit} disabled={props.searching || text.trim().length === 0}>
+        <button
+          className="btn btn-primary"
+          onClick={submit}
+          disabled={props.searching || text.trim().length === 0}
+        >
           {props.searching ? "Searching..." : "Search"}
         </button>
       </div>
       <div className="search-filters">
         <label className="checkbox">
-          <input type="checkbox" checked={prerelease} onChange={(e) => setPrerelease(e.target.checked)} />
+          <input
+            type="checkbox"
+            checked={prerelease}
+            onChange={(e) => setPrerelease(e.target.checked)}
+          />
           Include prerelease
         </label>
         <label className="checkbox">
-          <input type="checkbox" checked={exact} onChange={(e) => setExact(e.target.checked)} />
+          <input
+            type="checkbox"
+            checked={exact}
+            onChange={(e) => setExact(e.target.checked)}
+          />
           Exact package ID
         </label>
       </div>
@@ -96,17 +126,34 @@ export function SearchPackages(props: {
       )}
 
       {props.results && props.results.length === 0 && (
-        <EmptyState icon={<IconSearch size={30} />} title="No packages found" hint={`Nothing matched "${props.query}".`} />
+        <EmptyState
+          icon={<IconSearch size={30} />}
+          title="No packages found"
+          hint={`Nothing matched "${props.query}".`}
+        />
       )}
 
       {props.results?.map((result) => (
         <div
           key={`${result.source}:${result.id}`}
           className={`pkg-card ${props.selectedId?.toLowerCase() === result.id.toLowerCase() ? "selected" : ""}`}
+          role="button"
+          tabIndex={0}
+          aria-label={`View ${result.id} details`}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              props.onSelect(result.id);
+            }
+          }}
           onClick={() => props.onSelect(result.id)}
         >
           <div className="pkg-icon">
-            {result.iconUrl ? <img src={result.iconUrl} alt="" loading="lazy" /> : <IconPackage size={19} />}
+            {result.iconUrl ? (
+              <img src={result.iconUrl} alt="" loading="lazy" />
+            ) : (
+              <IconPackage size={19} />
+            )}
           </div>
           <div className="pkg-main">
             <div className="pkg-title">
@@ -118,14 +165,19 @@ export function SearchPackages(props: {
                 </span>
               )}
             </div>
-            {result.description && <p className="pkg-desc">{result.description}</p>}
+            {result.description && (
+              <p className="pkg-desc">{result.description}</p>
+            )}
             <div className="pkg-meta">
               {formatDownloads(result.totalDownloads) && (
                 <span className="meta-item">
-                  <IconDownload size={11} /> {formatDownloads(result.totalDownloads)}
+                  <IconDownload size={11} />{" "}
+                  {formatDownloads(result.totalDownloads)}
                 </span>
               )}
-              {result.authors.length > 0 && <span>by {result.authors.join(", ")}</span>}
+              {result.authors.length > 0 && (
+                <span>by {result.authors.join(", ")}</span>
+              )}
               <span>{result.source}</span>
               {result.tags.slice(0, 5).map((tag) => (
                 <span key={tag} className="tag">

@@ -1,35 +1,46 @@
-import { GetllSettingsSnapshot } from "../types";
-import { IconLogo, IconRefresh } from "./Icons";
+import { GetllSettingsSnapshot, TabId } from "../types";
+import { IconRefresh } from "./Icons";
 
+const TITLES: Record<TabId, string> = {
+  overview: "Overview",
+  browse: "Browse packages",
+  installed: "Installed packages",
+  updates: "Updates",
+  vulnerabilities: "Vulnerabilities",
+  sources: "Package sources",
+  settings: "Settings",
+};
 export function Header(props: {
   settings?: GetllSettingsSnapshot;
-  projectCount: number;
+  tab: TabId;
   onRefresh: () => void;
 }) {
-  const { settings, projectCount, onRefresh } = props;
   return (
     <header className="header">
-      <div className="logo">
-        <IconLogo size={24} stroke="#1f9cf0" />
+      <div className="breadcrumb">
+        <span>Workspace</span>
+        <span aria-hidden="true">/</span>
+        <strong>{TITLES[props.tab]}</strong>
       </div>
-      <div>
-        <h1>NuGet LL</h1>
-        <p className="subtitle">Visual NuGet package management for VS Code workspaces.</p>
+      <div className="header-actions">
+        {props.settings && (
+          <span
+            className={`badge ${props.settings.dotnetAvailable ? "ok" : "error"}`}
+          >
+            {props.settings.dotnetAvailable
+              ? `.NET ${props.settings.dotnetSdkVersion ?? "SDK"}`
+              : ".NET SDK not found"}
+          </span>
+        )}
+        <button
+          className="btn btn-ghost btn-sm"
+          aria-label="Refresh workspace"
+          onClick={props.onRefresh}
+        >
+          <IconRefresh size={14} />
+          <span>Refresh</span>
+        </button>
       </div>
-      <div className="spacer" />
-      <span className="badge">
-        {projectCount} project{projectCount === 1 ? "" : "s"}
-      </span>
-      {settings &&
-        (settings.dotnetAvailable ? (
-          <span className="badge ok">dotnet {settings.dotnetSdkVersion ?? "SDK"}</span>
-        ) : (
-          <span className="badge error">dotnet SDK not found</span>
-        ))}
-      <button className="btn btn-ghost btn-sm" onClick={onRefresh}>
-        <IconRefresh size={14} />
-        Refresh
-      </button>
     </header>
   );
 }
