@@ -48,7 +48,7 @@
 
   --font: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, SFMono-Regular, "Cascadia Mono", Menlo, Consolas, monospace;
-  --wrap: 1260px;
+  --wrap: 1320px;
   --gutter: clamp(16px, 4vw, 40px);
 }
 
@@ -94,7 +94,12 @@
 *::before,
 *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  scrollbar-color: rgba(31, 156, 240, 0.6) var(--bg);
+  scrollbar-width: thin;
+}
 body {
   margin: 0;
   min-width: 320px;
@@ -227,7 +232,7 @@ button { font: inherit; }
   mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent 72%);
   -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent 72%);
 }
-.hero-grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(32px, 5vw, 64px); align-items: center; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: clamp(32px, 5vw, 64px); align-items: center; }
 .hero h1 { margin-top: 20px; font-size: clamp(36px, 5.4vw, 58px); line-height: 1.05; letter-spacing: -0.035em; }
 .hero h1 em { font-style: normal; color: var(--accent-text); display: block; }
 .hero .lede { margin-top: 20px; font-size: clamp(17px, 1.6vw, 19px); color: var(--text); max-width: 540px; }
