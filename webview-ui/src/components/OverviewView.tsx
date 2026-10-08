@@ -48,7 +48,6 @@ export function OverviewView(props: {
     <div className="overview">
       <div className="page-heading">
         <div>
-          <p className="page-eyebrow">Your .NET workspace</p>
           <h2>Workspace overview</h2>
           <p className="section-hint">
             Projects, dependencies, and the checks that keep them healthy.
@@ -145,6 +144,44 @@ export function OverviewView(props: {
         </button>
       </div>
 
+      <section className="workspace-checks">
+        <div className="panel-heading">
+          <div>
+            <h3>Keep your workspace healthy</h3>
+            <p>Run a check to see what needs attention.</p>
+          </div>
+        </div>
+        <div className="check-grid">
+          <button
+            className="check-card"
+            onClick={() => {
+              post({ type: "checkOutdated" });
+              props.onNavigate("updates");
+            }}
+          >
+            <IconHourglass size={22} />
+            <span>
+              <strong>Check for updates</strong>
+              <small>Find newer versions across your projects.</small>
+            </span>
+            <span aria-hidden="true">→</span>
+          </button>
+          <button
+            className="check-card"
+            onClick={() => {
+              post({ type: "checkVulnerable" });
+              props.onNavigate("vulnerabilities");
+            }}
+          >
+            <IconShieldWarning size={22} />
+            <span>
+              <strong>Check vulnerabilities</strong>
+              <small>Review dependencies with known advisories.</small>
+            </span>
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </section>
       <section className="workspace-projects">
         <div className="panel-heading">
           <div>
@@ -219,44 +256,6 @@ export function OverviewView(props: {
               ))}
             </tbody>
           </table>
-        </div>
-      </section>
-      <section className="workspace-checks">
-        <div className="panel-heading">
-          <div>
-            <h3>Keep your workspace healthy</h3>
-            <p>Run a check to see what needs attention.</p>
-          </div>
-        </div>
-        <div className="check-grid">
-          <button
-            className="check-card"
-            onClick={() => {
-              post({ type: "checkOutdated" });
-              props.onNavigate("updates");
-            }}
-          >
-            <IconHourglass size={22} />
-            <span>
-              <strong>Check for updates</strong>
-              <small>Find newer versions across your projects.</small>
-            </span>
-            <span aria-hidden="true">→</span>
-          </button>
-          <button
-            className="check-card"
-            onClick={() => {
-              post({ type: "checkVulnerable" });
-              props.onNavigate("vulnerabilities");
-            }}
-          >
-            <IconShieldWarning size={22} />
-            <span>
-              <strong>Check vulnerabilities</strong>
-              <small>Review dependencies with known advisories.</small>
-            </span>
-            <span aria-hidden="true">→</span>
-          </button>
         </div>
       </section>
     </div>

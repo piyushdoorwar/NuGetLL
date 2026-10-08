@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { onMessage, post } from "./api/vscodeApi";
-import { Header } from "./components/Header";
 import { IconCheck, IconClose } from "./components/Icons";
 import { InstalledPackages } from "./components/InstalledPackages";
 import { OverviewView } from "./components/OverviewView";
 import { PackageDetails } from "./components/PackageDetails";
 import { SearchPackages } from "./components/SearchPackages";
 import { SettingsView } from "./components/SettingsView";
-import { Sidebar } from "./components/Sidebar";
 import { SourcesView } from "./components/SourcesView";
+import { TopBar } from "./components/TopBar";
 import { UpdatesView } from "./components/UpdatesView";
 import { VulnerabilitiesView } from "./components/VulnerabilitiesView";
 import { outdatedKey } from "./keys";
@@ -300,86 +299,85 @@ export function App() {
 
   return (
     <div className="app">
-      <Sidebar tab={tab} counts={counts} onSelect={setTab} />
-      <div className="workspace-main">
-        <Header
-          settings={settings}
-          tab={tab}
-          onRefresh={() => post({ type: "scanWorkspace" })}
-        />
-        <main className="content">
-          {tab === "overview" && (
-            <OverviewView
-              model={model}
-              outdated={outdated}
-              vulnerable={vulnerable}
-              settings={settings}
-              onNavigate={setTab}
-            />
-          )}
-          {tab === "browse" && (
-            <div className="browse-layout split">
-              <div className="browse-results">
-                <SearchPackages
-                  query={searchQuery}
-                  results={searchResults}
-                  searching={isRunning("Search")}
-                  defaultPrerelease={settings?.includePrerelease ?? false}
-                  onSearch={search}
-                  onSelect={showDetails}
-                  selectedId={details?.id}
-                />
-              </div>
-              {detailsPanel}
+      <TopBar
+        tab={tab}
+        counts={counts}
+        settings={settings}
+        onSelect={setTab}
+        onRefresh={() => post({ type: "scanWorkspace" })}
+      />
+      <main className="content">
+        {tab === "overview" && (
+          <OverviewView
+            model={model}
+            outdated={outdated}
+            vulnerable={vulnerable}
+            settings={settings}
+            onNavigate={setTab}
+          />
+        )}
+        {tab === "browse" && (
+          <div className="browse-layout split">
+            <div className="browse-results">
+              <SearchPackages
+                query={searchQuery}
+                results={searchResults}
+                searching={isRunning("Search")}
+                defaultPrerelease={settings?.includePrerelease ?? false}
+                onSearch={search}
+                onSelect={showDetails}
+                selectedId={details?.id}
+              />
             </div>
-          )}
-          {tab === "installed" && (
-            <div className="browse-layout split">
-              <div className="browse-results">
-                <InstalledPackages
-                  model={model}
-                  onDetails={showDetails}
-                  selectedId={details?.id}
-                />
-              </div>
-              {detailsPanel}
+            {detailsPanel}
+          </div>
+        )}
+        {tab === "installed" && (
+          <div className="browse-layout split">
+            <div className="browse-results">
+              <InstalledPackages
+                model={model}
+                onDetails={showDetails}
+                selectedId={details?.id}
+              />
             </div>
-          )}
-          {tab === "updates" && (
-            <UpdatesView
-              outdated={outdated}
-              checking={isRunning("Check outdated")}
-              progress={outdatedProgress}
-              updatingKeys={updatingKeys}
-              onUpdate={applyUpdates}
-              onCheck={checkOutdated}
-              onDetails={(id) => {
-                setTab("browse");
-                showDetails(id);
-              }}
-            />
-          )}
-          {tab === "vulnerabilities" && (
-            <VulnerabilitiesView
-              vulnerable={vulnerable}
-              deprecated={deprecated}
-              checkingVulnerable={isRunning("Check vulnerable")}
-              checkingDeprecated={isRunning("Check deprecated")}
-              vulnerableProgress={vulnerableProgress}
-              deprecatedProgress={deprecatedProgress}
-              onCheckVulnerable={() => post({ type: "checkVulnerable" })}
-              onCheckDeprecated={() => post({ type: "checkDeprecated" })}
-            />
-          )}
-          {tab === "sources" && (
-            <SourcesView
-              sources={sources}
-              busy={isRunning("Add source") || isRunning("Remove source")}
-            />
-          )}
-          {tab === "settings" && <SettingsView settings={settings} />}
-        </main>
-      </div>
+            {detailsPanel}
+          </div>
+        )}
+        {tab === "updates" && (
+          <UpdatesView
+            outdated={outdated}
+            checking={isRunning("Check outdated")}
+            progress={outdatedProgress}
+            updatingKeys={updatingKeys}
+            onUpdate={applyUpdates}
+            onCheck={checkOutdated}
+            onDetails={(id) => {
+              setTab("browse");
+              showDetails(id);
+            }}
+          />
+        )}
+        {tab === "vulnerabilities" && (
+          <VulnerabilitiesView
+            vulnerable={vulnerable}
+            deprecated={deprecated}
+            checkingVulnerable={isRunning("Check vulnerable")}
+            checkingDeprecated={isRunning("Check deprecated")}
+            vulnerableProgress={vulnerableProgress}
+            deprecatedProgress={deprecatedProgress}
+            onCheckVulnerable={() => post({ type: "checkVulnerable" })}
+            onCheckDeprecated={() => post({ type: "checkDeprecated" })}
+          />
+        )}
+        {tab === "sources" && (
+          <SourcesView
+            sources={sources}
+            busy={isRunning("Add source") || isRunning("Remove source")}
+          />
+        )}
+        {tab === "settings" && <SettingsView settings={settings} />}
+      </main>
       <div className="statusbar">
         {Object.entries(operations).map(([id, op]) => (
           <div key={id} className={`status-item ${op.status}`}>
