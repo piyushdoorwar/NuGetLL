@@ -11,12 +11,12 @@
   --card-alt: #eef4f9;
   --border: #dce4ec;
   --border-soft: #e7edf3;
-  --accent: #1f9cf0;
-  --accent-dark: #007acc;
-  --accent-deep: #0065a9;
-  --accent-text: #0065a9;
-  --accent-soft: rgba(31, 156, 240, 0.09);
-  --accent-glow: rgba(31, 156, 240, 0.18);
+  --accent: #8b6cf6;
+  --accent-dark: #512bd4;
+  --accent-deep: #4a22c4;
+  --accent-text: #4a22c4;
+  --accent-soft: rgba(139, 108, 246, 0.09);
+  --accent-glow: rgba(139, 108, 246, 0.18);
   --text: #192f42;
   --text-secondary: #4f6578;
   --text-muted: #65798b;
@@ -41,7 +41,9 @@ body.vscode-high-contrast {
   --text: #f4f7fb;
   --text-secondary: #b7c6d4;
   --text-muted: #91a4b6;
-  --accent-text: #5cb6f5;
+  --accent-text: #b29cfb;
+  --accent-dark: #8b6cf6;
+  --accent-deep: #6a4de6;
   --button-muted: #1c2a39;
   --danger: #f17a73;
   --warning: #d9a440;
@@ -342,7 +344,7 @@ select:focus-visible {
 
 .btn-primary {
   background: var(--accent);
-  color: #06243a;
+  color: #140830;
   box-shadow: none;
 }
 
@@ -943,7 +945,7 @@ table.data td.pkg {
 
 .alert.info {
   background: var(--accent-soft);
-  border: 1px solid rgba(31, 156, 240, 0.25);
+  border: 1px solid rgba(139, 108, 246, 0.25);
   color: var(--accent-text);
 }
 
@@ -1042,7 +1044,7 @@ table.data td.pkg {
 
 .picker-actions button:hover {
   background: var(--accent-soft);
-  border-color: rgba(31, 156, 240, 0.35);
+  border-color: rgba(139, 108, 246, 0.35);
 }
 
 /* ---------- Dialog ---------- */
@@ -1176,7 +1178,7 @@ table.data td.pkg {
 }
 
 .status-item.completed {
-  border-color: rgba(31, 156, 240, 0.35);
+  border-color: rgba(139, 108, 246, 0.35);
 }
 
 .status-item.failed {

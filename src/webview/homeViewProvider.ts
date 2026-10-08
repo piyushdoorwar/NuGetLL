@@ -113,11 +113,11 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
     // Brand mark: 3D package cube inside a magnifying-glass lens (media/getll.svg).
     const logoSvg = `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <g transform="translate(4 4) scale(0.5)">
-        <path d="M8.42229 20.6181C10.1779 21.5395 11.0557 22.0001 12 22.0001V12.0001L2.63802 7.07275C2.62423 7.09491 2.6107 7.11727 2.5974 7.13986C2 8.15436 2 9.41678 2 11.9416V12.0586C2 14.5834 2 15.8459 2.5974 16.8604C3.19479 17.8749 4.27063 18.4395 6.42229 19.5686L8.42229 20.6181Z" fill="#007acc"/>
-        <path opacity="0.7" d="M17.5774 4.43152L15.5774 3.38197C13.8218 2.46066 12.944 2 11.9997 2C11.0554 2 10.1776 2.46066 8.42197 3.38197L6.42197 4.43152C4.31821 5.53552 3.24291 6.09982 2.6377 7.07264L11.9997 12L21.3617 7.07264C20.7564 6.09982 19.6811 5.53552 17.5774 4.43152Z" fill="#007acc"/>
-        <path opacity="0.5" d="M21.4026 7.13986C21.3893 7.11727 21.3758 7.09491 21.362 7.07275L12 12.0001V22.0001C12.9443 22.0001 13.8221 21.5395 15.5777 20.6181L17.5777 19.5686C19.7294 18.4395 20.8052 17.8749 21.4026 16.8604C22 15.8459 22 14.5834 22 12.0586V11.9416C22 9.41678 22 8.15436 21.4026 7.13986Z" fill="#007acc"/>
+        <path d="M8.42229 20.6181C10.1779 21.5395 11.0557 22.0001 12 22.0001V12.0001L2.63802 7.07275C2.62423 7.09491 2.6107 7.11727 2.5974 7.13986C2 8.15436 2 9.41678 2 11.9416V12.0586C2 14.5834 2 15.8459 2.5974 16.8604C3.19479 17.8749 4.27063 18.4395 6.42229 19.5686L8.42229 20.6181Z" fill="#512BD4"/>
+        <path opacity="0.7" d="M17.5774 4.43152L15.5774 3.38197C13.8218 2.46066 12.944 2 11.9997 2C11.0554 2 10.1776 2.46066 8.42197 3.38197L6.42197 4.43152C4.31821 5.53552 3.24291 6.09982 2.6377 7.07264L11.9997 12L21.3617 7.07264C20.7564 6.09982 19.6811 5.53552 17.5774 4.43152Z" fill="#512BD4"/>
+        <path opacity="0.5" d="M21.4026 7.13986C21.3893 7.11727 21.3758 7.09491 21.362 7.07275L12 12.0001V22.0001C12.9443 22.0001 13.8221 21.5395 15.5777 20.6181L17.5777 19.5686C19.7294 18.4395 20.8052 17.8749 21.4026 16.8604C22 15.8459 22 14.5834 22 12.0586V11.9416C22 9.41678 22 8.15436 21.4026 7.13986Z" fill="#512BD4"/>
       </g>
-      <g stroke="#1f9cf0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <g stroke="#8B6CF6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="10" cy="10" r="7.5"/>
         <path d="M15.3 15.3 L21 21"/>
       </g>
@@ -152,13 +152,13 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} https: data:; style-src ${webview.cspSource} 'unsafe-inline'; font-src ${webview.cspSource}; script-src 'nonce-${scriptNonce}';" />
 <link rel="stylesheet" href="${fontUri}" />
 <style>
-  :root { color-scheme: light; --ink: #192f42; --muted: #65798b; --surface: #ffffff; --hover: #eef4f9; --line: #dce4ec; --blue: #0065a9; }
-  body.vscode-dark, body.vscode-high-contrast { color-scheme: dark; --ink: #f4f7fb; --muted: #91a4b6; --surface: #141d28; --hover: #1c2a39; --line: #2b3b4c; --blue: #5cb6f5; }
+  :root { color-scheme: light; --ink: #192f42; --muted: #65798b; --surface: #ffffff; --hover: #eef4f9; --line: #dce4ec; --accent: #4a22c4; }
+  body.vscode-dark, body.vscode-high-contrast { color-scheme: dark; --ink: #f4f7fb; --muted: #91a4b6; --surface: #141d28; --hover: #1c2a39; --line: #2b3b4c; --accent: #b29cfb; }
 
   * { box-sizing: border-box; }
   ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-thumb { background: #0065a9; border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: #1f9cf0; }
+  ::-webkit-scrollbar-thumb { background: #4a22c4; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #8b6cf6; }
   body {
     font-family: "DM Sans", var(--vscode-font-family, system-ui), sans-serif;
     margin: 0;
@@ -171,14 +171,14 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
   .logo {
     width: 46px; height: 46px; border-radius: 13px;
     display: flex; align-items: center; justify-content: center;
-    margin-bottom: 12px; color: var(--blue);
+    margin-bottom: 12px; color: var(--accent);
   }
   h2 { margin: 0 0 2px; font-size: 15px; letter-spacing: -0.2px; }
   p { margin: 0 0 16px; color: var(--muted); font-size: 12px; }
   button.primary {
     display: flex; align-items: center; justify-content: center;
     gap: 9px; width: 100%;
-    background: #1f9cf0; color: #06243a;
+    background: #8b6cf6; color: #140830;
     font-weight: 700; border: none; border-radius: 6px;
     padding: 9px 13px; margin-bottom: 18px;
     font-size: 12.5px; cursor: pointer; font-family: inherit;
@@ -193,8 +193,8 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
     border-radius: 8px; padding: 12px 13px;
     cursor: pointer; transition: border-color 0.15s ease, transform 0.15s ease;
   }
-  .card:hover { border-color: #007acc; background: var(--hover); }
-  .card .value { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; color: var(--blue); line-height: 1.1; }
+  .card:hover { border-color: #512bd4; background: var(--hover); }
+  .card .value { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); line-height: 1.1; }
   .card .value.neutral { color: var(--ink); }
   .card .value.bad { color: #e5534b; }
   .card .value.warn { color: #d9a440; }
@@ -210,14 +210,14 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
     font-size: 12px; cursor: pointer; font-family: inherit;
     transition: border-color 0.15s, color 0.15s, background 0.15s;
   }
-  .action:hover { border-color: #007acc; color: var(--ink); background: var(--hover); }
-  .action svg { color: #007acc; flex-shrink: 0; }
+  .action:hover { border-color: #512bd4; color: var(--ink); background: var(--hover); }
+  .action svg { color: #512bd4; flex-shrink: 0; }
   /* workspace info */
   .info-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
   .info-key { font-size: 11.5px; color: var(--muted); }
   .sdk-badge {
     font-family: "SF Mono", Consolas, monospace; font-size: 11px;
-    background: rgba(31,156,240,0.1); color: var(--blue);
+    background: rgba(31,156,240,0.1); color: var(--accent);
     border: 1px solid rgba(31,156,240,0.25); border-radius: 4px;
     padding: 2px 9px;
   }
@@ -238,7 +238,7 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
   .proj-row:hover { background: var(--hover); }
   .proj-name { font-size: 12px; color: var(--ink); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .proj-meta { font-size: 10.5px; color: var(--muted); flex-shrink: 0; margin-left: 8px; }
-  :focus-visible { outline: 2px solid #1f9cf0; outline-offset: 3px; }
+  :focus-visible { outline: 2px solid #8b6cf6; outline-offset: 3px; }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
   .home-brand { display:flex; gap:12px; align-items:center; padding-bottom:20px; margin-bottom:20px; border-bottom:1px solid var(--line); }

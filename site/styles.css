@@ -1,20 +1,20 @@
 /*
  * NuGet LL product site.
  * Follows the OS colour scheme (no toggle): light tokens by default, dark tokens
- * under prefers-color-scheme. NuGet LL blue accent. Plain CSS, no build step.
+ * under prefers-color-scheme. NuGet LL purple accent (.NET brand purple). Plain CSS, no build step.
  */
 
 :root {
   color-scheme: light;
 
   /* Brand */
-  --accent: #0b74c4;
-  --accent-hover: #075c9e;
+  --accent: #512bd4;
+  --accent-hover: #4a22c4;
   --accent-ink: #ffffff;
-  --accent-text: #0b6bb5;
-  --accent-soft: rgba(31, 156, 240, 0.12);
-  --accent-softer: rgba(31, 156, 240, 0.06);
-  --accent-line: rgba(31, 156, 240, 0.32);
+  --accent-text: #512bd4;
+  --accent-soft: rgba(81, 43, 212, 0.12);
+  --accent-softer: rgba(81, 43, 212, 0.06);
+  --accent-line: rgba(81, 43, 212, 0.32);
 
   /* Surfaces */
   --bg: #fafbfd;
@@ -44,7 +44,7 @@
   --shadow-sm: 0 1px 2px rgba(15, 28, 40, 0.05);
   --shadow: 0 1px 2px rgba(15, 28, 40, 0.04), 0 8px 24px -12px rgba(15, 28, 40, 0.14);
   --shadow-lg: 0 2px 4px rgba(15, 28, 40, 0.04), 0 24px 48px -20px rgba(15, 28, 40, 0.24);
-  --hero-glow: rgba(31, 156, 240, 0.09);
+  --hero-glow: rgba(81, 43, 212, 0.09);
 
   --font: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, SFMono-Regular, "Cascadia Mono", Menlo, Consolas, monospace;
@@ -56,13 +56,13 @@
   :root {
     color-scheme: dark;
 
-    --accent: #1f9cf0;
-    --accent-hover: #5cb6f5;
-    --accent-ink: #06243a;
-    --accent-text: #5cb6f5;
-    --accent-soft: rgba(31, 156, 240, 0.14);
-    --accent-softer: rgba(31, 156, 240, 0.07);
-    --accent-line: rgba(31, 156, 240, 0.34);
+    --accent: #8b6cf6;
+    --accent-hover: #b29cfb;
+    --accent-ink: #140830;
+    --accent-text: #b29cfb;
+    --accent-soft: rgba(139, 108, 246, 0.14);
+    --accent-softer: rgba(139, 108, 246, 0.07);
+    --accent-line: rgba(139, 108, 246, 0.34);
 
     --bg: #0d1117;
     --surface: #121923;
@@ -76,8 +76,8 @@
     --text: #d7dfea;
     --muted: #96a3b3;
 
-    --border: rgba(31, 156, 240, 0.16);
-    --border-strong: rgba(31, 156, 240, 0.34);
+    --border: rgba(139, 108, 246, 0.16);
+    --border-strong: rgba(139, 108, 246, 0.34);
 
     --patch: #62d39a;
     --minor: #e7bd57;
@@ -86,7 +86,7 @@
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px -14px rgba(0, 0, 0, 0.6);
     --shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.3), 0 28px 56px -24px rgba(0, 0, 0, 0.75);
-    --hero-glow: rgba(31, 156, 240, 0.14);
+    --hero-glow: rgba(139, 108, 246, 0.14);
   }
 }
 
@@ -97,7 +97,7 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
-  scrollbar-color: rgba(31, 156, 240, 0.6) var(--bg);
+  scrollbar-color: rgba(139, 108, 246, 0.6) var(--bg);
   scrollbar-width: thin;
 }
 body {
@@ -192,7 +192,7 @@ button { font: inherit; }
   transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
 }
 .btn:active { transform: translateY(1px); }
-.btn-primary { background: var(--accent); color: var(--accent-ink); box-shadow: 0 1px 2px rgba(31, 156, 240, 0.25), 0 8px 24px -14px rgba(31, 156, 240, 0.6); }
+.btn-primary { background: var(--accent); color: var(--accent-ink); box-shadow: 0 1px 2px rgba(139, 108, 246, 0.25), 0 8px 24px -14px rgba(139, 108, 246, 0.6); }
 .btn-primary:hover { background: var(--accent-hover); color: var(--accent-ink); }
 .btn-secondary { background: var(--surface); color: var(--ink); border-color: var(--border); box-shadow: var(--shadow-sm); }
 .btn-secondary:hover { border-color: var(--border-strong); color: var(--ink); background: var(--surface-3); }

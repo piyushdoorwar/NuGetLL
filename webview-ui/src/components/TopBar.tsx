@@ -39,7 +39,7 @@ export function TopBar(props: {
   return (
     <header className="topbar">
       <div className="topbar-brand">
-        <IconLogo size={20} stroke="#1f9cf0" />
+        <IconLogo size={20} stroke="#8B6CF6" />
         <strong>NuGet LL</strong>
       </div>
       <nav className="tabs" role="tablist" aria-label="Package manager views">
